@@ -38,6 +38,7 @@ function UserMenu() {
   }
 
   const initials = `${currentUser.firstName.charAt(0)}${currentUser.lastName.charAt(0)}`;
+  const dashboardLink = currentUser.isMentor ? '/mentor-dashboard' : '/dashboard';
 
   return (
     <div className="relative" ref={menuRef}>
@@ -65,23 +66,28 @@ function UserMenu() {
           <div className="px-4 py-2 border-b border-gray-700">
             <p className="text-sm text-white font-medium">{`${currentUser.firstName} ${currentUser.lastName}`}</p>
             <p className="text-xs text-gray-400 truncate">{currentUser.email}</p>
+            {currentUser.isMentor && (
+              <p className="text-xs text-primary mt-1">Mentor</p>
+            )}
           </div>
           
           <Link
-            to="/dashboard"
+            to={dashboardLink}
             className="block px-4 py-2 text-sm text-white hover:bg-darkblue-dark"
             onClick={() => setIsOpen(false)}
           >
             <i className="fas fa-user-circle mr-2"></i> Dashboard
           </Link>
           
-          <Link
-            to="/mcq"
-            className="block px-4 py-2 text-sm text-white hover:bg-darkblue-dark"
-            onClick={() => setIsOpen(false)}
-          >
-            <i className="fas fa-clipboard-check mr-2"></i> Take Assessment
-          </Link>
+          {!currentUser.isMentor && (
+            <Link
+              to="/mcq"
+              className="block px-4 py-2 text-sm text-white hover:bg-darkblue-dark"
+              onClick={() => setIsOpen(false)}
+            >
+              <i className="fas fa-clipboard-check mr-2"></i> Take Assessment
+            </Link>
+          )}
           
           <button
             onClick={handleLogout}

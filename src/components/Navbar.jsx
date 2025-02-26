@@ -6,6 +6,9 @@ import UserMenu from './UserMenu';
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { currentUser } = useAuth();
+  
+  // Determine if the user is a mentor
+  const isMentor = currentUser?.isMentor;
 
   return (
     <nav className="bg-darkblue-dark shadow-md">
@@ -34,13 +37,37 @@ function Navbar() {
           {/* Desktop menu */}
           <div className="hidden md:flex items-center space-x-8">
             <Link className="text-white hover:text-primary transition-colors" to="/">Home</Link>
-            <Link className="text-white hover:text-primary transition-colors" to="/interests">Interests</Link>
-            <Link className="text-white hover:text-primary transition-colors" to="/mcq">Assessment</Link>
+            
+            {/* Different navigation links based on user type */}
+            {!currentUser && (
+              <>
+                <Link className="text-white hover:text-primary transition-colors" to="/interests">Interests</Link>
+                <Link className="text-white hover:text-primary transition-colors" to="/mcq">Assessment</Link>
+              </>
+            )}
+            
+            {currentUser && !isMentor && (
+              <>
+                <Link className="text-white hover:text-primary transition-colors" to="/interests">Interests</Link>
+                <Link className="text-white hover:text-primary transition-colors" to="/mcq">Assessment</Link>
+                <Link className="text-white hover:text-primary transition-colors" to="/find-mentors">Find Mentors</Link>
+              </>
+            )}
+            
+            {currentUser && isMentor && (
+              <>
+                <Link className="text-white hover:text-primary transition-colors" to="/mentor-dashboard">Mentor Dashboard</Link>
+                <Link className="text-white hover:text-primary transition-colors" to="/mentee-requests">Mentee Requests</Link>
+              </>
+            )}
             
             {currentUser ? (
               <UserMenu />
             ) : (
-              <Link className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors" to="/login">Login</Link>
+              <div className="flex items-center space-x-4">
+                <Link className="text-white hover:text-primary transition-colors" to="/register">Register</Link>
+                <Link className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors" to="/login">Login</Link>
+              </div>
             )}
           </div>
         </div>
@@ -56,23 +83,51 @@ function Navbar() {
               >
                 Home
               </Link>
-              <Link 
-                className="text-white hover:text-primary transition-colors" 
-                to="/interests"
-                onClick={() => setIsOpen(false)}
-              >
-                Interests
-              </Link>
-              <Link 
-                className="text-white hover:text-primary transition-colors" 
-                to="/mcq"
-                onClick={() => setIsOpen(false)}
-              >
-                Assessment
-              </Link>
               
-              {currentUser ? (
+              {/* Mobile menu items for visitors */}
+              {!currentUser && (
                 <>
+                  <Link 
+                    className="text-white hover:text-primary transition-colors" 
+                    to="/interests"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Interests
+                  </Link>
+                  <Link 
+                    className="text-white hover:text-primary transition-colors" 
+                    to="/mcq"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Assessment
+                  </Link>
+                </>
+              )}
+              
+              {/* Mobile menu items for students */}
+              {currentUser && !isMentor && (
+                <>
+                  <Link 
+                    className="text-white hover:text-primary transition-colors" 
+                    to="/interests"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Interests
+                  </Link>
+                  <Link 
+                    className="text-white hover:text-primary transition-colors" 
+                    to="/mcq"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Assessment
+                  </Link>
+                  <Link 
+                    className="text-white hover:text-primary transition-colors" 
+                    to="/find-mentors"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Find Mentors
+                  </Link>
                   <Link 
                     className="text-white hover:text-primary transition-colors" 
                     to="/dashboard"
@@ -80,24 +135,57 @@ function Navbar() {
                   >
                     Dashboard
                   </Link>
-                  <button 
-                    className="text-white hover:text-primary transition-colors text-left" 
-                    onClick={() => {
-                      setIsOpen(false);
-                      useAuth().logout();
-                    }}
-                  >
-                    Logout
-                  </button>
                 </>
-              ) : (
-                <Link 
-                  className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors inline-block" 
-                  to="/login"
-                  onClick={() => setIsOpen(false)}
+              )}
+              
+              {/* Mobile menu items for mentors */}
+              {currentUser && isMentor && (
+                <>
+                  <Link 
+                    className="text-white hover:text-primary transition-colors" 
+                    to="/mentor-dashboard"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Mentor Dashboard
+                  </Link>
+                  <Link 
+                    className="text-white hover:text-primary transition-colors" 
+                    to="/mentee-requests"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Mentee Requests
+                  </Link>
+                </>
+              )}
+              
+              {/* Authentication links */}
+              {currentUser ? (
+                <button 
+                  className="text-white hover:text-primary transition-colors text-left" 
+                  onClick={() => {
+                    setIsOpen(false);
+                    useAuth().logout();
+                  }}
                 >
-                  Login
-                </Link>
+                  Logout
+                </button>
+              ) : (
+                <>
+                  <Link 
+                    className="text-white hover:text-primary transition-colors" 
+                    to="/register"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Register
+                  </Link>
+                  <Link 
+                    className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors inline-block" 
+                    to="/login"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Login
+                  </Link>
+                </>
               )}
             </div>
           </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-function ProtectedRoute({ children }) {
+function ProtectedRoute({ children, isMentorRoute = false }) {
   const { currentUser, loading } = useAuth();
   const location = useLocation();
 
@@ -19,6 +19,16 @@ function ProtectedRoute({ children }) {
 
   if (!currentUser) {
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // Check if this is a mentor route and the user is not a mentor
+  if (isMentorRoute && !currentUser.isMentor) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  // Check if this is a student route and the user is a mentor
+  if (!isMentorRoute && currentUser.isMentor) {
+    return <Navigate to="/mentor-dashboard" replace />;
   }
 
   return children;

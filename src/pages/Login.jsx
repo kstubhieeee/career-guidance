@@ -4,11 +4,15 @@ import { useAuth } from '../context/AuthContext';
 
 function Login() {
   const [isLogin, setIsLogin] = useState(true);
+  const [isMentor, setIsMentor] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     firstName: '',
-    lastName: ''
+    lastName: '',
+    experience: '',
+    specialization: '',
+    bio: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,17 +37,24 @@ function Login() {
       if (isLogin) {
         await login({
           email: formData.email,
-          password: formData.password
+          password: formData.password,
+          isMentor
         });
       } else {
         await register({
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
-          password: formData.password
+          password: formData.password,
+          isMentor,
+          ...(isMentor && {
+            experience: formData.experience,
+            specialization: formData.specialization,
+            bio: formData.bio
+          })
         });
       }
-      navigate(from, { replace: true });
+      navigate(isMentor ? '/mentor-dashboard' : from, { replace: true });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -53,6 +64,11 @@ function Login() {
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
+    setError('');
+  };
+
+  const toggleUserType = () => {
+    setIsMentor(!isMentor);
     setError('');
   };
 
@@ -69,6 +85,31 @@ function Login() {
               : 'Fill in your information to get started'
             }
           </p>
+          
+          <div className="mt-4 flex justify-center">
+            <div className="bg-darkblue rounded-lg p-1 inline-flex">
+              <button
+                onClick={() => setIsMentor(false)}
+                className={`px-4 py-2 text-sm rounded-md transition-colors ${
+                  !isMentor 
+                    ? 'bg-primary text-white' 
+                    : 'text-gray-300 hover:text-white'
+                }`}
+              >
+                Student
+              </button>
+              <button
+                onClick={() => setIsMentor(true)}
+                className={`px-4 py-2 text-sm rounded-md transition-colors ${
+                  isMentor 
+                    ? 'bg-primary text-white' 
+                    : 'text-gray-300 hover:text-white'
+                }`}
+              >
+                Mentor
+              </button>
+            </div>
+          </div>
         </div>
         
         {error && (
@@ -147,6 +188,66 @@ function Login() {
               placeholder="Password"
             />
           </div>
+          
+          {/* Mentor-specific fields */}
+          {!isLogin && isMentor && (
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="specialization" className="block text-sm font-medium text-gray-200 mb-1">
+                  Specialization
+                </label>
+                <select
+                  id="specialization"
+                  name="specialization"
+                  required
+                  value={formData.specialization}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-3 py-2 bg-darkblue border border-gray-600 text-white rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                >
+                  <option value="">Select your specialization</option>
+                  <option value="Science">Science</option>
+                  <option value="Technology">Technology</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Mathematics">Mathematics</option>
+                  <option value="Arts">Arts</option>
+                  <option value="Business">Business</option>
+                </select>
+              </div>
+              
+              <div>
+                <label htmlFor="experience" className="block text-sm font-medium text-gray-200 mb-1">
+                  Years of Experience
+                </label>
+                <input
+                  id="experience"
+                  name="experience"
+                  type="number"
+                  min="0"
+                  required
+                  value={formData.experience}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-3 py-2 bg-darkblue border border-gray-600 placeholder-gray-400 text-white rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                  placeholder="Years of experience"
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="bio" className="block text-sm font-medium text-gray-200 mb-1">
+                  Professional Bio
+                </label>
+                <textarea
+                  id="bio"
+                  name="bio"
+                  rows="3"
+                  required
+                  value={formData.bio}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-3 py-2 bg-darkblue border border-gray-600 placeholder-gray-400 text-white rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                  placeholder="Tell us about your professional background and expertise"
+                ></textarea>
+              </div>
+            </div>
+          )}
           
           {isLogin && (
             <div className="flex items-center justify-between">

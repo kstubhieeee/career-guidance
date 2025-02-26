@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  isMentor: { type: Boolean, default: false },
+  experience: { type: Number }, // For mentors
+  specialization: { type: String }, // For mentors
+  bio: { type: String }, // For mentors
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -93,7 +97,7 @@ const authenticate = async (req, res, next) => {
 // Register user
 app.post('/api/register', async (req, res) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, isMentor, experience, specialization, bio } = req.body;
     
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -110,7 +114,11 @@ app.post('/api/register', async (req, res) => {
       firstName,
       lastName,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      isMentor: isMentor || false,
+      experience: experience,
+      specialization: specialization,
+      bio: bio
     });
     
     await user.save();
@@ -131,7 +139,11 @@ app.post('/api/register', async (req, res) => {
         id: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
-        email: user.email
+        email: user.email,
+        isMentor: user.isMentor,
+        experience: user.experience,
+        specialization: user.specialization,
+        bio: user.bio
       }
     });
   } catch (error) {
@@ -143,7 +155,7 @@ app.post('/api/register', async (req, res) => {
 // Login user
 app.post('/api/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, isMentor } = req.body;
     
     // Check if user exists
     const user = await User.findOne({ email });
@@ -155,6 +167,15 @@ app.post('/api/login', async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
+    }
+    
+    // Check if user type matches
+    if (isMentor !== undefined && user.isMentor !== isMentor) {
+      return res.status(400).json({ 
+        message: isMentor 
+          ? 'This account is not registered as a mentor' 
+          : 'This account is registered as a mentor. Please use mentor login.'
+      });
     }
     
     // Create token
@@ -173,7 +194,11 @@ app.post('/api/login', async (req, res) => {
         id: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
-        email: user.email
+        email: user.email,
+        isMentor: user.isMentor,
+        experience: user.experience,
+        specialization: user.specialization,
+        bio: user.bio
       }
     });
   } catch (error) {

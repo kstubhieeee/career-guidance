@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Interests from './pages/Interests';
 import Mcq from './pages/Mcq';
 import Dashboard from './pages/Dashboard';
+import MentorDashboard from './pages/MentorDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 
@@ -28,6 +29,11 @@ function AppContent() {
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/mentor-dashboard" element={
+          <ProtectedRoute isMentorRoute={true}>
+            <MentorDashboard />
           </ProtectedRoute>
         } />
       </Routes>
