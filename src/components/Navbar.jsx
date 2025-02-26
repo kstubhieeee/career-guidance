@@ -65,7 +65,6 @@ function Navbar() {
               <UserMenu />
             ) : (
               <div className="flex items-center space-x-4">
-                <Link className="text-white hover:text-primary transition-colors" to="/register">Register</Link>
                 <Link className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors" to="/login">Login</Link>
               </div>
             )}
@@ -171,13 +170,7 @@ function Navbar() {
                 </button>
               ) : (
                 <>
-                  <Link 
-                    className="text-white hover:text-primary transition-colors" 
-                    to="/register"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Register
-                  </Link>
+                  
                   <Link 
                     className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors inline-block" 
                     to="/login"

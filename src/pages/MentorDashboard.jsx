@@ -10,21 +10,23 @@ function MentorDashboard() {
   const [sessions, setSessions] = useState([]);
 
   useEffect(() => {
-    // Mock data for demonstration
+    
     setStudents([
-      { id: 1, name: 'John Doe', email: 'john@example.com', field: 'Technology', lastActive: '2023-05-15T10:30:00' },
-      { id: 2, name: 'Jane Smith', email: 'jane@example.com', field: 'Science', lastActive: '2023-05-14T14:45:00' },
-      { id: 3, name: 'Mike Johnson', email: 'mike@example.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' }
+      { id: 1, name: 'Karan Banerjee', email: 'karanprince85@gmail.com', field: 'Technology', lastActive: '2023-05-15T10:30:00' },
+      { id: 2, name: 'Dyuti Agarwal', email: 'dyuti@example.com', field: 'Science', lastActive: '2023-05-14T14:45:00' },
+      { id: 3, name: 'Faiz Moulavi', email: 'mike@example.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' },
+      { id: 4, name: 'Sneha Choudhary', email: 'mike@example.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' }
     ]);
 
     setSessions([
-      { id: 1, studentName: 'John Doe', date: '2023-05-20T15:00:00', status: 'upcoming', topic: 'Career in Software Development' },
-      { id: 2, studentName: 'Jane Smith', date: '2023-05-18T11:30:00', status: 'upcoming', topic: 'Research Opportunities in Biology' },
-      { id: 3, studentName: 'Mike Johnson', date: '2023-05-10T13:00:00', status: 'completed', topic: 'Mechanical Engineering Career Paths' }
+      { id: 1, studentName: 'Karan Banerjee', date: '2023-05-20T15:00:00', status: 'upcoming', topic: 'Career in Software Development' },
+      { id: 2, studentName: 'Dyuti Agarwal', date: '2023-05-18T11:30:00', status: 'upcoming', topic: 'Research Opportunities in Biology' },
+      { id: 3, studentName: 'Faiz Moulavi', date: '2023-05-10T13:00:00', status: 'completed', topic: 'Mechanical Engineering Career Paths' },
+      { id: 4, studentName: 'Sneha Choudhary', date: '2023-05-10T13:00:00', status: 'completed', topic: 'Mechanical Engineering Career Paths' },
     ]);
   }, []);
 
-  // Format date
+  
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString).toLocaleDateString(undefined, options);
