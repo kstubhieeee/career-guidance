@@ -209,8 +209,7 @@ function Login() {
                   <option value="Technology">Technology</option>
                   <option value="Engineering">Engineering</option>
                   <option value="Mathematics">Mathematics</option>
-                  <option value="Arts">Arts</option>
-                  <option value="Business">Business</option>
+                  
                 </select>
               </div>
               
