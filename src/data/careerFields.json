@@ -1,0 +1,74 @@
+{
+  "science": {
+    "name": "Science",
+    "description": "You have a natural curiosity about the world and how things work. Your analytical mind and attention to detail make you well-suited for scientific research and discovery.",
+    "color": "rgba(255, 99, 132, 0.8)",
+    "careers": [
+      { "name": "Geneticist", "path": "/mcq" },
+      { "name": "Environmental Scientist", "path": "/mcq" },
+      { "name": "Microbiologist", "path": "/mcq" },
+      { "name": "Physicist", "path": "/mcq" },
+      { "name": "Biochemist", "path": "/mcq" }
+    ]
+  },
+  "technology": {
+    "name": "Technology",
+    "description": "You have a logical mind and enjoy solving complex problems using technology. Your ability to think systematically makes you ideal for roles in the tech industry.",
+    "color": "rgba(54, 162, 235, 0.8)",
+    "careers": [
+      { "name": "Software Developer", "path": "/mcq" },
+      { "name": "Cybersecurity Analyst", "path": "/mcq" },
+      { "name": "Data Scientist", "path": "/mcq" },
+      { "name": "AI/Machine Learning Engineer", "path": "/mcq" },
+      { "name": "IT Support Specialist", "path": "/mcq" }
+    ]
+  },
+  "engineering": {
+    "name": "Engineering",
+    "description": "You have a practical mindset and enjoy building and designing things. Your problem-solving skills and creativity make you well-suited for engineering roles.",
+    "color": "rgba(255, 206, 86, 0.8)",
+    "careers": [
+      { "name": "Civil Engineer", "path": "/mcq" },
+      { "name": "Mechanical Engineer", "path": "/mcq" },
+      { "name": "Electrical Engineer", "path": "/mcq" },
+      { "name": "Chemical Engineer", "path": "/mcq" },
+      { "name": "Aerospace Engineer", "path": "/mcq" }
+    ]
+  },
+  "mathematics": {
+    "name": "Mathematics",
+    "description": "You have a strong analytical mind and enjoy working with numbers and abstract concepts. Your attention to detail and logical thinking make you ideal for mathematical careers.",
+    "color": "rgba(75, 192, 192, 0.8)",
+    "careers": [
+      { "name": "Statistician", "path": "/mcq" },
+      { "name": "Actuary", "path": "/mcq" },
+      { "name": "Financial Analyst", "path": "/mcq" },
+      { "name": "Mathematician", "path": "/mcq" },
+      { "name": "Operations Research Analyst", "path": "/mcq" }
+    ]
+  },
+  "arts": {
+    "name": "Arts",
+    "description": "You have a creative mind and enjoy expressing yourself through various media. Your imagination and aesthetic sense make you well-suited for artistic and creative roles.",
+    "color": "rgba(153, 102, 255, 0.8)",
+    "careers": [
+      { "name": "Graphic Designer", "path": "/mcq" },
+      { "name": "Content Writer", "path": "/mcq" },
+      { "name": "Digital Marketer", "path": "/mcq" },
+      { "name": "UX/UI Designer", "path": "/mcq" },
+      { "name": "Multimedia Artist", "path": "/mcq" }
+    ]
+  },
+  "business": {
+    "name": "Business",
+    "description": "You have strong organizational and interpersonal skills. Your ability to lead and make strategic decisions makes you well-suited for business and management roles.",
+    "color": "rgba(255, 159, 64, 0.8)",
+    "careers": [
+      { "name": "Business Analyst", "path": "/mcq" },
+      { "name": "Project Manager", "path": "/mcq" },
+      { "name": "Marketing Manager", "path": "/mcq" },
+      { "name": "Human Resources Manager", "path": "/mcq" },
+      { "name": "Entrepreneur", "path": "/mcq" }
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "title": "WHO WE ARE",
+  "description": "We are <span class=\"text-primary font-bold\">Guidant</span>, a career guidance platform dedicated to helping students make informed decisions about their future. Our mission is to provide comprehensive career information, personalized assessments, and expert guidance to help you choose the right career path.",
+  "features": [
+    {
+      "icon": "fas fa-search",
+      "title": "Discover",
+      "description": "Explore various career options based on your interests and skills"
+    },
+    {
+      "icon": "fas fa-clipboard-check",
+      "title": "Assess",
+      "description": "Take personalized assessments to understand your strengths"
+    },
+    {
+      "icon": "fas fa-graduation-cap",
+      "title": "Succeed",
+      "description": "Get guidance on educational paths and career development"
+    }
+  ],
+  "buttonText": "Let's Begin",
+  "buttonLink": "/interests"
+}

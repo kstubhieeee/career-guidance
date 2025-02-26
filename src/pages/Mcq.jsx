@@ -9,6 +9,9 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Mcq() {
   const { saveAssessment } = useAuth();
+  const [questionsData, setQuestionsData] = useState(null);
+  const [careerFields, setCareerFields] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [scores, setScores] = useState({
     Science: 0,
@@ -17,85 +20,55 @@ function Mcq() {
     Mathematics: 0
   });
   const [showResults, setShowResults] = useState(false);
-  const [answeredQuestions, setAnsweredQuestions] = useState(Array(20).fill(false));
+  const [answeredQuestions, setAnsweredQuestions] = useState([]);
   const [progress, setProgress] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [savingResults, setSavingResults] = useState(false);
   const [saveError, setSaveError] = useState(null);
 
-  const questions = [
-    "What type of problems do you enjoy solving the most?",
-    "Which activity excites you the most?",
-    "How do you prefer to analyze data?",
-    "Which subject fascinates you the most?",
-    "What kind of experiments or projects interest you?",
-    "How do you approach challenges?",
-    "Which of the following would you enjoy as a career?",
-    "What is your preferred way of learning?",
-    "If given a project, which part would you like to handle?",
-    "Which of these would you enjoy reading about the most?",
-    "What type of innovations inspire you the most?",
-    "What do you enjoy doing in your free time?",
-    "Which tool or equipment would you like to work with?",
-    "Which of the following best describes your thought process?",
-    "What do you find most exciting about problem-solving?",
-    "Which career path excites you the most?",
-    "How do you prefer to spend your weekends?",
-    "Which of the following would you enjoy working on?",
-    "What kind of discoveries interest you the most?",
-    "Which real-world problem would you like to solve?"
-  ];
+  useEffect(() => {
+    // Load questions data
+    Promise.all([
+      import('../data/questions.json'),
+      import('../data/careerFields.json')
+    ])
+      .then(([questionsModule, careerFieldsModule]) => {
+        setQuestionsData(questionsModule);
+        setCareerFields(careerFieldsModule);
+        setAnsweredQuestions(Array(questionsModule.questions.length).fill(false));
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error loading data:', error);
+        setLoading(false);
+      });
+  }, []);
 
-  // Original options with categories
-  const optionsWithCategories = [
-    ["A. Conducting lab experiments (Science)", "B. Programming applications (Tech)", "C. Building structures (Engineering)", "D. Solving equations (Maths)"],
-    ["A. Observing nature and living organisms (Science)", "B. Learning about the latest tech innovations (Tech)", "C. Designing mechanical systems (Engineering)", "D. Exploring abstract mathematical theories (Maths)"],
-    ["A. Conducting research studies (Science)", "B. Analyzing software performance (Tech)", "C. Creating engineering blueprints (Engineering)", "D. Solving numerical problems (Maths)"],
-    ["A. Biology and Chemistry (Science)", "B. Computer Science (Tech)", "C. Physics and Mechanics (Engineering)", "D. Algebra and Calculus (Maths)"],
-    ["A. Investigating chemical reactions (Science)", "B. Developing new software (Tech)", "C. Constructing a working model (Engineering)", "D. Proving mathematical theorems (Maths)"],
-    ["A. Using logical reasoning to solve scientific problems (Science)", "B. Writing efficient code (Tech)", "C. Improving machine designs (Engineering)", "D. Finding mathematical patterns (Maths)"],
-    ["A. Medical Researcher (Science)", "B. AI Engineer (Tech)", "C. Civil Engineer (Engineering)", "D. Mathematician (Maths)"],
-    ["A. Conducting hands-on experiments (Science)", "B. Learning through online coding platforms (Tech)", "C. Working with physical prototypes (Engineering)", "D. Solving logical puzzles (Maths)"],
-    ["A. Studying the impact of substances (Science)", "B. Debugging and optimizing software (Tech)", "C. Developing innovative gadgets (Engineering)", "D. Creating formulas and models (Maths)"],
-    ["A. Scientific discoveries and medical advances (Science)", "B. The future of artificial intelligence (Tech)", "C. The latest developments in robotics (Engineering)", "D. The beauty of mathematical proofs (Maths)"],
-    ["A. Breakthroughs in medicine (Science)", "B. New programming languages (Tech)", "C. Advances in aerospace technology (Engineering)", "D. New theories in mathematics (Maths)"],
-    ["A. Watching science documentaries (Science)", "B. Exploring new software tools (Tech)", "C. Repairing or assembling gadgets (Engineering)", "D. Solving Sudoku or logic puzzles (Maths)"],
-    ["A. Microscopes and test tubes (Science)", "B. Computers and coding environments (Tech)", "C. 3D printers and machinery (Engineering)", "D. Graphing calculators and number theory (Maths)"],
-    ["A. Curious and experimental (Science)", "B. Logical and analytical (Tech)", "C. Creative and practical (Engineering)", "D. Abstract and detail-oriented (Maths)"],
-    ["A. Finding patterns in nature (Science)", "B. Cracking a tough algorithm (Tech)", "C. Designing an innovative product (Engineering)", "D. Solving an impossible math equation (Maths)"],
-    ["A. Environmental Scientist (Science)", "B. Cybersecurity Specialist (Tech)", "C. Mechanical Engineer (Engineering)", "D. Theoretical Mathematician (Maths)"],
-    ["A. Exploring the outdoors and researching nature (Science)", "B. Playing video games or coding new projects (Tech)", "C. Fixing or designing things at home (Engineering)", "D. Solving complex math problems for fun (Maths)"],
-    ["A. Developing medicines for rare diseases (Science)", "B. Creating an AI-powered tool (Tech)", "C. Designing earthquake-proof buildings (Engineering)", "D. Proving a new mathematical conjecture (Maths)"],
-    ["A. Space exploration and the universe (Science)", "B. Quantum computing (Tech)", "C. Renewable energy technologies (Engineering)", "D. Unsolved mathematical paradoxes (Maths)"],
-    ["A. Curing incurable diseases (Science)", "B. Enhancing cybersecurity (Tech)", "C. Building sustainable cities (Engineering)", "D. Solving millennium math problems (Maths)"]
-  ];
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-darkblue py-12 flex justify-center items-center">
+        <div className="text-white text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-xl">Loading assessment...</p>
+        </div>
+      </div>
+    );
+  }
 
-  // Map to track which option corresponds to which category
-  const optionCategories = [
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"],
-    ["Science", "Technology", "Engineering", "Mathematics"]
-  ];
+  if (!questionsData || !careerFields) {
+    return (
+      <div className="min-h-screen bg-darkblue py-12 flex justify-center items-center">
+        <div className="text-white text-center">
+          <p className="text-xl">Error loading assessment data. Please try again later.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const { questions, options, optionCategories } = questionsData;
 
   // Display options without categories
-  const options = optionsWithCategories.map(optionSet => 
+  const displayOptions = options.map(optionSet => 
     optionSet.map(option => {
       // Remove the category in parentheses
       return option.replace(/\s*\([^)]*\)\s*$/, '');
@@ -233,7 +206,7 @@ function Mcq() {
       Mathematics: 0
     });
     setShowResults(false);
-    setAnsweredQuestions(Array(20).fill(false));
+    setAnsweredQuestions(Array(questions.length).fill(false));
     setProgress(0);
     setSelectedOption(null);
     setSaveError(null);
@@ -243,33 +216,13 @@ function Mcq() {
     const maxScore = Math.max(scores.Science, scores.Technology, scores.Engineering, scores.Mathematics);
     
     if (maxScore === scores.Science) {
-      return {
-        field: "Science",
-        careers: ["Geneticist", "Environmental Scientist", "Microbiologist", "Physicist", "Biochemist"],
-        description: "You have a natural curiosity about the world and how things work. Your analytical mind and attention to detail make you well-suited for scientific research and discovery.",
-        color: "rgba(255, 99, 132, 0.8)"
-      };
+      return careerFields.science;
     } else if (maxScore === scores.Technology) {
-      return {
-        field: "Technology",
-        careers: ["Software Developer", "Cybersecurity Analyst", "Data Scientist", "AI/Machine Learning Engineer", "IT Support Specialist"],
-        description: "You have a logical mind and enjoy solving complex problems using technology. Your ability to think systematically makes you ideal for roles in the tech industry.",
-        color: "rgba(54, 162, 235, 0.8)"
-      };
+      return careerFields.technology;
     } else if (maxScore === scores.Engineering) {
-      return {
-        field: "Engineering",
-        careers: ["Civil Engineer", "Mechanical Engineer", "Electrical Engineer", "Chemical Engineer", "Aerospace Engineer"],
-        description: "You have a practical mindset and enjoy building and designing things. Your problem-solving skills and creativity make you well-suited for engineering roles.",
-        color: "rgba(255, 206, 86, 0.8)"
-      };
+      return careerFields.engineering;
     } else {
-      return {
-        field: "Mathematics",
-        careers: ["Statistician", "Actuary", "Financial Analyst", "Mathematician", "Operations Research Analyst"],
-        description: "You have a strong analytical mind and enjoy working with numbers and abstract concepts. Your attention to detail and logical thinking make you ideal for mathematical careers.",
-        color: "rgba(75, 192, 192, 0.8)"
-      };
+      return careerFields.mathematics;
     }
   };
 
@@ -321,7 +274,7 @@ function Mcq() {
                   </h2>
                   
                   <div className="space-y-4">
-                    {options[currentQuestion].map((option, index) => (
+                    {displayOptions[currentQuestion].map((option, index) => (
                       <button
                         key={index}
                         onClick={() => handleOptionClick(option, index)}
@@ -456,7 +409,7 @@ function Mcq() {
                       <div className="flex items-center justify-center mb-4">
                         <div className="w-16 h-16 rounded-full mr-4" style={{ backgroundColor: recommendation.color }}></div>
                         <h3 className="text-2xl font-bold text-primary">
-                          Your Recommended Career Path: {recommendation.field}
+                          Your Recommended Career Path: {recommendation.name}
                         </h3>
                       </div>
                       
@@ -472,7 +425,7 @@ function Mcq() {
                               key={index}
                               className="bg-darkblue-dark p-4 rounded-lg border border-gray-700 text-white text-center hover:shadow-lg transition-all duration-300 hover:transform hover:scale-105"
                             >
-                              {career}
+                              {career.name}
                             </div>
                           ))}
                         </div>

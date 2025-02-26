@@ -1,0 +1,18 @@
+{
+  "hero": {
+    "title": "Discover Your Career Path",
+    "description": "Explore different career fields based on your interests and skills",
+    "backgroundImage": "/src/assets/Images/pexels-photo-2080963.jpeg",
+    "buttonText": "Explore Careers",
+    "buttonLink": "#interests"
+  },
+  "introduction": {
+    "title": "Understanding Your Career Interests",
+    "paragraphs": [
+      "Career interests are your preferences regarding work activities and environment. Identifying your career interest helps you make a well-informed and more strategic decision on your career path.",
+      "Following your career interest means you are pursuing a career that uses your talents and aligns with your passion and preferences. Understanding and being able to determine your passion helps you find fulfillment and success in your chosen profession.",
+      "In this webpage we provide tools that will enable you make the right career decisions."
+    ],
+    "sectionTitle": "Let us know <span class=\"text-primary\">about your interests....</span>"
+  }
+}

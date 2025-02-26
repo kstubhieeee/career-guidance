@@ -1,0 +1,17 @@
+{
+  "title": "Tomorrow Looks Better Because We're <span class=\"text-primary\">Here to Help You </span>Choose Your Career Track.",
+  "subtitle": "Discover your perfect career path with personalized guidance and expert resources.",
+  "buttons": [
+    {
+      "text": "Learn More",
+      "link": "#about",
+      "primary": true
+    },
+    {
+      "text": "Explore Careers",
+      "link": "/interests",
+      "primary": false
+    }
+  ],
+  "image": "/src/assets/stem.png"
+}

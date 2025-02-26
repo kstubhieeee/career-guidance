@@ -1,0 +1,43 @@
+{
+  "title": "GET IN TOUCH",
+  "description": "Have questions about career guidance? We're here to help. Reach out to our team for personalized assistance.",
+  "contactInfo": {
+    "location": {
+      "icon": "fas fa-map-marker-alt",
+      "title": "Location",
+      "details": "Mira Road, Shanti Park 401107"
+    },
+    "email": {
+      "icon": "fas fa-envelope",
+      "title": "Email",
+      "details": "faiz.k.moulavi@slrtce.in"
+    },
+    "phone": {
+      "icon": "fas fa-phone-alt",
+      "title": "Phone",
+      "details": "9136261589"
+    }
+  },
+  "socialMedia": [
+    {
+      "platform": "Facebook",
+      "icon": "fab fa-facebook-f",
+      "url": "https://www.facebook.com/"
+    },
+    {
+      "platform": "Twitter",
+      "icon": "fab fa-twitter",
+      "url": "https://x.com/faizmoulavi1"
+    },
+    {
+      "platform": "Instagram",
+      "icon": "fab fa-instagram",
+      "url": "https://www.instagram.com/faiz_moulavi11/"
+    },
+    {
+      "platform": "LinkedIn",
+      "icon": "fab fa-linkedin-in",
+      "url": "https://www.linkedin.com/in/faiz-moulavi1/"
+    }
+  ]
+}
