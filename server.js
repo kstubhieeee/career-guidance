@@ -50,9 +50,20 @@ const assessmentSchema = new mongoose.Schema({
   completedAt: { type: Date, default: Date.now }
 });
 
+// Define Contact Message Schema
+const contactSchema = new mongoose.Schema({
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: { type: String },
+  message: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
+
 // Create models
 const User = mongoose.model('User', userSchema);
 const Assessment = mongoose.model('Assessment', assessmentSchema);
+const Contact = mongoose.model('Contact', contactSchema);
 
 // Authentication middleware
 const authenticate = async (req, res, next) => {
@@ -209,6 +220,46 @@ app.get('/api/assessments', authenticate, async (req, res) => {
     res.json({ assessments });
   } catch (error) {
     console.error('Get assessments error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Save contact form message
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { firstName, lastName, email, phone, message } = req.body;
+    
+    // Create new contact message
+    const contactMessage = new Contact({
+      firstName,
+      lastName,
+      email,
+      phone,
+      message
+    });
+    
+    await contactMessage.save();
+    
+    res.status(201).json({ message: 'Message sent successfully' });
+  } catch (error) {
+    console.error('Contact form error:', error);
+    res.status(500).json({ message: 'Failed to send message. Please try again later.' });
+  }
+});
+
+// Admin route to get all contact messages (protected)
+app.get('/api/admin/contacts', authenticate, async (req, res) => {
+  try {
+    // Check if user is admin (you would need to add an isAdmin field to your user schema)
+    // For now, we'll just check if the user exists
+    if (!req.user) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+    
+    const messages = await Contact.find().sort({ createdAt: -1 });
+    res.json({ messages });
+  } catch (error) {
+    console.error('Get contacts error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
