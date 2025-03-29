@@ -4,11 +4,181 @@
     "description": "You have a natural curiosity about the world and how things work. Your analytical mind and attention to detail make you well-suited for scientific research and discovery.",
     "color": "rgba(255, 99, 132, 0.8)",
     "careers": [
-      { "name": "Geneticist", "path": "/mcq" },
-      { "name": "Environmental Scientist", "path": "/mcq" },
-      { "name": "Microbiologist", "path": "/mcq" },
-      { "name": "Physicist", "path": "/mcq" },
-      { "name": "Biochemist", "path": "/mcq" }
+      { 
+        "name": "Geneticist", 
+        "path": "/mcq",
+        "description": "Geneticists study genes, their functions, and their influence on the growth, development, and inheritance of traits in living organisms.",
+        "howToBecome": "To become a geneticist, you need a bachelor's degree in genetics, biology, or a related field, followed by a master's or PhD for research positions. Strong analytical and laboratory skills are essential.",
+        "afterTwelfth": "After 12th standard with science (Biology, Physics, Chemistry), pursue a B.Sc. in Genetics, Biotechnology, or Biology, then an M.Sc. and possibly a PhD in Genetics or a specialized field.",
+        "averageSalary": "₹5-12 lakhs per annum for entry-level positions, going up to ₹20-30 lakhs for experienced geneticists.",
+        "topColleges": [
+          {
+            "name": "All India Institute of Medical Sciences (AIIMS)",
+            "location": "New Delhi",
+            "website": "https://www.aiims.edu"
+          },
+          {
+            "name": "Indian Institute of Science (IISc)",
+            "location": "Bangalore",
+            "website": "https://www.iisc.ac.in"
+          },
+          {
+            "name": "Tata Institute of Fundamental Research",
+            "location": "Mumbai",
+            "website": "https://www.tifr.res.in"
+          },
+          {
+            "name": "Jawaharlal Nehru University",
+            "location": "New Delhi",
+            "website": "https://www.jnu.ac.in"
+          },
+          {
+            "name": "University of Delhi",
+            "location": "Delhi",
+            "website": "https://www.du.ac.in"
+          }
+        ]
+      },
+      { 
+        "name": "Environmental Scientist", 
+        "path": "/mcq",
+        "description": "Environmental scientists study the environment and identify ways to protect it and human health. They analyze data related to air, water, soil, and other environmental resources.",
+        "howToBecome": "Obtain a bachelor's degree in environmental science, ecology, or a related field. For advanced positions, a master's degree or PhD is often required. Fieldwork experience and analytical skills are important.",
+        "afterTwelfth": "After 12th with science (PCM or PCB), pursue a B.Sc. in Environmental Science, followed by an M.Sc. and possibly a PhD for research positions.",
+        "averageSalary": "₹4-8 lakhs per annum for entry-level positions, reaching ₹15-25 lakhs for senior environmental scientists.",
+        "topColleges": [
+          {
+            "name": "Indian Institute of Science",
+            "location": "Bangalore",
+            "website": "https://www.iisc.ac.in"
+          },
+          {
+            "name": "Jawaharlal Nehru University",
+            "location": "New Delhi",
+            "website": "https://www.jnu.ac.in"
+          },
+          {
+            "name": "TERI School of Advanced Studies",
+            "location": "New Delhi",
+            "website": "https://www.terisas.ac.in"
+          },
+          {
+            "name": "Banaras Hindu University",
+            "location": "Varanasi",
+            "website": "https://www.bhu.ac.in"
+          },
+          {
+            "name": "University of Hyderabad",
+            "location": "Hyderabad",
+            "website": "https://www.uohyd.ac.in"
+          }
+        ]
+      },
+      { 
+        "name": "Microbiologist", 
+        "path": "/mcq",
+        "description": "Microbiologists study microorganisms such as bacteria, viruses, fungi, and parasites. They research how these organisms grow, interact with the environment, and impact human health.",
+        "howToBecome": "Earn a bachelor's degree in microbiology, biology, or a related field. Advanced research positions typically require a master's or PhD. Laboratory experience and analytical skills are crucial.",
+        "afterTwelfth": "After 12th with science (PCB), pursue a B.Sc. in Microbiology or Biology, followed by an M.Sc. in Microbiology and potentially a PhD for research.",
+        "averageSalary": "₹3-7 lakhs per annum for entry-level positions, with senior positions reaching ₹15-25 lakhs.",
+        "topColleges": [
+          {
+            "name": "All India Institute of Medical Sciences",
+            "location": "New Delhi",
+            "website": "https://www.aiims.edu"
+          },
+          {
+            "name": "Indian Institute of Science",
+            "location": "Bangalore",
+            "website": "https://www.iisc.ac.in"
+          },
+          {
+            "name": "Banaras Hindu University",
+            "location": "Varanasi",
+            "website": "https://www.bhu.ac.in"
+          },
+          {
+            "name": "University of Delhi",
+            "location": "Delhi",
+            "website": "https://www.du.ac.in"
+          },
+          {
+            "name": "Manipal Academy of Higher Education",
+            "location": "Manipal",
+            "website": "https://www.manipal.edu"
+          }
+        ]
+      },
+      { 
+        "name": "Physicist", 
+        "path": "/mcq",
+        "description": "Physicists study the fundamental nature of the universe, including matter, energy, motion, and force. They conduct research, develop theories, and design experiments to test physical phenomena.",
+        "howToBecome": "Obtain a bachelor's degree in physics or a related field, followed by a master's and usually a PhD for research positions. Strong mathematical skills and critical thinking are essential.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Sc. in Physics, followed by an M.Sc. and a PhD for academic or research careers.",
+        "averageSalary": "₹4-9 lakhs per annum for entry-level positions, with experienced physicists earning ₹15-30 lakhs or more in specialized fields.",
+        "topColleges": [
+          {
+            "name": "Indian Institute of Science",
+            "location": "Bangalore",
+            "website": "https://www.iisc.ac.in"
+          },
+          {
+            "name": "Tata Institute of Fundamental Research",
+            "location": "Mumbai",
+            "website": "https://www.tifr.res.in"
+          },
+          {
+            "name": "Indian Institute of Technology Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "Indian Institute of Technology Delhi",
+            "location": "New Delhi",
+            "website": "https://www.iitd.ac.in"
+          },
+          {
+            "name": "Indian Institute of Technology Kanpur",
+            "location": "Kanpur",
+            "website": "https://www.iitk.ac.in"
+          }
+        ]
+      },
+      { 
+        "name": "Biochemist", 
+        "path": "/mcq",
+        "description": "Biochemists study the chemical and physical principles of living things and biological processes. They research how cells, proteins, and other substances function and interact.",
+        "howToBecome": "Earn a bachelor's degree in biochemistry, chemistry, or biology, followed by a master's or PhD for research positions. Laboratory skills and knowledge of chemical analysis techniques are important.",
+        "afterTwelfth": "After 12th with PCB, pursue a B.Sc. in Biochemistry or Chemistry, followed by an M.Sc. and potentially a PhD for research careers.",
+        "averageSalary": "₹4-8 lakhs per annum for entry-level positions, with experienced biochemists earning ₹15-25 lakhs.",
+        "topColleges": [
+          {
+            "name": "Indian Institute of Science",
+            "location": "Bangalore",
+            "website": "https://www.iisc.ac.in"
+          },
+          {
+            "name": "All India Institute of Medical Sciences",
+            "location": "New Delhi",
+            "website": "https://www.aiims.edu"
+          },
+          {
+            "name": "University of Delhi",
+            "location": "Delhi",
+            "website": "https://www.du.ac.in"
+          },
+          {
+            "name": "Indian Institute of Technology Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "Christian Medical College",
+            "location": "Vellore",
+            "website": "https://www.cmch-vellore.edu"
+          }
+        ]
+      }
     ]
   },
   "technology": {
@@ -16,11 +186,181 @@
     "description": "You have a logical mind and enjoy solving complex problems using technology. Your ability to think systematically makes you ideal for roles in the tech industry.",
     "color": "rgba(54, 162, 235, 0.8)",
     "careers": [
-      { "name": "Software Developer", "path": "/mcq" },
-      { "name": "Cybersecurity Analyst", "path": "/mcq" },
-      { "name": "Data Scientist", "path": "/mcq" },
-      { "name": "AI/Machine Learning Engineer", "path": "/mcq" },
-      { "name": "IT Support Specialist", "path": "/mcq" }
+      { 
+        "name": "Software Developer", 
+        "path": "/mcq",
+        "description": "Software developers design, code, test, and maintain computer programs. They create applications for computers, mobile devices, and other electronic systems.",
+        "howToBecome": "Earn a bachelor's degree in computer science, software engineering, or a related field. Many developers also pursue certifications or bootcamps. Programming skills, problem-solving abilities, and continuous learning are essential.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Computer Science or Information Technology, or a BCA followed by an MCA.",
+        "averageSalary": "₹3.5-8 lakhs per annum for entry-level positions, with experienced developers earning ₹12-40 lakhs depending on skills and company.",
+        "topColleges": [
+          {
+            "name": "Indian Institute of Technology Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "Indian Institute of Technology Delhi",
+            "location": "New Delhi",
+            "website": "https://www.iitd.ac.in"
+          },
+          {
+            "name": "Indian Institute of Technology Madras",
+            "location": "Chennai",
+            "website": "https://www.iitm.ac.in"
+          },
+          {
+            "name": "BITS Pilani",
+            "location": "Pilani",
+            "website": "https://www.bits-pilani.ac.in"
+          },
+          {
+            "name": "National Institute of Technology Karnataka",
+            "location": "Surathkal",
+            "website": "https://www.nitk.ac.in"
+          }
+        ]
+      },
+      { 
+        "name": "Cybersecurity Analyst", 
+        "path": "/mcq",
+        "description": "Cybersecurity analysts protect computer systems and networks from cyber threats. They monitor for breaches, investigate incidents, and implement security measures.",
+        "howToBecome": "Obtain a bachelor's degree in cybersecurity, computer science, or a related field. Certifications like CISSP, CEH, or CompTIA Security+ are highly valued. Strong analytical skills and ethical hacking knowledge are important.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech in Computer Science with specialization in Cybersecurity, or get a general CS degree followed by specialized certifications.",
+        "averageSalary": "₹4-10 lakhs per annum for entry-level positions, with experienced analysts earning ₹15-40 lakhs or more.",
+        "topColleges": [
+          {
+            "name": "Indian Institute of Technology Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "Indian Institute of Technology Kanpur",
+            "location": "Kanpur",
+            "website": "https://www.iitk.ac.in"
+          },
+          {
+            "name": "IIIT Hyderabad",
+            "location": "Hyderabad",
+            "website": "https://www.iiit.ac.in"
+          },
+          {
+            "name": "IIT Kharagpur",
+            "location": "Kharagpur",
+            "website": "https://www.iitkgp.ac.in"
+          },
+          {
+            "name": "Amity University",
+            "location": "Noida",
+            "website": "https://www.amity.edu"
+          }
+        ]
+      },
+      { 
+        "name": "Data Scientist", 
+        "path": "/mcq",
+        "description": "Data scientists analyze and interpret complex data to help organizations make better decisions. They use statistical methods, machine learning, and programming to extract insights from data.",
+        "howToBecome": "Earn a bachelor's degree in computer science, statistics, mathematics, or a related field, often followed by a master's or PhD. Skills in programming, statistics, and data visualization are essential.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech in Computer Science, Data Science, or Statistics, followed by an M.Tech or specialized courses in data science.",
+        "averageSalary": "₹5-12 lakhs per annum for entry-level positions, with experienced data scientists earning ₹15-40 lakhs or more.",
+        "topColleges": [
+          {
+            "name": "Indian Institute of Science",
+            "location": "Bangalore",
+            "website": "https://www.iisc.ac.in"
+          },
+          {
+            "name": "Indian Statistical Institute",
+            "location": "Kolkata",
+            "website": "https://www.isical.ac.in"
+          },
+          {
+            "name": "IIT Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "IIT Delhi",
+            "location": "New Delhi",
+            "website": "https://www.iitd.ac.in"
+          },
+          {
+            "name": "IIM Bangalore",
+            "location": "Bangalore",
+            "website": "https://www.iimb.ac.in"
+          }
+        ]
+      },
+      { 
+        "name": "AI/Machine Learning Engineer", 
+        "path": "/mcq",
+        "description": "AI/ML engineers design and implement systems that can learn from and make decisions based on data. They develop algorithms and models that enable computers to perform tasks that typically require human intelligence.",
+        "howToBecome": "Obtain a bachelor's degree in computer science, mathematics, or a related field, often followed by a master's or PhD. Strong skills in programming, mathematics, and algorithm development are essential.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech in Computer Science with specialization in AI/ML, followed by an M.Tech or specialized courses.",
+        "averageSalary": "₹6-15 lakhs per annum for entry-level positions, with experienced engineers earning ₹20-50 lakhs or more.",
+        "topColleges": [
+          {
+            "name": "IIT Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "IIT Delhi",
+            "location": "New Delhi",
+            "website": "https://www.iitd.ac.in"
+          },
+          {
+            "name": "IISc Bangalore",
+            "location": "Bangalore",
+            "website": "https://www.iisc.ac.in"
+          },
+          {
+            "name": "IIIT Hyderabad",
+            "location": "Hyderabad",
+            "website": "https://www.iiit.ac.in"
+          },
+          {
+            "name": "IIT Madras",
+            "location": "Chennai",
+            "website": "https://www.iitm.ac.in"
+          }
+        ]
+      },
+      { 
+        "name": "IT Support Specialist", 
+        "path": "/mcq",
+        "description": "IT support specialists help users troubleshoot computer and network problems. They provide technical assistance, maintain systems, and ensure technology runs smoothly.",
+        "howToBecome": "A bachelor's degree in computer science or information technology is helpful but not always required. Certifications like CompTIA A+, Network+, or Microsoft certifications are valuable. Problem-solving and communication skills are crucial.",
+        "afterTwelfth": "After 12th with any stream, pursue a BCA, B.Sc. in IT, or diploma in computer applications, along with technical certifications.",
+        "averageSalary": "₹2-5 lakhs per annum for entry-level positions, with experienced specialists earning ₹8-15 lakhs.",
+        "topColleges": [
+          {
+            "name": "University of Delhi",
+            "location": "Delhi",
+            "website": "https://www.du.ac.in"
+          },
+          {
+            "name": "Symbiosis Institute of Computer Studies and Research",
+            "location": "Pune",
+            "website": "https://www.sicsr.ac.in"
+          },
+          {
+            "name": "Christ University",
+            "location": "Bangalore",
+            "website": "https://www.christuniversity.in"
+          },
+          {
+            "name": "Manipal Academy of Higher Education",
+            "location": "Manipal",
+            "website": "https://www.manipal.edu"
+          },
+          {
+            "name": "Amity University",
+            "location": "Noida",
+            "website": "https://www.amity.edu"
+          }
+        ]
+      }
     ]
   },
   "engineering": {
@@ -28,11 +368,181 @@
     "description": "You have a practical mindset and enjoy building and designing things. Your problem-solving skills and creativity make you well-suited for engineering roles.",
     "color": "rgba(255, 206, 86, 0.8)",
     "careers": [
-      { "name": "Civil Engineer", "path": "/mcq" },
-      { "name": "Mechanical Engineer", "path": "/mcq" },
-      { "name": "Electrical Engineer", "path": "/mcq" },
-      { "name": "Chemical Engineer", "path": "/mcq" },
-      { "name": "Aerospace Engineer", "path": "/mcq" }
+      { 
+        "name": "Civil Engineer", 
+        "path": "/mcq",
+        "description": "Civil engineers design, build, and maintain infrastructure projects like buildings, roads, bridges, and water systems. They ensure projects meet safety, environmental, and regulatory requirements.",
+        "howToBecome": "Earn a bachelor's degree in civil engineering, followed by a master's for specialized roles. Obtaining a Professional Engineer (PE) license is important for career advancement.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Civil Engineering, followed by an M.Tech for specialization.",
+        "averageSalary": "₹3-7 lakhs per annum for entry-level positions, with experienced engineers earning ₹10-25 lakhs or more.",
+        "topColleges": [
+          {
+            "name": "IIT Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "IIT Delhi",
+            "location": "New Delhi",
+            "website": "https://www.iitd.ac.in"
+          },
+          {
+            "name": "IIT Madras",
+            "location": "Chennai",
+            "website": "https://www.iitm.ac.in"
+          },
+          {
+            "name": "IIT Kharagpur",
+            "location": "Kharagpur",
+            "website": "https://www.iitkgp.ac.in"
+          },
+          {
+            "name": "BITS Pilani",
+            "location": "Pilani",
+            "website": "https://www.bits-pilani.ac.in"
+          }
+        ]
+      },
+      { 
+        "name": "Mechanical Engineer", 
+        "path": "/mcq",
+        "description": "Mechanical engineers design, develop, and test mechanical devices and systems. They work on a variety of machines, tools, and products, from engines and robotics to manufacturing equipment.",
+        "howToBecome": "Obtain a bachelor's degree in mechanical engineering, with a master's helpful for specialized roles. Strong analytical, problem-solving, and creativity skills are essential.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Mechanical Engineering, followed by an M.Tech for specialization.",
+        "averageSalary": "₹3-8 lakhs per annum for entry-level positions, with experienced engineers earning ₹10-30 lakhs or more.",
+        "topColleges": [
+          {
+            "name": "IIT Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "IIT Delhi",
+            "location": "New Delhi",
+            "website": "https://www.iitd.ac.in"
+          },
+          {
+            "name": "IIT Madras",
+            "location": "Chennai",
+            "website": "https://www.iitm.ac.in"
+          },
+          {
+            "name": "IIT Kanpur",
+            "location": "Kanpur",
+            "website": "https://www.iitk.ac.in"
+          },
+          {
+            "name": "BITS Pilani",
+            "location": "Pilani",
+            "website": "https://www.bits-pilani.ac.in"
+          }
+        ]
+      },
+      { 
+        "name": "Electrical Engineer", 
+        "path": "/mcq",
+        "description": "Electrical engineers design, develop, and test electrical equipment and systems. They work on everything from power generation and transmission to communications and electronic devices.",
+        "howToBecome": "Earn a bachelor's degree in electrical engineering, with a master's helpful for specialized roles. Strong analytical and problem-solving skills, along with knowledge of mathematics and physics, are important.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Electrical Engineering, followed by an M.Tech for specialization.",
+        "averageSalary": "₹3-8 lakhs per annum for entry-level positions, with experienced engineers earning ₹10-30 lakhs or more.",
+        "topColleges": [
+          {
+            "name": "IIT Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "IIT Delhi",
+            "location": "New Delhi",
+            "website": "https://www.iitd.ac.in"
+          },
+          {
+            "name": "IIT Kanpur",
+            "location": "Kanpur",
+            "website": "https://www.iitk.ac.in"
+          },
+          {
+            "name": "IIT Madras",
+            "location": "Chennai",
+            "website": "https://www.iitm.ac.in"
+          },
+          {
+            "name": "NIT Trichy",
+            "location": "Tiruchirappalli",
+            "website": "https://www.nitt.edu"
+          }
+        ]
+      },
+      { 
+        "name": "Chemical Engineer", 
+        "path": "/mcq",
+        "description": "Chemical engineers apply principles of chemistry, physics, and mathematics to design and develop chemical manufacturing processes. They work on producing chemicals, fuels, drugs, food, and many other products.",
+        "howToBecome": "Obtain a bachelor's degree in chemical engineering, with a master's or PhD helpful for research positions. Strong analytical and problem-solving skills are essential.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Chemical Engineering, followed by an M.Tech for specialization.",
+        "averageSalary": "₹4-9 lakhs per annum for entry-level positions, with experienced engineers earning ₹12-30 lakhs or more.",
+        "topColleges": [
+          {
+            "name": "IIT Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "IIT Delhi",
+            "location": "New Delhi",
+            "website": "https://www.iitd.ac.in"
+          },
+          {
+            "name": "IIT Kharagpur",
+            "location": "Kharagpur",
+            "website": "https://www.iitkgp.ac.in"
+          },
+          {
+            "name": "IIT Madras",
+            "location": "Chennai",
+            "website": "https://www.iitm.ac.in"
+          },
+          {
+            "name": "ICT Mumbai",
+            "location": "Mumbai",
+            "website": "https://www.ictmumbai.edu.in"
+          }
+        ]
+      },
+      { 
+        "name": "Aerospace Engineer", 
+        "path": "/mcq",
+        "description": "Aerospace engineers design, develop, and test aircraft, spacecraft, satellites, and missiles. They create and improve propulsion systems, vehicle structures, and navigation systems.",
+        "howToBecome": "Earn a bachelor's degree in aerospace engineering or a related field, with a master's helpful for specialized roles. Strong analytical, mathematical, and problem-solving skills are essential.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Aerospace Engineering, followed by an M.Tech for specialization.",
+        "averageSalary": "₹5-10 lakhs per annum for entry-level positions, with experienced engineers earning ₹15-40 lakhs or more.",
+        "topColleges": [
+          {
+            "name": "IIT Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "IIT Kanpur",
+            "location": "Kanpur",
+            "website": "https://www.iitk.ac.in"
+          },
+          {
+            "name": "IIT Madras",
+            "location": "Chennai",
+            "website": "https://www.iitm.ac.in"
+          },
+          {
+            "name": "IIT Kharagpur",
+            "location": "Kharagpur",
+            "website": "https://www.iitkgp.ac.in"
+          },
+          {
+            "name": "Indian Institute of Space Science and Technology",
+            "location": "Thiruvananthapuram",
+            "website": "https://www.iist.ac.in"
+          }
+        ]
+      }
     ]
   },
   "mathematics": {
@@ -40,23 +550,53 @@
     "description": "You have a strong analytical mind and enjoy working with numbers and abstract concepts. Your attention to detail and logical thinking make you ideal for mathematical careers.",
     "color": "rgba(75, 192, 192, 0.8)",
     "careers": [
-      { "name": "Statistician", "path": "/mcq" },
-      { "name": "Actuary", "path": "/mcq" },
-      { "name": "Financial Analyst", "path": "/mcq" },
-      { "name": "Mathematician", "path": "/mcq" },
-      { "name": "Operations Research Analyst", "path": "/mcq" }
+      { 
+        "name": "Statistician", 
+        "path": "/mcq" 
+      },
+      { 
+        "name": "Actuary", 
+        "path": "/mcq" 
+      },
+      { 
+        "name": "Financial Analyst", 
+        "path": "/mcq" 
+      },
+      { 
+        "name": "Mathematician", 
+        "path": "/mcq" 
+      },
+      { 
+        "name": "Operations Research Analyst", 
+        "path": "/mcq" 
+      }
     ]
   },
-  "arts": {
-    "name": "Arts",
-    "description": "You have a creative mind and enjoy expressing yourself through various media. Your imagination and aesthetic sense make you well-suited for artistic and creative roles.",
+  "humanities": {
+    "name": "Humanities",
+    "description": "You have a deep interest in understanding human culture, history, and behavior. Your communication and critical thinking skills make you well-suited for careers in the humanities.",
     "color": "rgba(153, 102, 255, 0.8)",
     "careers": [
-      { "name": "Graphic Designer", "path": "/mcq" },
-      { "name": "Content Writer", "path": "/mcq" },
-      { "name": "Digital Marketer", "path": "/mcq" },
-      { "name": "UX/UI Designer", "path": "/mcq" },
-      { "name": "Multimedia Artist", "path": "/mcq" }
+      { 
+        "name": "Historian", 
+        "path": "/mcq" 
+      },
+      { 
+        "name": "Psychologist", 
+        "path": "/mcq" 
+      },
+      { 
+        "name": "Sociologist", 
+        "path": "/mcq" 
+      },
+      { 
+        "name": "Linguist", 
+        "path": "/mcq" 
+      },
+      { 
+        "name": "Philosopher", 
+        "path": "/mcq" 
+      }
     ]
   },
   "business": {
@@ -64,11 +604,26 @@
     "description": "You have strong organizational and interpersonal skills. Your ability to lead and make strategic decisions makes you well-suited for business and management roles.",
     "color": "rgba(255, 159, 64, 0.8)",
     "careers": [
-      { "name": "Business Analyst", "path": "/mcq" },
-      { "name": "Project Manager", "path": "/mcq" },
-      { "name": "Marketing Manager", "path": "/mcq" },
-      { "name": "Human Resources Manager", "path": "/mcq" },
-      { "name": "Entrepreneur", "path": "/mcq" }
+      { 
+        "name": "Business Analyst", 
+        "path": "/mcq" 
+      },
+      { 
+        "name": "Project Manager", 
+        "path": "/mcq" 
+      },
+      { 
+        "name": "Marketing Manager", 
+        "path": "/mcq" 
+      },
+      { 
+        "name": "Human Resources Manager", 
+        "path": "/mcq" 
+      },
+      { 
+        "name": "Entrepreneur", 
+        "path": "/mcq" 
+      }
     ]
   }
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import InterestSection from '../components/InterestSection';
 import Contact from '../components/Contact';
+import Footer from '../components/Footer';
 
 function Interests() {
   const [interestsData, setInterestsData] = useState(null);
@@ -82,6 +83,7 @@ function Interests() {
       
       <InterestSection />
       <Contact />
+      <Footer />
     </div>
   );
 }
