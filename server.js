@@ -19,7 +19,7 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/career
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: ['http://localhost:5173', 'http://localhost:5174'],
   credentials: true
 }));
 
@@ -64,10 +64,29 @@ const contactSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
+// Define Session Schema
+const sessionSchema = new mongoose.Schema({
+  mentorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  mentorName: { type: String, required: true },
+  studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  studentName: { type: String, required: true },
+  sessionDate: { type: String, required: true },
+  sessionTime: { type: String, required: true },
+  sessionType: { type: String, enum: ['video', 'audio', 'chat'], required: true },
+  notes: { type: String },
+  price: { type: Number, required: true },
+  paymentId: { type: String, required: true },
+  status: { type: String, enum: ['pending', 'confirmed', 'completed', 'cancelled', 'rescheduled'], default: 'pending' },
+  rating: { type: Number, min: 1, max: 5 },
+  feedback: { type: String },
+  createdAt: { type: Date, default: Date.now }
+});
+
 // Create models
 const User = mongoose.model('User', userSchema);
 const Assessment = mongoose.model('Assessment', assessmentSchema);
 const Contact = mongoose.model('Contact', contactSchema);
+const Session = mongoose.model('Session', sessionSchema);
 
 // Authentication middleware
 const authenticate = async (req, res, next) => {
@@ -286,6 +305,140 @@ app.get('/api/admin/contacts', authenticate, async (req, res) => {
   } catch (error) {
     console.error('Get contacts error:', error);
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Create a new session booking
+app.post('/api/sessions', authenticate, async (req, res) => {
+  try {
+    console.log('Received session booking request:', req.body);
+    console.log('Authenticated user:', { id: req.user._id, name: `${req.user.firstName} ${req.user.lastName}` });
+    
+    const {
+      mentorId,
+      mentorName,
+      sessionDate,
+      sessionTime,
+      sessionType,
+      notes,
+      price,
+      paymentId
+    } = req.body;
+    
+    // Validate mentorId is a valid MongoDB ObjectId
+    let validMentorId;
+    try {
+      if (mentorId && mongoose.Types.ObjectId.isValid(mentorId)) {
+        validMentorId = new mongoose.Types.ObjectId(mentorId);
+      } else {
+        // For demo purposes, allow non-MongoDB IDs but convert them
+        console.warn('Invalid mentorId received:', mentorId);
+        validMentorId = new mongoose.Types.ObjectId('000000000000000000000000'); // Use a placeholder ObjectId
+      }
+    } catch (error) {
+      console.error('Error validating mentorId:', error);
+      validMentorId = new mongoose.Types.ObjectId('000000000000000000000000'); // Use a placeholder ObjectId
+    }
+    
+    const newSession = new Session({
+      mentorId: validMentorId,
+      mentorName,
+      studentId: req.user._id,
+      studentName: `${req.user.firstName} ${req.user.lastName}`,
+      sessionDate,
+      sessionTime,
+      sessionType,
+      notes,
+      price,
+      paymentId,
+      status: 'confirmed'
+    });
+    
+    console.log('Saving session to database:', newSession);
+    await newSession.save();
+    
+    res.status(201).json({
+      message: 'Session booked successfully',
+      session: newSession
+    });
+  } catch (error) {
+    console.error('Session booking error:', error);
+    res.status(500).json({ message: 'Failed to book session. Please try again later.' });
+  }
+});
+
+// Get user's sessions (as student)
+app.get('/api/sessions', authenticate, async (req, res) => {
+  try {
+    const sessions = await Session.find({ studentId: req.user._id })
+      .sort({ createdAt: -1 });
+    
+    res.json({ sessions });
+  } catch (error) {
+    console.error('Get sessions error:', error);
+    res.status(500).json({ message: 'Failed to fetch sessions. Please try again later.' });
+  }
+});
+
+// Get user's sessions (as mentor)
+app.get('/api/mentor/sessions', authenticate, async (req, res) => {
+  try {
+    // Check if the user is a mentor
+    if (!req.user.isMentor) {
+      return res.status(403).json({ message: 'Access denied. User is not a mentor.' });
+    }
+    
+    const sessions = await Session.find({ mentorId: req.user._id })
+      .sort({ createdAt: -1 });
+    
+    res.json({ sessions });
+  } catch (error) {
+    console.error('Get mentor sessions error:', error);
+    res.status(500).json({ message: 'Failed to fetch sessions. Please try again later.' });
+  }
+});
+
+// Update a session (for rescheduling or rating)
+app.put('/api/sessions/:sessionId', authenticate, async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    const updates = req.body;
+    
+    // Validate sessionId is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(sessionId)) {
+      return res.status(400).json({ message: 'Invalid session ID format' });
+    }
+    
+    // Find the session
+    const session = await Session.findById(sessionId);
+    
+    if (!session) {
+      return res.status(404).json({ message: 'Session not found' });
+    }
+    
+    // Make sure the user is either the student or mentor of the session
+    if (session.studentId.toString() !== req.user._id.toString() && 
+        (session.mentorId ? session.mentorId.toString() !== req.user._id.toString() : true)) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+    
+    // Update allowed fields only
+    const allowedUpdates = ['sessionDate', 'sessionTime', 'status', 'rating', 'feedback'];
+    Object.keys(updates).forEach(key => {
+      if (allowedUpdates.includes(key)) {
+        session[key] = updates[key];
+      }
+    });
+    
+    await session.save();
+    
+    res.json({
+      message: 'Session updated successfully',
+      session
+    });
+  } catch (error) {
+    console.error('Update session error:', error);
+    res.status(500).json({ message: 'Failed to update session. Please try again later.' });
   }
 });
 

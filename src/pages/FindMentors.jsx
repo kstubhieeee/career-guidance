@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import mentorData from '../data/mentors.json';
 import Footer from '../components/Footer';
+import MentorBookingModal from '../components/MentorBookingModal';
+import { toast, Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function FindMentors() {
   const [mentors, setMentors] = useState([]);
@@ -8,6 +12,15 @@ function FindMentors() {
   const [searchTerm, setSearchTerm] = useState('');
   const [priceFilter, setPriceFilter] = useState('all');
   const [ratingFilter, setRatingFilter] = useState('all');
+  const [selectedMentor, setSelectedMentor] = useState(null);
+  const { currentUser } = useAuth();
+  
+  // Add state for environment variables
+  const [envVars] = useState({
+    razorpayKeyId: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_ilZnoyJIDqrWYR'
+  });
+
+  const navigate = useNavigate();
 
   // Fallback image - base64 encoded simple placeholder (light gray with person icon)
   const fallbackImageBase64 = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjUwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iIzM0NDk2NCIvPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjE3MCIgcj0iNzAiIGZpbGw9IiM2NTc3OWEiLz48cmVjdCB4PSIxMDAiIHk9IjI3MCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxNTAiIHJ4PSI1MCIgZmlsbD0iIzY1Nzc5YSIvPjx0ZXh0IHg9IjIwMCIgeT0iNDUwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5NZW50b3I8L3RleHQ+PC9zdmc+';
@@ -65,6 +78,9 @@ function FindMentors() {
       }
     });
     
+    // Save mentors to localStorage for rating system to use
+    localStorage.setItem('mentors', JSON.stringify(mentorsWithPhotos));
+    
     setMentors(mentorsWithPhotos);
     setFilteredMentors(mentorsWithPhotos);
   }, []);
@@ -114,11 +130,45 @@ function FindMentors() {
     setRatingFilter(e.target.value);
   };
 
-  console.log("Rendering FindMentors with", filteredMentors.length, "mentors");
+  const handleBookSession = (mentor) => {
+    if (!currentUser) {
+      toast.error('Please log in to book a session with a mentor');
+      navigate('/login');
+      return;
+    }
+    
+    setSelectedMentor(mentor);
+    // Load Razorpay script if not already loaded
+    if (!window.Razorpay) {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  };
+
+  const handleBookingSuccess = (booking) => {
+    setSelectedMentor(null);
+    toast.success(
+      <div>
+        Booking confirmed with {booking.mentorName}!
+        <button 
+          onClick={() => navigate('/my-bookings')}
+          className="ml-2 underline text-primary-light hover:text-primary"
+        >
+          View Bookings
+        </button>
+      </div>
+    );
+  };
+
+  const closeBookingModal = () => {
+    setSelectedMentor(null);
+  };
 
   return (
     <>
-      <div className="bg-darkblue min-h-screen py-12">
+      <div className={`bg-darkblue min-h-screen py-12 ${selectedMentor ? 'blur-sm pointer-events-none overflow-hidden' : ''}`}>
         <div className="container mx-auto px-4">
           <h1 className="text-4xl font-bold text-white mb-2 text-center">Find Your Perfect Mentor</h1>
           <p className="text-gray-300 text-center mb-10 max-w-2xl mx-auto">Connect with experienced professionals who can guide you through your career journey</p>
@@ -152,10 +202,10 @@ function FindMentors() {
                   style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffffff'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.5em 1.5em', paddingRight: '3rem' }}
                 >
                   <option value="all">All Prices</option>
-                  <option value="0-60">Under $60</option>
-                  <option value="60-80">$60 - $80</option>
-                  <option value="80-100">$80 - $100</option>
-                  <option value="100">$100+</option>
+                  <option value="0-60">Under ₹60</option>
+                  <option value="60-80">₹60 - ₹80</option>
+                  <option value="80-100">₹80 - ₹100</option>
+                  <option value="100">₹100+</option>
                 </select>
               </div>
               
@@ -224,9 +274,12 @@ function FindMentors() {
                     <div className="mt-auto">
                       <div className="flex justify-between items-center pt-4 border-t border-gray-700">
                         <div className="text-white font-bold text-xl">
-                          ${mentor.price}<span className="text-gray-400 font-normal text-sm">/session</span>
+                          ₹{mentor.price}<span className="text-gray-400 font-normal text-sm">/session</span>
                         </div>
-                        <button className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg transition-colors font-semibold shadow-md hover:shadow-lg flex items-center">
+                        <button 
+                          onClick={() => handleBookSession(mentor)}
+                          className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg transition-colors font-semibold shadow-md hover:shadow-lg flex items-center"
+                        >
                           <span>Book Session</span>
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -249,6 +302,34 @@ function FindMentors() {
           </div>
         </div>
       </div>
+
+      {/* Booking Modal */}
+      {selectedMentor && (
+        <MentorBookingModal 
+          mentor={selectedMentor} 
+          onClose={closeBookingModal}
+          onSuccess={handleBookingSuccess}
+        />
+      )}
+      
+      {/* Toast notifications */}
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: '#333',
+            color: '#fff',
+            borderRadius: '8px'
+          },
+          success: {
+            iconTheme: {
+              primary: '#6366f1',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
+      
       <Footer />
     </>
   );

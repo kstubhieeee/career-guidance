@@ -43,14 +43,14 @@ function Navbar() {
             {!currentUser && (
               <>
                 <Link className="text-white hover:text-primary transition-colors" to="/interests">Interests</Link>
-                <Link className="text-white hover:text-primary transition-colors" to="/mcq">Assessment</Link>
+                <Link className="text-white hover:text-primary transition-colors" to="/assessment">Assessment</Link>
               </>
             )}
             
             {currentUser && !isMentor && (
               <>
                 <Link className="text-white hover:text-primary transition-colors" to="/interests">Interests</Link>
-                <Link className="text-white hover:text-primary transition-colors" to="/mcq">Assessment</Link>
+                <Link className="text-white hover:text-primary transition-colors" to="/assessment">Assessment</Link>
               </>
             )}
             
@@ -103,7 +103,7 @@ function Navbar() {
                   </Link>
                   <Link 
                     className="text-white hover:text-primary transition-colors" 
-                    to="/mcq"
+                    to="/assessment"
                     onClick={() => setIsOpen(false)}
                   >
                     Assessment
@@ -123,7 +123,7 @@ function Navbar() {
                   </Link>
                   <Link 
                     className="text-white hover:text-primary transition-colors" 
-                    to="/mcq"
+                    to="/assessment"
                     onClick={() => setIsOpen(false)}
                   >
                     Assessment
@@ -160,15 +160,27 @@ function Navbar() {
               
               {/* Authentication links */}
               {currentUser ? (
-                <button 
-                  className="text-white hover:text-primary transition-colors text-left" 
-                  onClick={() => {
-                    setIsOpen(false);
-                    useAuth().logout();
-                  }}
-                >
-                  Logout
-                </button>
+                <div className="p-2">
+                  <Link to="/profile" className="block py-2 px-4 text-white hover:bg-secondary-dark rounded-lg transition-colors">
+                    Profile
+                  </Link>
+                  <Link to="/my-bookings" className="block py-2 px-4 text-white hover:bg-secondary-dark rounded-lg transition-colors">
+                    My Bookings
+                  </Link>
+                  <Link to="/session-history" className="block py-2 px-4 text-white hover:bg-secondary-dark rounded-lg transition-colors">
+                    Session History
+                  </Link>
+                  <hr className="border-gray-700 my-1" />
+                  <button 
+                    onClick={() => {
+                      setIsOpen(false);
+                      useAuth().logout();
+                    }}
+                    className="w-full text-left py-2 px-4 text-white hover:bg-secondary-dark rounded-lg transition-colors"
+                  >
+                    Log Out
+                  </button>
+                </div>
               ) : (
                 <>
                   

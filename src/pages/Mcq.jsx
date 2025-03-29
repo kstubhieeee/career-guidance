@@ -1,79 +1,60 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { useAuth } from '../context/AuthContext';
+import { useAssessment } from '../context/AssessmentContext.jsx';
 
 // Register Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Mcq() {
-  const { saveAssessment } = useAuth();
-  const [questionsData, setQuestionsData] = useState(null);
-  const [careerFields, setCareerFields] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [scores, setScores] = useState({
-    Science: 0,
-    Technology: 0,
-    Engineering: 0,
-    Mathematics: 0
-  });
-  const [showResults, setShowResults] = useState(false);
-  const [answeredQuestions, setAnsweredQuestions] = useState([]);
-  const [progress, setProgress] = useState(0);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [savingResults, setSavingResults] = useState(false);
-  const [saveError, setSaveError] = useState(null);
-
-  useEffect(() => {
-    // Load questions data
-    Promise.all([
-      import('../data/questions.json'),
-      import('../data/careerFields.json')
-    ])
-      .then(([questionsModule, careerFieldsModule]) => {
-        setQuestionsData(questionsModule);
-        setCareerFields(careerFieldsModule);
-        setAnsweredQuestions(Array(questionsModule.questions.length).fill(false));
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error loading data:', error);
-        setLoading(false);
-      });
-  }, []);
+  const { currentUser } = useAuth();
+  const { 
+    loading, 
+    questions, 
+    currentQuestion, 
+    setCurrentQuestion, 
+    scores,
+    answeredQuestions,
+    showResults,
+    aiAnalysis,
+    error,
+    isGeneratingAnalysis,
+    handleOptionSelect,
+    resetAssessment,
+    getProgress
+  } = useAssessment();
 
   if (loading) {
     return (
       <div className="min-h-screen bg-darkblue py-12 flex justify-center items-center">
         <div className="text-white text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-xl">Loading assessment...</p>
+          <p className="text-xl">Loading AI-powered assessment questions...</p>
+          <p className="text-sm text-gray-400 mt-2">This may take a moment</p>
         </div>
       </div>
     );
   }
 
-  if (!questionsData || !careerFields) {
+  if (error) {
     return (
       <div className="min-h-screen bg-darkblue py-12 flex justify-center items-center">
         <div className="text-white text-center">
-          <p className="text-xl">Error loading assessment data. Please try again later.</p>
+          <div className="bg-red-500 bg-opacity-20 border border-red-500 p-4 rounded-lg mb-4">
+            <p className="text-xl">{error}</p>
+          </div>
+          <Link 
+            to="/assessment" 
+            className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors mt-4 inline-block"
+          >
+            Back to Assessment
+          </Link>
         </div>
       </div>
     );
   }
-
-  const { questions, options, optionCategories } = questionsData;
-
-  // Display options without categories
-  const displayOptions = options.map(optionSet => 
-    optionSet.map(option => {
-      // Remove the category in parentheses
-      return option.replace(/\s*\([^)]*\)\s*$/, '');
-    })
-  );
 
   // Prepare chart data
   const chartData = {
@@ -118,127 +99,54 @@ function Mcq() {
             const label = context.label || '';
             const value = context.raw || 0;
             const total = context.dataset.data.reduce((a, b) => a + b, 0);
-            const percentage = Math.round((value / total) * 100);
-            return `${label}: ${value} (${percentage}%)`;
+            const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+            return `${label}: ${value} points (${percentage}%)`;
           }
         }
       }
     }
   };
 
-  const handleOptionClick = (option, index) => {
-    if (answeredQuestions[currentQuestion]) return;
-
-    setSelectedOption(index);
-
-    // Update scores based on the selected option's category
-    const newScores = { ...scores };
-    const category = optionCategories[currentQuestion][index];
-    newScores[category] += 1;
-    setScores(newScores);
-
-    // Mark question as answered after a short delay
-    setTimeout(() => {
-      const newAnsweredQuestions = [...answeredQuestions];
-      newAnsweredQuestions[currentQuestion] = true;
-      setAnsweredQuestions(newAnsweredQuestions);
-
-      // Move to next question or show results after a delay
-      setTimeout(() => {
-        if (currentQuestion < questions.length - 1) {
-          setCurrentQuestion(currentQuestion + 1);
-          setProgress(((currentQuestion + 1) / questions.length) * 100);
-          setSelectedOption(null);
-        } else {
-          setShowResults(true);
-          saveAssessmentResults();
+  const getOptionClassName = (qIndex, oIndex) => {
+    // Current question styles
+    if (qIndex === currentQuestion) {
+      if (answeredQuestions[qIndex]) {
+        // After answering
+        const isSelectedCategory = questions[qIndex].categories[oIndex];
+        if (isSelectedCategory) {
+          return "bg-primary text-white border border-primary-dark";
         }
-      }, 500);
-    }, 500);
-  };
-
-  const saveAssessmentResults = async () => {
-    const recommendedField = getRecommendedCareer().field;
-    
-    try {
-      setSavingResults(true);
-      setSaveError(null);
+        return "bg-darkblue-light border border-gray-700 opacity-70";
+      }
       
-      await saveAssessment({
-        scores,
-        recommendedField
-      });
-    } catch (error) {
-      console.error('Error saving assessment:', error);
-      setSaveError('Failed to save your assessment results. Your results are still displayed below.');
-    } finally {
-      setSavingResults(false);
+      // Before answering - hover state
+      return "bg-darkblue-light border border-gray-700 hover:bg-darkblue-dark transform hover:-translate-y-1 hover:shadow-lg";
     }
+    
+    // Other questions
+    return "bg-darkblue-light border border-gray-700"; 
   };
 
   const handlePrevClick = () => {
     if (currentQuestion > 0) {
       setCurrentQuestion(currentQuestion - 1);
-      setProgress(((currentQuestion - 1) / questions.length) * 100);
     }
   };
 
   const handleNextClick = () => {
     if (currentQuestion < questions.length - 1 && answeredQuestions[currentQuestion]) {
       setCurrentQuestion(currentQuestion + 1);
-      setProgress(((currentQuestion + 1) / questions.length) * 100);
-      setSelectedOption(null);
     }
   };
 
-  const handlePageNumberClick = (pageNumber) => {
-    setCurrentQuestion(pageNumber);
-    setProgress(((pageNumber) / questions.length) * 100);
-    setSelectedOption(null);
-  };
-
-  const resetAssessment = () => {
-    setCurrentQuestion(0);
-    setScores({
-      Science: 0,
-      Technology: 0,
-      Engineering: 0,
-      Mathematics: 0
-    });
-    setShowResults(false);
-    setAnsweredQuestions(Array(questions.length).fill(false));
-    setProgress(0);
-    setSelectedOption(null);
-    setSaveError(null);
-  };
-
-  const getRecommendedCareer = () => {
-    const maxScore = Math.max(scores.Science, scores.Technology, scores.Engineering, scores.Mathematics);
-    
-    if (maxScore === scores.Science) {
-      return careerFields.science;
-    } else if (maxScore === scores.Technology) {
-      return careerFields.technology;
-    } else if (maxScore === scores.Engineering) {
-      return careerFields.engineering;
-    } else {
-      return careerFields.mathematics;
+  const getCategoryColor = (category) => {
+    switch(category) {
+      case 'Science': return 'rgba(255, 99, 132, 0.8)';
+      case 'Technology': return 'rgba(54, 162, 235, 0.8)';
+      case 'Engineering': return 'rgba(255, 206, 86, 0.8)';
+      case 'Mathematics': return 'rgba(75, 192, 192, 0.8)';
+      default: return 'rgba(153, 102, 255, 0.8)';
     }
-  };
-
-  const getOptionClassName = (index) => {
-    if (answeredQuestions[currentQuestion]) {
-      if (selectedOption === index) {
-        return "bg-primary text-white border border-primary-dark";
-      }
-      return "bg-darkblue-light border border-gray-700 opacity-70";
-    }
-    
-    if (selectedOption === index) {
-      return "bg-primary-light text-white border border-primary";
-    }
-    
-    return "bg-darkblue-light border border-gray-700 hover:bg-darkblue-dark";
   };
 
   return (
@@ -252,10 +160,10 @@ function Mcq() {
               <div className="w-32 bg-gray-700 rounded-full h-2.5">
                 <div 
                   className="bg-primary h-2.5 rounded-full transition-all duration-500" 
-                  style={{ width: `${progress}%` }}
+                  style={{ width: `${getProgress()}%` }}
                 ></div>
               </div>
-              <div className="text-sm text-gray-300">{Math.round(progress)}%</div>
+              <div className="text-sm text-gray-300">{Math.round(getProgress())}%</div>
             </div>
           </div>
           
@@ -270,19 +178,19 @@ function Mcq() {
                   </div>
                   
                   <h2 className="text-xl font-semibold text-white mb-6">
-                    {questions[currentQuestion]}
+                    {questions[currentQuestion]?.question}
                   </h2>
                   
                   <div className="space-y-4">
-                    {displayOptions[currentQuestion].map((option, index) => (
+                    {questions[currentQuestion]?.options.map((option, index) => (
                       <button
                         key={index}
-                        onClick={() => handleOptionClick(option, index)}
+                        onClick={() => handleOptionSelect(currentQuestion, index)}
                         disabled={answeredQuestions[currentQuestion]}
-                        className={`w-full text-left p-5 rounded-lg transition-all duration-300 text-white ${getOptionClassName(index)} hover:shadow-lg transform hover:-translate-y-1`}
+                        className={`w-full text-left p-5 rounded-lg transition-all duration-300 text-white ${getOptionClassName(currentQuestion, index)}`}
                       >
                         <div className="flex items-center">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${selectedOption === index ? 'bg-white text-primary' : 'bg-darkblue-dark text-white'}`}>
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center mr-3 bg-darkblue-dark text-white">
                             {option.charAt(0)}
                           </div>
                           <span className="text-lg">{option.substring(2)}</span>
@@ -305,24 +213,18 @@ function Mcq() {
                     <i className="fas fa-arrow-left mr-2"></i> Previous
                   </button>
                   
-                  <div className="hidden md:flex flex-wrap justify-center">
-                    {Array.from({ length: Math.min(5, questions.length - currentQuestion) }, (_, i) => {
-                      const pageStart = Math.floor(currentQuestion / 5) * 5;
-                      return pageStart + i < questions.length ? pageStart + i : null;
-                    }).filter(Boolean).map((num) => (
-                      <button
-                        key={num}
-                        onClick={() => handlePageNumberClick(num)}
-                        className={`w-10 h-10 mx-1 rounded-full flex items-center justify-center transition-all duration-300 ${
-                          currentQuestion === num
-                            ? 'bg-primary text-white scale-110'
-                            : answeredQuestions[num]
-                              ? 'bg-gray-700 text-white'
-                              : 'bg-darkblue border border-gray-600 text-white hover:bg-darkblue-dark'
+                  <div className="hidden md:flex space-x-2">
+                    {questions.map((_, idx) => (
+                      <div
+                        key={idx}
+                        className={`w-3 h-3 rounded-full ${
+                          idx === currentQuestion 
+                            ? 'bg-primary' 
+                            : answeredQuestions[idx]
+                              ? 'bg-gray-400' 
+                              : 'bg-gray-700'
                         }`}
-                      >
-                        {num + 1}
-                      </button>
+                      ></div>
                     ))}
                   </div>
                   
@@ -338,23 +240,46 @@ function Mcq() {
                     Next <i className="fas fa-arrow-right ml-2"></i>
                   </button>
                 </div>
+                
+                {/* STEM field legend */}
+                <div className="mt-8 p-4 bg-darkblue rounded-lg border border-gray-700">
+                  <h3 className="text-white font-medium mb-2">Answer Key:</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: getCategoryColor('Science') }}></div>
+                      <span className="text-gray-300 text-sm">Science</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: getCategoryColor('Technology') }}></div>
+                      <span className="text-gray-300 text-sm">Technology</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: getCategoryColor('Engineering') }}></div>
+                      <span className="text-gray-300 text-sm">Engineering</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 rounded-full mr-2" style={{ backgroundColor: getCategoryColor('Mathematics') }}></div>
+                      <span className="text-gray-300 text-sm">Mathematics</span>
+                    </div>
+                  </div>
+                </div>
               </>
             ) : (
               <div className="text-center py-8">
                 <h2 className="text-3xl font-bold text-white mb-6">Your Career Assessment Results</h2>
                 
-                {savingResults && (
+                {isGeneratingAnalysis && (
                   <div className="bg-blue-500 bg-opacity-20 border border-blue-500 text-white p-3 rounded-md mb-6">
                     <div className="flex items-center justify-center">
                       <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-3"></div>
-                      <p>Saving your assessment results...</p>
+                      <p>AI is analyzing your results...</p>
                     </div>
                   </div>
                 )}
                 
-                {saveError && (
+                {error && (
                   <div className="bg-red-500 bg-opacity-20 border border-red-500 text-white p-3 rounded-md mb-6">
-                    <p>{saveError}</p>
+                    <p>{error}</p>
                   </div>
                 )}
                 
@@ -369,25 +294,18 @@ function Mcq() {
                   
                   {/* Score Details */}
                   <div className="bg-darkblue p-6 rounded-lg border border-gray-700">
-                    <h3 className="text-xl font-bold text-white mb-4">Detailed Scores</h3>
+                    <h3 className="text-xl font-bold text-white mb-4">Your STEM Scores</h3>
                     <div className="space-y-4">
                       {Object.entries(scores).map(([field, score]) => {
-                        const percentage = Math.round((score / questions.length) * 100);
-                        let bgColor;
-                        
-                        switch(field) {
-                          case 'Science': bgColor = 'rgba(255, 99, 132, 0.8)'; break;
-                          case 'Technology': bgColor = 'rgba(54, 162, 235, 0.8)'; break;
-                          case 'Engineering': bgColor = 'rgba(255, 206, 86, 0.8)'; break;
-                          case 'Mathematics': bgColor = 'rgba(75, 192, 192, 0.8)'; break;
-                          default: bgColor = 'rgba(153, 102, 255, 0.8)';
-                        }
+                        const totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
+                        const percentage = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
+                        const bgColor = getCategoryColor(field);
                         
                         return (
                           <div key={field} className="text-left">
                             <div className="flex justify-between mb-1">
                               <span className="text-white font-medium">{field}</span>
-                              <span className="text-white">{score}/{questions.length} ({percentage}%)</span>
+                              <span className="text-white">{score} points ({percentage}%)</span>
                             </div>
                             <div className="w-full bg-gray-700 rounded-full h-2.5">
                               <div 
@@ -402,44 +320,67 @@ function Mcq() {
                   </div>
                 </div>
                 
-                {(() => {
-                  const recommendation = getRecommendedCareer();
-                  return (
+                {aiAnalysis && (
+                  <>
                     <div className="bg-darkblue p-6 rounded-lg border border-gray-700 mb-8">
                       <div className="flex items-center justify-center mb-4">
-                        <div className="w-16 h-16 rounded-full mr-4" style={{ backgroundColor: recommendation.color }}></div>
+                        <div className="w-16 h-16 rounded-full mr-4" style={{ backgroundColor: getCategoryColor(aiAnalysis.primaryField) }}></div>
                         <h3 className="text-2xl font-bold text-primary">
-                          Your Recommended Career Path: {recommendation.name}
+                          Recommended Career Path: {aiAnalysis.primaryField}
+                          {aiAnalysis.secondaryField && (
+                            <span className="block text-lg text-gray-300 mt-1">
+                              with {aiAnalysis.secondaryField} as secondary focus
+                            </span>
+                          )}
                         </h3>
                       </div>
                       
-                      <p className="text-gray-300 mb-6 text-lg">
-                        {recommendation.description}
+                      <p className="text-gray-300 mb-6 text-lg text-left">
+                        {aiAnalysis.analysis}
                       </p>
                       
                       <div className="mb-6">
-                        <h4 className="text-xl font-semibold text-white mb-3">Recommended Careers:</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                          {recommendation.careers.map((career, index) => (
+                        <h4 className="text-xl font-semibold text-white mb-3 text-left">Recommended Careers:</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {aiAnalysis.recommendedCareers.map((career, index) => (
                             <div 
                               key={index}
-                              className="bg-darkblue-dark p-4 rounded-lg border border-gray-700 text-white text-center hover:shadow-lg transition-all duration-300 hover:transform hover:scale-105"
+                              className="bg-darkblue-dark p-5 rounded-lg border border-gray-700 text-left hover:shadow-lg transition-all duration-300"
                             >
-                              {career.name}
+                              <h5 className="text-primary font-bold text-lg mb-2">{career.title}</h5>
+                              <p className="text-gray-300 mb-3">{career.description}</p>
+                              <div className="mb-3">
+                                <span className="text-white font-medium">Education Path:</span>
+                                <p className="text-gray-300">{career.educationPath}</p>
+                              </div>
+                              <div>
+                                <span className="text-white font-medium">Key Skills:</span>
+                                <div className="flex flex-wrap gap-2 mt-1">
+                                  {career.keySkills?.map((skill, i) => (
+                                    <span key={i} className="bg-darkblue px-2 py-1 rounded text-gray-300 text-xs border border-gray-600">{skill}</span>
+                                  ))}
+                                </div>
+                              </div>
                             </div>
                           ))}
                         </div>
                       </div>
                       
-                      <div className="text-gray-300">
-                        <p>
-                          These career suggestions are based on your responses to the assessment questions. 
-                          Consider exploring these options further to find the best fit for your interests and skills.
-                        </p>
-                      </div>
+                      {aiAnalysis.skillsToFocus && (
+                        <div className="text-left">
+                          <h4 className="text-xl font-semibold text-white mb-3">Skills to Develop:</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {aiAnalysis.skillsToFocus.map((skill, index) => (
+                              <span key={index} className="bg-primary bg-opacity-20 text-primary px-3 py-2 rounded-full text-sm font-medium">
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  );
-                })()}
+                  </>
+                )}
                 
                 <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4">
                   <button

@@ -12,6 +12,15 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        // First check if we have user data in localStorage
+        const savedUser = localStorage.getItem('currentUser');
+        
+        if (savedUser) {
+          setCurrentUser(JSON.parse(savedUser));
+          setLoading(false);
+        }
+        
+        // Always verify with the server even if we have local data
         const response = await fetch('http://localhost:3250/api/user', {
           method: 'GET',
           credentials: 'include',
@@ -19,13 +28,22 @@ export const AuthProvider = ({ children }) => {
 
         if (response.ok) {
           const data = await response.json();
+          
+          // Update localStorage and state if server data is available
+          localStorage.setItem('currentUser', JSON.stringify(data.user));
           setCurrentUser(data.user);
         } else {
+          // Clear localStorage if server doesn't recognize the user
+          localStorage.removeItem('currentUser');
           setCurrentUser(null);
         }
       } catch (err) {
         console.error('Error fetching user:', err);
-        setCurrentUser(null);
+        // Don't clear localStorage on network errors to prevent logout
+        // when server is temporarily unavailable
+        if (!localStorage.getItem('currentUser')) {
+          setCurrentUser(null);
+        }
       } finally {
         setLoading(false);
       }
@@ -52,6 +70,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.message || 'Registration failed');
       }
 
+      localStorage.setItem('currentUser', JSON.stringify(data.user));
       setCurrentUser(data.user);
       return data;
     } catch (err) {
@@ -78,6 +97,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.message || 'Login failed');
       }
 
+      localStorage.setItem('currentUser', JSON.stringify(data.user));
       setCurrentUser(data.user);
       return data;
     } catch (err) {
@@ -99,6 +119,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.message || 'Logout failed');
       }
 
+      localStorage.removeItem('currentUser');
       setCurrentUser(null);
     } catch (err) {
       setError(err.message);

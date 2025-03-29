@@ -79,6 +79,22 @@ function UserMenu() {
             <i className="fas fa-user-circle mr-2"></i> Dashboard
           </Link>
           
+          <Link
+            to="/my-bookings"
+            className="block px-4 py-2 text-sm text-white hover:bg-darkblue-dark"
+            onClick={() => setIsOpen(false)}
+          >
+            <i className="fas fa-calendar-check mr-2"></i> My Bookings
+          </Link>
+          
+          <Link
+            to="/session-history"
+            className="block px-4 py-2 text-sm text-white hover:bg-darkblue-dark"
+            onClick={() => setIsOpen(false)}
+          >
+            <i className="fas fa-history mr-2"></i> Session History
+          </Link>
+          
           {!currentUser.isMentor && (
             <Link
               to="/mcq"

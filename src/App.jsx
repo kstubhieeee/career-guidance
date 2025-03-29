@@ -8,8 +8,12 @@ import Mcq from './pages/Mcq';
 import Dashboard from './pages/Dashboard';
 import MentorDashboard from './pages/MentorDashboard';
 import FindMentors from './pages/FindMentors';
+import MyBookings from './pages/MyBookings';
+import SessionHistory from './pages/SessionHistory';
+import Assesment from './pages/assesment';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
+import { AssessmentProvider } from './context/AssessmentContext.jsx';
 
 function AppContent() {
   const location = useLocation();
@@ -22,9 +26,12 @@ function AppContent() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/interests" element={<Interests />} />
+        <Route path="/assessment" element={<Assesment />} />
         <Route path="/mcq" element={
           <ProtectedRoute>
-            <Mcq />
+            <AssessmentProvider>
+              <Mcq />
+            </AssessmentProvider>
           </ProtectedRoute>
         } />
         <Route path="/dashboard" element={
@@ -38,6 +45,16 @@ function AppContent() {
           </ProtectedRoute>
         } />
         <Route path="/find-mentors" element={<FindMentors />} />
+        <Route path="/my-bookings" element={
+          <ProtectedRoute>
+            <MyBookings />
+          </ProtectedRoute>
+        } />
+        <Route path="/session-history" element={
+          <ProtectedRoute>
+            <SessionHistory />
+          </ProtectedRoute>
+        } />
       </Routes>
     </div>
   );
