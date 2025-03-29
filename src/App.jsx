@@ -7,6 +7,7 @@ import Interests from './pages/Interests';
 import Mcq from './pages/Mcq';
 import Dashboard from './pages/Dashboard';
 import MentorDashboard from './pages/MentorDashboard';
+import FindMentors from './pages/FindMentors';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 
@@ -36,6 +37,7 @@ function AppContent() {
             <MentorDashboard />
           </ProtectedRoute>
         } />
+        <Route path="/find-mentors" element={<FindMentors />} />
       </Routes>
     </div>
   );

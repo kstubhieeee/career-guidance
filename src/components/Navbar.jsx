@@ -37,6 +37,7 @@ function Navbar() {
           {/* Desktop menu */}
           <div className="hidden md:flex items-center space-x-8">
             <Link className="text-white hover:text-primary transition-colors" to="/">Home</Link>
+            <Link className="text-white hover:text-primary transition-colors" to="/find-mentors">Find Mentors</Link>
             
             {/* Different navigation links based on user type */}
             {!currentUser && (
@@ -50,7 +51,6 @@ function Navbar() {
               <>
                 <Link className="text-white hover:text-primary transition-colors" to="/interests">Interests</Link>
                 <Link className="text-white hover:text-primary transition-colors" to="/mcq">Assessment</Link>
-                <Link className="text-white hover:text-primary transition-colors" to="/find-mentors">Find Mentors</Link>
               </>
             )}
             
@@ -81,6 +81,14 @@ function Navbar() {
                 onClick={() => setIsOpen(false)}
               >
                 Home
+              </Link>
+              
+              <Link 
+                className="text-white hover:text-primary transition-colors" 
+                to="/find-mentors"
+                onClick={() => setIsOpen(false)}
+              >
+                Find Mentors
               </Link>
               
               {/* Mobile menu items for visitors */}
@@ -119,13 +127,6 @@ function Navbar() {
                     onClick={() => setIsOpen(false)}
                   >
                     Assessment
-                  </Link>
-                  <Link 
-                    className="text-white hover:text-primary transition-colors" 
-                    to="/find-mentors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Find Mentors
                   </Link>
                   <Link 
                     className="text-white hover:text-primary transition-colors" 

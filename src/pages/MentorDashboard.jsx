@@ -13,9 +13,12 @@ function MentorDashboard() {
     
     setStudents([
       { id: 1, name: 'Karan Banerjee', email: 'karanprince85@gmail.com', field: 'Technology', lastActive: '2023-05-15T10:30:00' },
-      { id: 2, name: 'Dyuti Agarwal', email: 'dyuti@example.com', field: 'Science', lastActive: '2023-05-14T14:45:00' },
-      { id: 3, name: 'Faiz Moulavi', email: 'mike@example.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' },
-      { id: 4, name: 'Sneha Choudhary', email: 'mike@example.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' }
+      { id: 2, name: 'Dyuti Agarwal', email: 'dyuti.z.agarwal@gmail.com', field: 'Science', lastActive: '2023-05-14T14:45:00' },
+      { id: 3, name: 'Faiz Moulavi', email: 'faizloveskohli@gmail.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' },
+      { id: 4, name: 'Sneha Choudhary', email: 'snehaa@gmail.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' },
+      { id: 5, name: 'Shrey Mishra', email: 'shrey69@gmail.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' }
+      
+      
     ]);
 
     setSessions([

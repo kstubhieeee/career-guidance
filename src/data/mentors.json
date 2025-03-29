@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "name": "Dr. Sarah Johnson",
+    "photo": "src/data/mentorIMG/dummyMentor.png",
+    "qualification": "Ph.D. in Computer Science",
+    "expertise": ["Software Engineering", "Machine Learning", "Career Development"],
+    "experience": "15 years in tech industry, previously Senior Engineer at Google",
+    "price": 75,
+    "rating": 4.9,
+    "availability": ["Monday", "Wednesday", "Friday"]
+  },
+  {
+    "id": 2,
+    "name": "Michael Chen",
+    "photo": "src/data/mentorIMG/2dummyIMG.png",
+    "qualification": "MBA, Stanford University",
+    "expertise": ["Business Strategy", "Entrepreneurship", "Leadership"],
+    "experience": "10 years as startup founder and business consultant",
+    "price": 80,
+    "rating": 4.8,
+    "availability": ["Tuesday", "Thursday", "Saturday"]
+  },
+  {
+    "id": 3,
+    "name": "Dr. Amelia Rodriguez",
+    "photo": "src/data/mentorIMG/3mentor.png",
+    "qualification": "Ph.D. in Psychology",
+    "expertise": ["Career Counseling", "Personal Development", "Stress Management"],
+    "experience": "12 years in career counseling and psychology practice",
+    "price": 65,
+    "rating": 4.7,
+    "availability": ["Monday", "Tuesday", "Friday"]
+  },
+  {
+    "id": 4,
+    "name": "James Wilson",
+    "photo": "/mentors/james-wilson.jpg",
+    "qualification": "MS in Electrical Engineering",
+    "expertise": ["Hardware Design", "IoT", "Engineering Management"],
+    "experience": "20 years in engineering leadership at Intel and AMD",
+    "price": 90,
+    "rating": 4.9,
+    "availability": ["Wednesday", "Thursday", "Sunday"]
+  },
+  {
+    "id": 5,
+    "name": "Priya Patel",
+    "photo": "/mentors/priya-patel.jpg",
+    "qualification": "MBA, Marketing Specialist",
+    "expertise": ["Digital Marketing", "Brand Management", "Content Strategy"],
+    "experience": "8 years in marketing roles at major brands",
+    "price": 70,
+    "rating": 4.6,
+    "availability": ["Monday", "Wednesday", "Saturday"]
+  },
+  {
+    "id": 6,
+    "name": "David Kim",
+    "photo": "/mentors/david-kim.jpg",
+    "qualification": "MS in Data Science",
+    "expertise": ["Data Analysis", "AI", "Tech Career Transition"],
+    "experience": "11 years as Data Scientist and Team Lead",
+    "price": 85,
+    "rating": 4.8,
+    "availability": ["Tuesday", "Thursday", "Sunday"]
+  }
+] 
