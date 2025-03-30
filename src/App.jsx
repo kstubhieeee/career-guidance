@@ -5,12 +5,13 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Interests from './pages/Interests';
 import Mcq from './pages/Mcq';
+import Analysis from './pages/Analysis';
 import Dashboard from './pages/Dashboard';
 import MentorDashboard from './pages/MentorDashboard';
 import FindMentors from './pages/FindMentors';
 import MyBookings from './pages/MyBookings';
 import SessionHistory from './pages/SessionHistory';
-import Assesment from './pages/assesment';
+import Assesment from './pages/Assesment';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import { AssessmentProvider } from './context/AssessmentContext.jsx';
@@ -31,6 +32,13 @@ function AppContent() {
           <ProtectedRoute>
             <AssessmentProvider>
               <Mcq />
+            </AssessmentProvider>
+          </ProtectedRoute>
+        } />
+        <Route path="/analysis" element={
+          <ProtectedRoute>
+            <AssessmentProvider>
+              <Analysis />
             </AssessmentProvider>
           </ProtectedRoute>
         } />

@@ -4,5 +4,5 @@ export const getEnvVar = (key, fallback = '') => {
   return import.meta.env[`VITE_${key}`] || fallback;
 };
 
-// Export commonly used environment variables
-export const OPENROUTER_API_KEY = getEnvVar('OPENROUTER_API_KEY', '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'); 
+// Export Gemini API key
+export const GEMINI_API_KEY = getEnvVar('GEMINI_API_KEY', 'AIzaSyBmuGPpLhFgSNSsY273SLKBrVMGdMCuzKo'); 
