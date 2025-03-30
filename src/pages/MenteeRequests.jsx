@@ -49,7 +49,24 @@ function MenteeRequests() {
       }
 
       const data = await response.json();
-      setRequests(data.sessionRequests || []);
+
+      // Filter out requests that have related sessions or completed payments
+      // These will be shown in the SessionHistory component instead
+      const filteredRequests = data.sessionRequests.filter(request => {
+        // Skip requests with related sessions
+        if (request.hasRelatedSession) {
+          return false;
+        }
+
+        // Skip requests with completed payment
+        if (request.paymentStatus === 'completed') {
+          return false;
+        }
+
+        return true;
+      });
+
+      setRequests(filteredRequests || []);
     } catch (err) {
       console.error('Error fetching session requests:', err);
       setError(err.message || 'Failed to load session requests. Please try again.');
@@ -233,6 +250,31 @@ function MenteeRequests() {
                         <p className="text-white bg-darkblue p-3 rounded border border-gray-700">
                           {request.notes}
                         </p>
+                      </div>
+                    )}
+
+                    {request.status === 'accepted' && (
+                      <div className="flex flex-col sm:flex-row gap-3 mt-4">
+                        <button
+                          onClick={() => {
+                            console.log("Navigating to video call setup with room ID:", request._id);
+                            navigate('/video-call-setup', {
+                              state: {
+                                roomID: request._id,
+                                sessionId: request._id,
+                                sessionRequestId: request._id,
+                                isMentor: true,
+                                from: '/mentee-requests'
+                              }
+                            });
+                          }}
+                          className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                          </svg>
+                          Join Video Call
+                        </button>
                       </div>
                     )}
 

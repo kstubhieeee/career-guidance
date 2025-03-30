@@ -2,37 +2,44 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toast, Toaster } from 'react-hot-toast';
-import MentorRatingModal from '../components/MentorRatingModal';
 import Footer from '../components/Footer';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3250';
 
 const statusBadgeClasses = {
-  pending: 'bg-blue-900 bg-opacity-20 text-blue-400 border-blue-500',
-  accepted: 'bg-yellow-900 bg-opacity-20 text-yellow-400 border-yellow-500',
-  confirmed: 'bg-green-900 bg-opacity-40 text-green-400 border-green-500 font-semibold',
-  completed: 'bg-green-900 bg-opacity-20 text-green-400 border-green-500',
-  cancelled: 'bg-red-900 bg-opacity-20 text-red-400 border-red-500',
-  rescheduled: 'bg-purple-900 bg-opacity-20 text-purple-400 border-purple-500',
-  rejected: 'bg-red-900 bg-opacity-20 text-red-400 border-red-500',
-  default: 'bg-gray-900 bg-opacity-20 text-gray-400 border-gray-500'
+  confirmed: 'bg-green-500 bg-opacity-20 text-green-400 border-green-500',
+  pending: 'bg-yellow-500 bg-opacity-20 text-yellow-400 border-yellow-500',
+  accepted: 'bg-blue-500 bg-opacity-20 text-blue-400 border-blue-500',
+  rejected: 'bg-red-500 bg-opacity-20 text-red-400 border-red-500',
+  completed: 'bg-purple-500 bg-opacity-20 text-purple-400 border-purple-500',
+  cancelled: 'bg-gray-500 bg-opacity-20 text-gray-400 border-gray-500',
+  default: 'bg-gray-500 bg-opacity-20 text-gray-400 border-gray-600'
 };
 
 const sessionTypeIcons = {
   video: (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-    </svg>
+    <span className="flex items-center text-blue-400">
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+      </svg>
+      Video
+    </span>
   ),
   audio: (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-    </svg>
+    <span className="flex items-center text-green-400">
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+      </svg>
+      Audio
+    </span>
   ),
   chat: (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-    </svg>
+    <span className="flex items-center text-indigo-400">
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+      </svg>
+      Chat
+    </span>
   )
 };
 
@@ -41,10 +48,10 @@ function MyBookings() {
   const navigate = useNavigate();
   const location = useLocation();
   const [bookings, setBookings] = useState([]);
+  const [sessionRequests, setSessionRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [bookingToRate, setBookingToRate] = useState(null);
+  const [activeTab, setActiveTab] = useState('all');
   const [mentors, setMentors] = useState({});
-  const [activeTab, setActiveTab] = useState('confirmed');
 
   useEffect(() => {
     const handlePaymentSuccess = () => {
@@ -125,11 +132,43 @@ function MyBookings() {
   }, [currentUser, location.state]);
 
   const processBookings = (sessions, sessionRequests) => {
-    // Combine sessions and requests, marking their source
-    const allBookings = [
-      ...sessions.map(session => ({ ...session, source: 'session' })),
-      ...sessionRequests.map(request => ({ ...request, source: 'request' }))
-    ];
+    // First, identify paid sessions by their request IDs
+    const paidSessionRequestIds = new Set();
+    const sessionRequestToSession = new Map();
+
+    sessions.forEach(session => {
+      if (session.paymentId && session.paymentId !== 'pending' && session.sessionRequestId) {
+        paidSessionRequestIds.add(session.sessionRequestId);
+        sessionRequestToSession.set(session.sessionRequestId, session);
+      }
+    });
+
+    // Create a list of bookings to show
+    let allBookings = [];
+
+    // First, filter session requests - only include those that don't have a corresponding paid session
+    const filteredRequests = sessionRequests.filter(request => {
+      return !paidSessionRequestIds.has(request._id.toString());
+    }).map(request => ({ ...request, source: 'request' }));
+
+    // Add these requests to our bookings list
+    allBookings = [...filteredRequests];
+
+    // Then, filter sessions - only include those that have been paid for 
+    // or don't have a corresponding request (direct sessions)
+    const filteredSessions = sessions.filter(session => {
+      // Always include sessions with completed payment
+      if (session.paymentId && session.paymentId !== 'pending') {
+        return true;
+      }
+
+      // For sessions without payment, only include if they don't have a session request
+      // This avoids showing both the session and the request for unpaid sessions
+      return !session.sessionRequestId;
+    }).map(session => ({ ...session, source: 'session' }));
+
+    // Add these sessions to our bookings list
+    allBookings = [...allBookings, ...filteredSessions];
 
     // Sort by date, most recent first
     allBookings.sort((a, b) => {
@@ -212,49 +251,6 @@ function MyBookings() {
       setMentors(mentorDetails);
     } catch (error) {
       console.error('Error fetching mentor details:', error);
-    }
-  };
-
-  const handleRateSession = (booking) => {
-    setBookingToRate(booking);
-  };
-
-  const handleRatingSubmit = async (bookingId, rating, feedback) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/sessions/${bookingId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          rating,
-          feedback,
-          status: 'completed'
-        }),
-        credentials: 'include'
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update session rating');
-      }
-
-      // Refresh the bookings
-      const updatedResponse = await fetch(`${API_BASE_URL}/api/sessions`, {
-        method: 'GET',
-        credentials: 'include'
-      });
-
-      if (!updatedResponse.ok) {
-        throw new Error('Failed to refresh bookings');
-      }
-
-      const data = await updatedResponse.json();
-      setBookings(data.sessions);
-      setBookingToRate(null);
-      toast.success('Rating submitted successfully!');
-    } catch (error) {
-      console.error('Error submitting rating:', error);
-      toast.error('Failed to submit rating');
     }
   };
 
@@ -599,17 +595,28 @@ function MyBookings() {
                               )}
 
                               {/* Confirmed session - show Join Session button */}
-                              {isSessionConfirmed(booking) && (
-                                <a
-                                  href="#"
-                                  className="inline-block bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors text-center font-medium"
-                                >
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                  </svg>
-                                  Join Session
-                                </a>
-                              )}
+                              {isSessionConfirmed(booking) && booking.paymentId && booking.paymentId !== 'pending' &&
+                                booking.status !== 'completed' && booking.status !== 'cancelled' && (
+                                  <button
+                                    onClick={() => {
+                                      console.log("Navigating to video call setup with room ID:", booking._id);
+                                      navigate('/video-call-setup', {
+                                        state: {
+                                          roomID: booking._id,
+                                          sessionId: booking._id,
+                                          sessionRequestId: booking.sessionRequestId,
+                                          from: '/my-bookings'
+                                        }
+                                      });
+                                    }}
+                                    className="flex items-center justify-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm"
+                                  >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                    </svg>
+                                    Join Session
+                                  </button>
+                                )}
 
                               {/* Reschedule button - only for confirmed/paid sessions */}
                               {isSessionConfirmed(booking) && (
@@ -630,7 +637,14 @@ function MyBookings() {
                               {/* Rate session button - show for confirmed/completed sessions without rating */}
                               {isSessionConfirmed(booking) && !booking.rating && (
                                 <button
-                                  onClick={() => handleRateSession(booking)}
+                                  onClick={() => {
+                                    navigate('/rate-session', {
+                                      state: {
+                                        sessionId: booking._id,
+                                        fromVideoCall: false
+                                      }
+                                    });
+                                  }}
                                   className="inline-block bg-darkblue hover:bg-darkblue-dark text-white py-2 px-4 rounded-lg border border-gray-600 transition-colors"
                                 >
                                   Rate Session
@@ -699,14 +713,6 @@ function MyBookings() {
           </div>
         </div>
       </div>
-
-      {bookingToRate && (
-        <MentorRatingModal
-          booking={bookingToRate}
-          onClose={() => setBookingToRate(null)}
-          onSubmit={(rating, feedback) => handleRatingSubmit(bookingToRate._id, rating, feedback)}
-        />
-      )}
 
       <Toaster
         position="top-center"

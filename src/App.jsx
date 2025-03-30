@@ -18,7 +18,12 @@ import Assesment from './pages/Assesment';
 import MentorSignup from './pages/MentorSignup';
 import MenteeRequests from './pages/MenteeRequests';
 import SessionPayment from './pages/SessionPayment';
+import VideoCall from './pages/VideoCall';
+import VideoCallSetupPage from './pages/VideoCallSetup';
+import VideoCallActivePage from './pages/VideoCallActive';
+import RateSession from './pages/RateSession';
 import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRouteShared from './components/ProtectedRouteShared';
 import { AuthProvider } from './context/AuthContext';
 import { AssessmentProvider } from './context/AssessmentContext.jsx';
 
@@ -81,6 +86,26 @@ function AppContent() {
         <Route path="/session-history" element={
           <ProtectedRoute>
             <SessionHistory />
+          </ProtectedRoute>
+        } />
+        <Route path="/video-call" element={
+          <ProtectedRouteShared>
+            <VideoCall />
+          </ProtectedRouteShared>
+        } />
+        <Route path="/video-call-setup" element={
+          <ProtectedRouteShared>
+            <VideoCallSetupPage />
+          </ProtectedRouteShared>
+        } />
+        <Route path="/video-call-active" element={
+          <ProtectedRouteShared>
+            <VideoCallActivePage />
+          </ProtectedRouteShared>
+        } />
+        <Route path="/rate-session" element={
+          <ProtectedRoute>
+            <RateSession />
           </ProtectedRoute>
         } />
       </Routes>

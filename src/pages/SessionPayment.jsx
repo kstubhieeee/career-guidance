@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toast, Toaster } from 'react-hot-toast';
 import Footer from '../components/Footer';
+import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:3250';
 
@@ -16,9 +17,11 @@ function SessionPayment() {
     const [errorMessage, setErrorMessage] = useState('');
     const [mentor, setMentor] = useState(null);
     const [agreementChecked, setAgreementChecked] = useState(false);
+    const [paymentCompleted, setPaymentCompleted] = useState(false);
     const [razorpayKeyId] = useState(import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_ilZnoyJIDqrWYR');
     const [scriptLoaded, setScriptLoaded] = useState(false);
     const scriptRef = useRef(null);
+    const [paymentSuccess, setPaymentSuccess] = useState(false);
 
     // Get session data from location state or fetch from API
     useEffect(() => {
@@ -162,6 +165,25 @@ function SessionPayment() {
         return `${formattedHour}:${minutes} ${ampm}`;
     };
 
+    // Create a helper function to ensure session ID is properly formatted
+    const getCleanSessionId = (session) => {
+        if (!session || !session._id) return null;
+
+        // If session._id is an object with a toString method, use that
+        if (typeof session._id === 'object' && session._id.toString) {
+            return session._id.toString();
+        }
+
+        // If it's a string, make sure it's clean
+        if (typeof session._id === 'string') {
+            // Remove any non-alphanumeric characters that might cause problems with MongoDB
+            const cleanedId = session._id.trim().replace(/[^a-zA-Z0-9]/g, '');
+            return cleanedId;
+        }
+
+        return null;
+    };
+
     // Fix handlePayment function to properly handle errors
     const handlePayment = async () => {
         if (!agreementChecked) {
@@ -202,9 +224,9 @@ function SessionPayment() {
             // Initialize Razorpay payment
             const options = {
                 key: razorpayKeyId,
-                amount: Math.round(sessionPrice * 100), // Convert to paise (smallest Indian currency unit)
+                amount: Math.round(sessionPrice * 100),
                 currency: "INR",
-                name: "Career Guidant",
+                name: "Career Guidance",
                 description: `Session with ${session.mentorName}`,
                 image: logoUrl,
                 handler: async function (response) {
@@ -214,42 +236,85 @@ function SessionPayment() {
                             paymentId: response.razorpay_payment_id
                         });
 
+                        // Make sure we have the basic required payment ID
+                        if (!response.razorpay_payment_id) {
+                            console.error('Missing Razorpay payment ID:', response);
+                            toast.error('Payment verification failed: Missing payment ID');
+                            setErrorMessage('Payment verification failed: Missing payment ID');
+                            setProcessing(false);
+                            return;
+                        }
+
+                        // Get a clean session ID
+                        const cleanSessionId = getCleanSessionId(session);
+                        if (!cleanSessionId) {
+                            console.error('Invalid or missing session ID');
+                            toast.error('Payment verification failed: Invalid session ID');
+                            setErrorMessage('Payment verification failed: Invalid session ID');
+                            setProcessing(false);
+                            return;
+                        }
+
+                        // Add detailed logging about the session object
+                        console.log('Session object:', {
+                            id: session._id,
+                            idType: typeof session._id,
+                            idToString: session._id?.toString?.() || 'N/A',
+                            cleanId: cleanSessionId,
+                            sessionDate: session.sessionDate,
+                            mentorId: session.mentorId,
+                            mentorName: session.mentorName,
+                            paymentId: session.paymentId,
+                            status: session.status
+                        });
+
+                        console.log(`Using cleaned session ID: ${cleanSessionId}`);
+
                         // Update session with payment ID
-                        const apiResponse = await fetch(`${API_BASE_URL}/api/sessions/${session._id}/payment`, {
-                            method: 'PUT',
+                        const apiResponse = await fetch(`${API_BASE_URL}/api/verify-payment`, {
+                            method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                paymentId: response.razorpay_payment_id
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_order_id: response.razorpay_order_id || null,
+                                razorpay_signature: response.razorpay_signature || null,
+                                sessionId: cleanSessionId
                             }),
                             credentials: 'include'
                         });
 
                         if (!apiResponse.ok) {
-                            const errorData = await apiResponse.json().catch(() => ({}));
-                            throw new Error(errorData.message || 'Failed to update session with payment');
+                            let errorMessage = 'Payment verification failed';
+
+                            try {
+                                const errorData = await apiResponse.json();
+                                console.error('Payment verification failed:', errorData);
+                                errorMessage = errorData.message || errorMessage;
+                            } catch (jsonError) {
+                                console.error('Error parsing error response:', jsonError);
+                            }
+
+                            toast.error(errorMessage);
+                            setErrorMessage(`Payment verification failed: ${errorMessage}`);
+                            throw new Error(errorMessage);
                         }
 
                         const apiData = await apiResponse.json();
                         console.log('Session updated successfully:', apiData);
                         toast.success('Payment successful! Session confirmed.');
+                        setPaymentSuccess(true);
+                        setPaymentCompleted(true);
 
                         // Navigate to My Bookings page after successful payment
                         setTimeout(() => {
-                            navigate('/my-bookings', {
-                                state: { paymentSuccess: true, session: apiData.session }
-                            });
-                        }, 1500);
+                            navigate('/my-bookings');
+                        }, 2000);
                     } catch (error) {
-                        console.error('Error updating session after payment:', error);
-                        setErrorMessage(error.message || 'Payment successful but failed to update session. Please contact support.');
-                        // Even if we have an error, we should navigate back to bookings since the payment was successful
-                        setTimeout(() => {
-                            navigate('/my-bookings', {
-                                state: { paymentSuccess: true }
-                            });
-                        }, 3000);
+                        console.error("Error updating session after payment:", error);
+                        toast.error("Payment successful, but there was an error updating your session. Please contact support.");
+                    } finally {
                         setProcessing(false);
                     }
                 },
@@ -392,6 +457,16 @@ function SessionPayment() {
                                     I agree to the <a href="#" className="text-primary hover:underline">Terms & Conditions</a> and understand that this payment is secure and processed via Razorpay. The session will be confirmed after successful payment.
                                 </label>
                             </div>
+
+                            {paymentSuccess && (
+                                <div className="bg-green-900 bg-opacity-20 border border-green-500 text-green-400 p-4 rounded-lg mb-6 text-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <p className="font-bold text-lg">Payment Successful!</p>
+                                    <p>Your session has been confirmed. You will be redirected to your bookings page shortly.</p>
+                                </div>
+                            )}
 
                             {errorMessage && (
                                 <div className="bg-red-900 bg-opacity-20 border border-red-500 text-red-400 p-4 rounded-lg mb-6">

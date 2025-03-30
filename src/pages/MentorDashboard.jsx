@@ -181,6 +181,12 @@ function MentorDashboard() {
                     </span>
                   )}
                 </Link>
+                <Link to="/video-call-setup" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors shadow-md flex items-center">
+                  <svg className="w-5 h-5 mr-2" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  Video Call
+                </Link>
                 <button className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors shadow-md flex items-center">
                   <svg className="w-5 h-5 mr-2" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -287,6 +293,39 @@ function MentorDashboard() {
                 </div>
               </div>
 
+              {/* Quick Actions Card */}
+              <div className="bg-darkblue-light rounded-lg shadow-md p-6 border border-gray-700 mb-8">
+                <h2 className="text-xl font-bold text-white mb-6">Quick Actions</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <Link
+                    to="/video-call-setup"
+                    className="bg-blue-600 hover:bg-blue-700 transition-colors p-4 rounded-lg flex flex-col items-center justify-center text-white"
+                  >
+                    <svg className="w-10 h-10 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    <span className="font-medium">Start Video Call</span>
+                    <span className="text-xs text-blue-200 mt-1">No booking required</span>
+                  </Link>
+
+                  <div className="bg-purple-600 hover:bg-purple-700 transition-colors p-4 rounded-lg flex flex-col items-center justify-center text-white cursor-pointer">
+                    <svg className="w-10 h-10 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span className="font-medium">Schedule Session</span>
+                    <span className="text-xs text-purple-200 mt-1">Plan future sessions</span>
+                  </div>
+
+                  <div className="bg-green-600 hover:bg-green-700 transition-colors p-4 rounded-lg flex flex-col items-center justify-center text-white cursor-pointer">
+                    <svg className="w-10 h-10 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    </svg>
+                    <span className="font-medium">Send Messages</span>
+                    <span className="text-xs text-green-200 mt-1">Communicate with students</span>
+                  </div>
+                </div>
+              </div>
+
               {/* Students List */}
               <div className="bg-darkblue-light rounded-lg shadow-md p-6 border border-gray-700 mb-8">
                 <div className="flex justify-between items-center mb-6">
@@ -360,6 +399,15 @@ function MentorDashboard() {
                                 <button className="bg-darkblue-dark text-white px-3 py-1 rounded text-xs border border-gray-600 hover:bg-darkblue transition-colors">
                                   Schedule
                                 </button>
+                                <Link
+                                  to={`/video-call-setup?studentId=${student.id}`}
+                                  className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 transition-colors flex items-center"
+                                >
+                                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                  </svg>
+                                  Video Call
+                                </Link>
                               </div>
                             </td>
                           </tr>
@@ -373,6 +421,54 @@ function MentorDashboard() {
                   </div>
                 )}
               </div>
+
+              {/* Upcoming Sessions */}
+              {sessions.filter(s => s.status === 'upcoming').length > 0 && (
+                <div className="bg-darkblue-light rounded-lg shadow-md p-6 border border-gray-700 mb-8">
+                  <h2 className="text-xl font-bold text-white mb-6">Upcoming Sessions</h2>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-white">
+                      <thead>
+                        <tr className="border-b border-gray-700">
+                          <th className="py-3 px-4 text-left">Student</th>
+                          <th className="py-3 px-4 text-left">Topic</th>
+                          <th className="py-3 px-4 text-left">Date</th>
+                          <th className="py-3 px-4 text-left">Time</th>
+                          <th className="py-3 px-4 text-left">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {sessions
+                          .filter(session => session.status === 'upcoming')
+                          .map(session => (
+                            <tr key={session.id} className="border-b border-gray-700 hover:bg-darkblue-dark">
+                              <td className="py-3 px-4">{session.studentName}</td>
+                              <td className="py-3 px-4">{session.topic}</td>
+                              <td className="py-3 px-4">{formatDate(session.date)}</td>
+                              <td className="py-3 px-4">{formatTime(session.time || '12:00')}</td>
+                              <td className="py-3 px-4">
+                                <div className="flex space-x-2">
+                                  <Link
+                                    to={`/video-call-setup?sessionId=${session.id}`}
+                                    className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 transition-colors flex items-center"
+                                  >
+                                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                    </svg>
+                                    Join Call
+                                  </Link>
+                                  <button className="bg-darkblue-dark text-white px-3 py-1 rounded text-xs border border-gray-600 hover:bg-darkblue transition-colors">
+                                    Reschedule
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
 
               {/* Session History */}
               <div className="bg-darkblue-light rounded-lg shadow-md p-6 border border-gray-700">
@@ -410,9 +506,20 @@ function MentorDashboard() {
                                 )}
                               </td>
                               <td className="py-3 px-4">
-                                <button className="bg-darkblue-dark text-white px-3 py-1 rounded text-xs border border-gray-600 hover:bg-darkblue transition-colors">
-                                  View Details
-                                </button>
+                                <div className="flex space-x-2">
+                                  <button className="bg-darkblue-dark text-white px-3 py-1 rounded text-xs border border-gray-600 hover:bg-darkblue transition-colors">
+                                    View Details
+                                  </button>
+                                  <Link
+                                    to={`/video-call-setup?studentName=${encodeURIComponent(session.studentName)}`}
+                                    className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 transition-colors flex items-center"
+                                  >
+                                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                    </svg>
+                                    Follow-up Call
+                                  </Link>
+                                </div>
                               </td>
                             </tr>
                           ))}
