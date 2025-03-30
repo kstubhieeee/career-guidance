@@ -14,7 +14,7 @@ function SessionPaymentModal({ session, onClose, onSuccess, razorpayKeyId }) {
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
       script.async = true;
       document.body.appendChild(script);
-      
+
       return () => {
         if (document.body.contains(script)) {
           document.body.removeChild(script);
@@ -89,13 +89,12 @@ function SessionPaymentModal({ session, onClose, onSuccess, razorpayKeyId }) {
 
       const razorpayInstance = new window.Razorpay(options);
       razorpayInstance.open();
-      
+
       razorpayInstance.on('payment.failed', function (response) {
         console.error('Payment failed:', response.error);
         toast.error('Payment failed. Please try again.');
         setLoading(false);
       });
-      
     } catch (error) {
       console.error('Error initiating payment:', error);
       setErrorMessage(error.message || 'Error initiating payment. Please try again.');
@@ -108,7 +107,7 @@ function SessionPaymentModal({ session, onClose, onSuccess, razorpayKeyId }) {
   return (
     <div className="fixed inset-0 bg-darkblue bg-opacity-80 flex items-center justify-center z-50 overflow-y-auto p-4">
       <div className="relative bg-darkblue-light border border-gray-700 rounded-xl shadow-xl max-w-md w-full mx-auto p-6 animate-fadeIn">
-        <button 
+        <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
         >
@@ -118,7 +117,7 @@ function SessionPaymentModal({ session, onClose, onSuccess, razorpayKeyId }) {
         </button>
 
         <h3 className="text-2xl font-bold text-white mb-6">Complete Your Booking</h3>
-        
+
         <div className="space-y-4 mb-6">
           <div className="bg-darkblue p-4 rounded-lg">
             <h4 className="text-white font-semibold mb-2">Session Details</h4>
@@ -140,6 +139,15 @@ function SessionPaymentModal({ session, onClose, onSuccess, razorpayKeyId }) {
               <div className="flex justify-between text-white font-bold">
                 <span>Total Amount:</span>
                 <span>₹{session.price}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3 mb-6">
+            <div>
+              <h4 className="text-white text-sm font-medium mb-2">Payment Provider</h4>
+              <div className="flex items-center justify-center mt-2">
+                <img src="/images/razorpay-logo.svg" alt="Razorpay" className="h-6" />
               </div>
             </div>
           </div>

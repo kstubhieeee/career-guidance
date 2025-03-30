@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toast, Toaster } from 'react-hot-toast';
 import Footer from '../components/Footer';
@@ -10,7 +10,8 @@ function SessionHistory() {
   const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
-  
+  const navigate = useNavigate();
+
   // New state for rescheduling
   const [newDate, setNewDate] = useState('');
   const [newTime, setNewTime] = useState('');
@@ -24,17 +25,17 @@ function SessionHistory() {
           setLoading(false);
           return;
         }
-        
+
         // Fetch bookings from the API
         const response = await fetch('http://localhost:3250/api/sessions', {
           method: 'GET',
           credentials: 'include'
         });
-        
+
         if (!response.ok) {
           throw new Error('Failed to fetch session history');
         }
-        
+
         const data = await response.json();
         setBookings(data.sessions);
         setLoading(false);
@@ -44,7 +45,7 @@ function SessionHistory() {
         setLoading(false);
       }
     };
-    
+
     fetchBookings();
   }, [currentUser]);
 
@@ -76,25 +77,25 @@ function SessionHistory() {
         }),
         credentials: 'include'
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to reschedule session');
       }
-      
+
       // Refresh the bookings list
       const bookingsResponse = await fetch('http://localhost:3250/api/sessions', {
         method: 'GET',
         credentials: 'include'
       });
-      
+
       if (!bookingsResponse.ok) {
         throw new Error('Failed to refresh sessions');
       }
-      
+
       const bookingsData = await bookingsResponse.json();
       setBookings(bookingsData.sessions);
-      
+
       // Close modal and show success message
       setShowRescheduleModal(false);
       toast.success('Session rescheduled successfully');
@@ -154,11 +155,31 @@ function SessionHistory() {
         return null;
     }
   };
-  
-  const getStatusBadge = (status) => {
+
+  const getStatusBadge = (status, paymentId) => {
+    // First check payment status
+    if (paymentId && paymentId !== 'pending') {
+      if (status === 'confirmed') {
+        return <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          Confirmed
+        </span>;
+      }
+      if (status === 'completed') {
+        return <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">Completed</span>;
+      }
+    }
+
+    // Then check session status
     switch (status) {
       case 'confirmed':
         return <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Confirmed</span>;
+      case 'accepted':
+        return paymentId && paymentId !== 'pending'
+          ? <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Confirmed</span>
+          : <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">Payment Required</span>;
       case 'rescheduled':
         return <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">Rescheduled</span>;
       case 'completed':
@@ -174,7 +195,7 @@ function SessionHistory() {
     <div className="bg-darkblue min-h-screen pt-24 pb-12">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-bold text-white mb-8 text-center">Session History</h1>
-        
+
         {loading ? (
           <div className="flex justify-center py-10">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -198,13 +219,13 @@ function SessionHistory() {
                   <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
                     <div className="flex items-center mb-4 md:mb-0">
                       <h2 className="text-xl font-bold text-white mr-3">Session with {booking.mentorName}</h2>
-                      {getStatusBadge(booking.status)}
+                      {getStatusBadge(booking.status, booking.paymentId)}
                     </div>
                     <div className="text-gray-300 text-sm">
                       Booked on {formatDate(booking.createdAt)}
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div className="bg-secondary-dark rounded-lg p-4">
                       <h3 className="text-white text-sm font-semibold mb-3">Session Details</h3>
@@ -229,46 +250,90 @@ function SessionHistory() {
                         )}
                       </div>
                     </div>
-                    
+
                     <div className="bg-secondary-dark rounded-lg p-4">
                       <h3 className="text-white text-sm font-semibold mb-3">Payment Details</h3>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-gray-400">Transaction ID:</span>
-                          <span className="text-white text-sm truncate max-w-[200px]" title={booking.paymentId}>
-                            {booking.paymentId}
-                          </span>
+
+                      {booking.paymentId && booking.paymentId !== 'pending' ? (
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Transaction ID:</span>
+                            <span className="text-white text-sm truncate max-w-[200px]" title={booking.paymentId}>
+                              {booking.paymentId}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Amount Paid:</span>
+                            <span className="text-white font-semibold">₹{booking.price}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Payment Method:</span>
+                            <span className="text-white">Razorpay</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Status:</span>
+                            <span className="text-green-400">Paid</span>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-400">Amount Paid:</span>
-                          <span className="text-white font-semibold">₹{booking.price}</span>
+                      ) : (
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Amount:</span>
+                            <span className="text-white font-semibold">₹{booking.price}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Status:</span>
+                            <span className="text-yellow-400">
+                              {booking.status === 'accepted' ? 'Payment Required' : 'Pending'}
+                            </span>
+                          </div>
+                          {booking.status === 'accepted' && (
+                            <div className="mt-2 pt-2 border-t border-gray-700">
+                              <button
+                                onClick={() => navigate(`/session-payment?sessionId=${booking._id}`)}
+                                className="w-full bg-primary hover:bg-primary-dark text-white py-1 px-3 rounded text-sm transition-colors"
+                              >
+                                Pay Now
+                              </button>
+                            </div>
+                          )}
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-400">Payment Method:</span>
-                          <span className="text-white">Razorpay</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-400">Status:</span>
-                          <span className="text-green-400">Paid</span>
-                        </div>
-                      </div>
+                      )}
                     </div>
                   </div>
-                  
+
                   <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2 border-t border-gray-700">
-                    {booking.status !== 'completed' && booking.status !== 'cancelled' && (
-                      <>
-                        <button 
+                    {/* Show Join Session button only for paid/confirmed sessions that aren't completed or cancelled */}
+                    {booking.paymentId && booking.paymentId !== 'pending' &&
+                      booking.status !== 'completed' && booking.status !== 'cancelled' && (
+                        <button
                           className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg transition-colors flex items-center justify-center"
-                          onClick={() => {/* Join session logic */}}
+                          onClick={() => {/* Join session logic */ }}
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                           </svg>
                           Join Session
                         </button>
-                        
-                        <button 
+                      )}
+
+                    {/* Only show Pay button for accepted sessions without payment */}
+                    {booking.status === 'accepted' && (!booking.paymentId || booking.paymentId === 'pending') && (
+                      <button
+                        className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg transition-colors flex items-center justify-center"
+                        onClick={() => navigate(`/session-payment?sessionId=${booking._id}`)}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                        </svg>
+                        Make Payment
+                      </button>
+                    )}
+
+                    {/* Only show Reschedule button for confirmed/paid sessions */}
+                    {booking.paymentId && booking.paymentId !== 'pending' &&
+                      booking.status !== 'completed' && booking.status !== 'cancelled' && (
+                        <button
                           className="bg-secondary hover:bg-secondary-dark text-white px-4 py-2 rounded-lg transition-colors flex items-center justify-center"
                           onClick={() => handleReschedule(booking)}
                         >
@@ -277,7 +342,19 @@ function SessionHistory() {
                           </svg>
                           Reschedule
                         </button>
-                      </>
+                      )}
+
+                    {/* Show rate session button for completed sessions */}
+                    {booking.status === 'completed' && !booking.rating && (
+                      <button
+                        className="bg-secondary hover:bg-secondary-dark text-white px-4 py-2 rounded-lg transition-colors flex items-center justify-center"
+                        onClick={() => {/* Rating logic */ }}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                        </svg>
+                        Rate Session
+                      </button>
                     )}
                   </div>
                 </div>
@@ -286,14 +363,14 @@ function SessionHistory() {
           </div>
         )}
       </div>
-      
+
       {/* Reschedule Modal */}
       {showRescheduleModal && selectedBooking && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-secondary-light rounded-lg shadow-xl max-w-md w-full p-6 animate-fadeIn">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold text-white">Reschedule Session</h3>
-              <button 
+              <button
                 onClick={() => setShowRescheduleModal(false)}
                 className="text-gray-400 hover:text-white"
               >
@@ -302,10 +379,10 @@ function SessionHistory() {
                 </svg>
               </button>
             </div>
-            
+
             <div className="mb-4">
               <p className="text-gray-300 mb-4">Current session with {selectedBooking.mentorName} is scheduled for {formatDate(selectedBooking.sessionDate)} at {formatTime(selectedBooking.sessionTime)}.</p>
-              
+
               <div className="grid grid-cols-1 gap-4 mb-4">
                 <div>
                   <label className="block text-white text-sm font-medium mb-2">
@@ -320,7 +397,7 @@ function SessionHistory() {
                     required
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-white text-sm font-medium mb-2">
                     New Time
@@ -346,7 +423,7 @@ function SessionHistory() {
                 </div>
               </div>
             </div>
-            
+
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setShowRescheduleModal(false)}
@@ -364,8 +441,8 @@ function SessionHistory() {
           </div>
         </div>
       )}
-      
-      <Toaster 
+
+      <Toaster
         position="top-center"
         toastOptions={{
           style: {
@@ -375,7 +452,7 @@ function SessionHistory() {
           },
         }}
       />
-      
+
       <Footer />
     </div>
   );

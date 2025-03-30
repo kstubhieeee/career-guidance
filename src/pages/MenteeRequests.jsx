@@ -61,6 +61,7 @@ function MenteeRequests() {
   // Function to handle request status update
   const handleStatusUpdate = async (requestId, status) => {
     setProcessingRequest(requestId);
+    setError(null);
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/session-requests/${requestId}`, {
@@ -79,15 +80,21 @@ function MenteeRequests() {
       }
 
       // Update the request status in the UI
-      setRequests(requests.map(request => 
-        request._id === requestId ? { ...request, status } : request
+      setRequests(requests.map(request =>
+        request._id === requestId ? { ...request, status, paymentStatus: status === 'accepted' ? 'pending' : request.paymentStatus } : request
       ));
 
       // Show success message
-      toast.success(`Session request ${status} successfully`);
+      toast.success(`Session request ${status === 'accepted' ? 'accepted' : 'rejected'} successfully`);
+
+      // Refresh the data to get the latest status from server
+      setTimeout(() => {
+        fetchSessionRequests();
+      }, 1000); // Refresh after 1 second to get updated server data
     } catch (err) {
       console.error(`Error ${status} session request:`, err);
       toast.error(err.message || `Failed to ${status} the session request`);
+      setError(err.message || `Failed to ${status} the session request. Please try again.`);
     } finally {
       setProcessingRequest(null);
     }
@@ -102,12 +109,12 @@ function MenteeRequests() {
   // Format time from 24h to 12h format
   const formatTime = (timeString) => {
     if (!timeString) return '';
-    
+
     const [hours, minutes] = timeString.split(':');
     const hour = parseInt(hours, 10);
     const ampm = hour >= 12 ? 'PM' : 'AM';
     const hour12 = hour % 12 || 12;
-    
+
     return `${hour12}:${minutes || '00'} ${ampm}`;
   };
 
@@ -116,7 +123,7 @@ function MenteeRequests() {
       <div className="container mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold text-white mb-2">Mentee Requests</h1>
         <p className="text-gray-300 mb-8">Manage your session requests from students</p>
-        
+
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
@@ -124,7 +131,7 @@ function MenteeRequests() {
         ) : error ? (
           <div className="bg-red-500 bg-opacity-20 text-white p-4 rounded-lg border border-red-500">
             <p>{error}</p>
-            <button 
+            <button
               onClick={fetchSessionRequests}
               className="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark"
             >
@@ -144,14 +151,13 @@ function MenteeRequests() {
         ) : (
           <div className="space-y-6">
             {requests.map(request => (
-              <div 
-                key={request._id} 
-                className={`bg-darkblue-light p-6 rounded-lg border ${
-                  request.status === 'pending' ? 'border-yellow-600' : 
-                  request.status === 'accepted' ? 'border-green-600' : 
-                  request.status === 'rejected' ? 'border-red-600' : 
-                  'border-gray-600'
-                }`}
+              <div
+                key={request._id}
+                className={`bg-darkblue-light p-6 rounded-lg border ${request.status === 'pending' ? 'border-yellow-600' :
+                  request.status === 'accepted' ? 'border-green-600' :
+                    request.status === 'rejected' ? 'border-red-600' :
+                      'border-gray-600'
+                  }`}
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                   <div>
@@ -162,19 +168,18 @@ function MenteeRequests() {
                       Request received on {formatDate(request.createdAt)}
                     </p>
                   </div>
-                  
+
                   <div className="mt-2 md:mt-0">
-                    <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
-                      request.status === 'pending' ? 'bg-yellow-500 bg-opacity-20 text-yellow-300' : 
-                      request.status === 'accepted' ? 'bg-green-500 bg-opacity-20 text-green-300' : 
-                      request.status === 'rejected' ? 'bg-red-500 bg-opacity-20 text-red-300' : 
-                      'bg-gray-500 bg-opacity-20 text-gray-300'
-                    }`}>
+                    <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${request.status === 'pending' ? 'bg-yellow-500 bg-opacity-20 text-yellow-300' :
+                      request.status === 'accepted' ? 'bg-green-500 bg-opacity-20 text-green-300' :
+                        request.status === 'rejected' ? 'bg-red-500 bg-opacity-20 text-red-300' :
+                          'bg-gray-500 bg-opacity-20 text-gray-300'
+                      }`}>
                       {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
                     </span>
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                   <div>
                     <h4 className="text-primary text-sm font-medium mb-1">Date & Time</h4>
@@ -182,18 +187,18 @@ function MenteeRequests() {
                       {formatDate(request.sessionDate)} at {formatTime(request.sessionTime)}
                     </p>
                   </div>
-                  
+
                   <div>
                     <h4 className="text-primary text-sm font-medium mb-1">Session Type</h4>
                     <p className="text-white capitalize">{request.sessionType}</p>
                   </div>
-                  
+
                   <div>
                     <h4 className="text-primary text-sm font-medium mb-1">Student Name</h4>
                     <p className="text-white">{request.studentName}</p>
                   </div>
                 </div>
-                
+
                 {request.notes && (
                   <div className="mb-4">
                     <h4 className="text-primary text-sm font-medium mb-1">Notes</h4>
@@ -202,7 +207,7 @@ function MenteeRequests() {
                     </p>
                   </div>
                 )}
-                
+
                 {request.status === 'pending' && (
                   <div className="flex flex-col sm:flex-row gap-3 mt-4">
                     <button
@@ -222,7 +227,7 @@ function MenteeRequests() {
                       )}
                       Accept Request
                     </button>
-                    
+
                     <button
                       onClick={() => handleStatusUpdate(request._id, 'rejected')}
                       disabled={processingRequest === request._id}

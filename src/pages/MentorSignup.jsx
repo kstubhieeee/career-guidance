@@ -65,7 +65,7 @@ function MentorSignup() {
         console.error('Server connection test: Error', err);
       }
     };
-    
+
     testServerConnection();
   }, []);
 
@@ -80,17 +80,17 @@ function MentorSignup() {
   const handleExpertiseChange = (e) => {
     const value = e.target.value;
     const isChecked = e.target.checked;
-    
+
     setFormData(prevData => {
       if (isChecked) {
-        return { 
-          ...prevData, 
-          expertise: [...prevData.expertise, value] 
+        return {
+          ...prevData,
+          expertise: [...prevData.expertise, value]
         };
       } else {
-        return { 
-          ...prevData, 
-          expertise: prevData.expertise.filter(item => item !== value) 
+        return {
+          ...prevData,
+          expertise: prevData.expertise.filter(item => item !== value)
         };
       }
     });
@@ -99,17 +99,17 @@ function MentorSignup() {
   const handleAvailabilityChange = (e) => {
     const value = e.target.value;
     const isChecked = e.target.checked;
-    
+
     setFormData(prevData => {
       if (isChecked) {
-        return { 
-          ...prevData, 
-          availability: [...prevData.availability, value] 
+        return {
+          ...prevData,
+          availability: [...prevData.availability, value]
         };
       } else {
-        return { 
-          ...prevData, 
-          availability: prevData.availability.filter(day => day !== value) 
+        return {
+          ...prevData,
+          availability: prevData.availability.filter(day => day !== value)
         };
       }
     });
@@ -133,7 +133,7 @@ function MentorSignup() {
     }
 
     setSelectedImage(file);
-    
+
     // Create a preview URL
     const fileReader = new FileReader();
     fileReader.onload = () => {
@@ -145,36 +145,36 @@ function MentorSignup() {
   // Function to upload the image to the server
   const uploadImage = async (file) => {
     if (!file) return null;
-    
+
     setUploadingImage(true);
     const formData = new FormData();
     formData.append('profileImage', file);
-    
+
     try {
       console.log('Uploading image:', file.name, 'size:', file.size, 'type:', file.type);
-      
+
       const response = await fetch('http://localhost:3250/api/upload/profile-image', {
         method: 'POST',
         body: formData,
         // Don't set Content-Type header - browser will set it automatically with boundary
       });
-      
+
       console.log('Image upload response status:', response.status);
-      
+
       // Check if the response is JSON or not
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
         console.error('Server returned non-JSON response:', await response.text());
         throw new Error('Server returned an invalid response format');
       }
-      
+
       const data = await response.json();
       console.log('Image upload response data:', data);
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Failed to upload image');
       }
-      
+
       return data.imagePath;
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -187,31 +187,31 @@ function MentorSignup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate essential fields
     if (formData.expertise.length === 0) {
       toast.error('Please select at least one area of expertise');
       return;
     }
-    
+
     if (formData.availability.length === 0) {
       toast.error('Please select at least one day of availability');
       return;
     }
-    
+
     // Validate price is a number
     const price = parseFloat(formData.price);
     if (isNaN(price) || price < 10) {
       toast.error('Please enter a valid price (minimum $10)');
       return;
     }
-    
+
     setLoading(true);
 
     try {
       // First upload the image if one is selected
       let photoUrl = formData.photoUrl;
-      
+
       if (selectedImage) {
         photoUrl = await uploadImage(selectedImage);
         if (!photoUrl) {
@@ -220,7 +220,7 @@ function MentorSignup() {
           return;
         }
       }
-      
+
       console.log('Submitting mentor registration form with image path:', photoUrl);
 
       const registrationData = {
@@ -237,27 +237,27 @@ function MentorSignup() {
         price: price,
         availability: formData.availability
       };
-      
+
       const result = await register(registrationData);
-      
+
       console.log('Registration successful:', result);
       toast.success('Registration successful!');
       navigate('/mentor-dashboard');
     } catch (err) {
       console.error('Mentor registration error:', err);
-      
+
       // Provide more detailed error messages
       let errorMessage = 'Registration failed';
-      
+
       if (err.message) {
         errorMessage = err.message;
       }
-      
+
       // Network error
       if (err.name === 'TypeError' && err.message.includes('Failed to fetch')) {
         errorMessage = 'Network error: Unable to connect to the server. Please check your internet connection and try again.';
       }
-      
+
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -273,13 +273,13 @@ function MentorSignup() {
             Share your expertise and help students achieve their career goals
           </p>
         </div>
-        
+
         <form className="space-y-8" onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Personal Information */}
             <div className="space-y-6">
               <h3 className="text-xl font-medium text-white border-b border-gray-700 pb-2">Personal Information</h3>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-medium text-gray-200 mb-1">
@@ -296,7 +296,7 @@ function MentorSignup() {
                     placeholder="First Name"
                   />
                 </div>
-                
+
                 <div>
                   <label htmlFor="lastName" className="block text-sm font-medium text-gray-200 mb-1">
                     Last Name *
@@ -313,7 +313,7 @@ function MentorSignup() {
                   />
                 </div>
               </div>
-              
+
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-1">
                   Email Address *
@@ -330,7 +330,7 @@ function MentorSignup() {
                   placeholder="Email address"
                 />
               </div>
-              
+
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-200 mb-1">
                   Password *
@@ -347,7 +347,7 @@ function MentorSignup() {
                   placeholder="Password"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-200 mb-1">
                   Profile Photo
@@ -355,9 +355,9 @@ function MentorSignup() {
                 <div className="mt-1 flex items-center space-x-4">
                   <div className="w-24 h-24 border-2 border-dashed border-gray-500 rounded-lg flex items-center justify-center overflow-hidden bg-gray-800">
                     {previewUrl ? (
-                      <img 
-                        src={previewUrl} 
-                        alt="Profile preview" 
+                      <img
+                        src={previewUrl}
+                        alt="Profile preview"
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -406,11 +406,11 @@ function MentorSignup() {
                 </div>
               </div>
             </div>
-            
+
             {/* Professional Information */}
             <div className="space-y-6">
               <h3 className="text-xl font-medium text-white border-b border-gray-700 pb-2">Professional Information</h3>
-              
+
               <div>
                 <label htmlFor="qualification" className="block text-sm font-medium text-gray-200 mb-1">
                   Qualification *
@@ -426,7 +426,7 @@ function MentorSignup() {
                   placeholder="e.g., MSc in Computer Science, PhD in Mathematics"
                 />
               </div>
-              
+
               <div>
                 <label htmlFor="experience" className="block text-sm font-medium text-gray-200 mb-1">
                   Experience (years) *
@@ -442,7 +442,7 @@ function MentorSignup() {
                   placeholder="e.g., 5 years in software development, 3 years teaching"
                 />
               </div>
-              
+
               <div>
                 <label htmlFor="price" className="block text-sm font-medium text-gray-200 mb-1">
                   Session Fee (USD) *
@@ -463,7 +463,7 @@ function MentorSignup() {
                   Set your price per 30-minute session (minimum $10)
                 </p>
               </div>
-              
+
               <div>
                 <label htmlFor="bio" className="block text-sm font-medium text-gray-200 mb-1">
                   Professional Bio *
@@ -481,7 +481,7 @@ function MentorSignup() {
               </div>
             </div>
           </div>
-          
+
           {/* Areas of Expertise */}
           <div>
             <h3 className="text-xl font-medium text-white border-b border-gray-700 pb-2 mb-4">Areas of Expertise *</h3>
@@ -504,7 +504,7 @@ function MentorSignup() {
               ))}
             </div>
           </div>
-          
+
           {/* Availability */}
           <div>
             <h3 className="text-xl font-medium text-white border-b border-gray-700 pb-2 mb-4">Availability *</h3>
@@ -527,7 +527,7 @@ function MentorSignup() {
               ))}
             </div>
           </div>
-          
+
           <div className="flex flex-col items-center space-y-4 pt-4">
             <button
               type="submit"
@@ -536,17 +536,22 @@ function MentorSignup() {
             >
               {loading ? 'Registering...' : 'Register as Mentor'}
             </button>
-            
-            <p className="text-sm text-gray-300">
-              Already have an account?{' '}
-              <Link to="/login" className="font-medium text-primary hover:text-primary-light">
-                Sign in
-              </Link>
-            </p>
+
+            <div className="text-center mt-4">
+              <p className="text-sm text-gray-300">
+                Already have an account?{' '}
+                <Link
+                  to="/mentor-login"
+                  className="font-medium text-primary hover:text-primary-light"
+                >
+                  Sign in
+                </Link>
+              </p>
+            </div>
           </div>
         </form>
       </div>
-      <Toaster 
+      <Toaster
         position="top-center"
         toastOptions={{
           duration: 5000,

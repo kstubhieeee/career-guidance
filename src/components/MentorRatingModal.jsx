@@ -8,14 +8,14 @@ function MentorRatingModal({ booking, onClose, onSubmit }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (rating < 1) {
       toast.error('Please select a rating');
       return;
     }
-    
+
     setSubmitting(true);
-    
+
     try {
       // Call the onSubmit function which now handles the API call in the parent component
       await onSubmit(rating, feedback);
@@ -33,7 +33,7 @@ function MentorRatingModal({ booking, onClose, onSubmit }) {
       <div className="bg-darkblue-light border border-gray-700 rounded-xl shadow-xl max-w-md w-full mx-auto p-6 animate-fadeIn">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-bold text-white">Rate Your Session</h3>
-          <button 
+          <button
             onClick={onClose}
             className="text-gray-400 hover:text-white transition-colors"
           >
@@ -42,14 +42,14 @@ function MentorRatingModal({ booking, onClose, onSubmit }) {
             </svg>
           </button>
         </div>
-        
+
         <div className="mb-6">
           <p className="text-gray-300 mb-2">Session with <span className="text-white font-medium">{booking.mentorName}</span></p>
           <p className="text-gray-300 text-sm">
             {new Date(booking.sessionDate).toLocaleDateString()} at {booking.sessionTime}
           </p>
         </div>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <label className="block text-white text-sm font-medium mb-3">
@@ -75,7 +75,7 @@ function MentorRatingModal({ booking, onClose, onSubmit }) {
               {rating === 5 && 'Excellent'}
             </div>
           </div>
-          
+
           <div className="mb-6">
             <label htmlFor="feedback" className="block text-white text-sm font-medium mb-2">
               Your Feedback (Optional)
@@ -88,7 +88,7 @@ function MentorRatingModal({ booking, onClose, onSubmit }) {
               className="w-full p-3 rounded-lg bg-darkblue border border-gray-600 text-white focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 focus:outline-none min-h-[100px]"
             ></textarea>
           </div>
-          
+
           <button
             type="submit"
             disabled={submitting}

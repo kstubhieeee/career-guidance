@@ -129,7 +129,11 @@ const sessionSchema = new mongoose.Schema({
   notes: { type: String },
   price: { type: Number, required: true },
   paymentId: { type: String, required: true },
-  status: { type: String, enum: ['pending', 'confirmed', 'completed', 'cancelled', 'rescheduled'], default: 'pending' },
+  status: {
+    type: String,
+    enum: ['pending', 'confirmed', 'completed', 'cancelled', 'rescheduled', 'accepted'],
+    default: 'pending'
+  },
   rating: { type: Number, min: 1, max: 5 },
   feedback: { type: String },
   createdAt: { type: Date, default: Date.now }
@@ -137,52 +141,17 @@ const sessionSchema = new mongoose.Schema({
 
 // Add a session request schema
 const sessionRequestSchema = new mongoose.Schema({
-  mentorId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  studentId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  studentName: {
-    type: String,
-    required: true
-  },
-  sessionDate: {
-    type: Date,
-    required: true
-  },
-  sessionTime: {
-    type: String,
-    required: true
-  },
-  sessionType: {
-    type: String,
-    enum: ['video', 'chat', 'in-person'],
-    default: 'video'
-  },
-  notes: {
-    type: String,
-    default: ''
-  },
-  status: {
-    type: String,
-    enum: ['pending', 'accepted', 'rejected', 'completed'],
-    default: 'pending'
-  },
-  paymentStatus: {
-    type: String,
-    enum: ['pending', 'completed'],
-    default: 'pending'
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+  studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  mentorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  studentName: { type: String, required: true },
+  mentorName: { type: String, required: true },
+  sessionDate: { type: Date, required: true },
+  sessionTime: { type: String, required: true },
+  sessionType: { type: String, required: true },
+  notes: { type: String },
+  status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' },
+  paymentStatus: { type: String, enum: ['pending', 'completed'], default: 'pending' }
+}, { timestamps: true });
 
 // Create models
 const User = mongoose.model('User', userSchema);
@@ -283,7 +252,7 @@ app.post('/api/register', async (req, res) => {
       email,
       password: hashedPassword,
       isMentor: isMentor || false,
-      // Add mentor fields if registering as a mentor
+      // Only add mentor fields if registering as a mentor
       ...(isMentor ? {
         qualification,
         experience,
@@ -294,7 +263,15 @@ app.post('/api/register', async (req, res) => {
         availability: availability || [],
         rating: 5.0, // Default rating for new mentors
         sessionsCompleted: 0
-      } : {})
+      } : {
+        // Explicitly set mentor fields to undefined or empty values for students
+        expertise: [],
+        photoUrl: '',
+        price: 0,
+        rating: 0,
+        sessionsCompleted: 0,
+        availability: []
+      })
     });
     
     console.log('Creating new user with data:', {
@@ -549,16 +526,61 @@ app.post('/api/sessions', authenticate, async (req, res) => {
   }
 });
 
-// Get user's sessions (as student)
+// Get all sessions for a user
 app.get('/api/sessions', authenticate, async (req, res) => {
   try {
-    const sessions = await Session.find({ studentId: req.user._id })
-      .sort({ createdAt: -1 });
+    const userId = req.user._id;
     
-    res.json({ sessions });
+    // Find sessions where the user is either a student or mentor
+    let sessions;
+    
+    if (req.user.isMentor) {
+      // If user is a mentor, find sessions where they are the mentor
+      sessions = await Session.find({ mentorId: userId });
+    } else {
+      // If user is a student, find sessions where they are the student
+      sessions = await Session.find({ studentId: userId });
+      
+      // For each session, check if there's a related session request
+      // This helps determine payment status for the frontend
+      for (const session of sessions) {
+        try {
+          // Find any related session request
+          const relatedRequest = await SessionRequest.findOne({
+            studentId: userId,
+            mentorId: session.mentorId,
+            sessionDate: new Date(session.sessionDate),
+            sessionTime: session.sessionTime
+          });
+          
+          if (relatedRequest) {
+            // Add paymentStatus from the request if it's available and the session doesn't have one
+            if (relatedRequest.paymentStatus === 'completed' && (!session.paymentId || session.paymentId === 'pending')) {
+              session.paymentStatus = 'completed';
+              // Update the session to note it's been paid for
+              if (session.paymentId === 'pending') {
+                session.paymentId = relatedRequest._id.toString() + '_paid';
+                await session.save();
+              }
+            }
+          }
+        } catch (err) {
+          console.error('Error processing related session request:', err);
+          // Continue with the next session even if there's an error with this one
+        }
+      }
+    }
+    
+    res.json({
+      success: true,
+      sessions
+    });
   } catch (error) {
-    console.error('Get sessions error:', error);
-    res.status(500).json({ message: 'Failed to fetch sessions. Please try again later.' });
+    console.error('Error fetching sessions:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error fetching sessions: ' + error.message 
+    });
   }
 });
 
@@ -643,6 +665,45 @@ app.get('/api/mentors', async (req, res) => {
   }
 });
 
+// Get a specific mentor by ID
+app.get('/api/mentors/:mentorId', async (req, res) => {
+  try {
+    const { mentorId } = req.params;
+    
+    // Validate mentorId is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(mentorId)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Invalid mentor ID format' 
+      });
+    }
+    
+    // Find the mentor
+    const mentor = await User.findOne({ 
+      _id: mentorId,
+      isMentor: true
+    }).select('-password');
+    
+    if (!mentor) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Mentor not found' 
+      });
+    }
+    
+    res.json({ 
+      success: true, 
+      mentor 
+    });
+  } catch (err) {
+    console.error('Error fetching mentor details:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error fetching mentor details' 
+    });
+  }
+});
+
 // Error handling middleware for multer
 const handleMulterError = (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
@@ -696,6 +757,8 @@ app.post('/api/session-requests', authenticate, async (req, res) => {
   try {
     const { mentorId, sessionDate, sessionTime, sessionType, notes } = req.body;
     
+    console.log('Creating session request:', req.body);
+    
     // Make sure the user is logged in
     if (!req.user) {
       return res.status(401).json({ 
@@ -722,11 +785,34 @@ app.post('/api/session-requests', authenticate, async (req, res) => {
       });
     }
     
+    // Validate required fields
+    if (!sessionDate) {
+      return res.status(400).json({
+        success: false,
+        message: 'Session date is required'
+      });
+    }
+    
+    if (!sessionTime) {
+      return res.status(400).json({
+        success: false,
+        message: 'Session time is required'
+      });
+    }
+    
+    if (!sessionType) {
+      return res.status(400).json({
+        success: false,
+        message: 'Session type is required'
+      });
+    }
+    
     // Create the session request
     const sessionRequest = new SessionRequest({
       mentorId,
       studentId: req.user._id,
       studentName: `${req.user.firstName} ${req.user.lastName}`,
+      mentorName: `${mentor.firstName} ${mentor.lastName}`,
       sessionDate,
       sessionTime,
       sessionType,
@@ -744,6 +830,17 @@ app.post('/api/session-requests', authenticate, async (req, res) => {
     });
   } catch (error) {
     console.error('Error creating session request:', error);
+    
+    // Catch validation errors
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({
+        success: false,
+        message: 'Validation Error',
+        errors: messages
+      });
+    }
+    
     res.status(500).json({ 
       success: false, 
       message: 'Error creating session request: ' + error.message 
@@ -796,7 +893,7 @@ app.put('/api/session-requests/:requestId', authenticate, async (req, res) => {
     
     console.log('Updating session request:', { requestId, status });
     
-    if (!['accepted', 'rejected', 'pending'].includes(status)) {
+    if (!['accepted', 'rejected', 'pending', 'approved'].includes(status)) {
       return res.status(400).json({ message: 'Invalid status value' });
     }
     
@@ -822,7 +919,7 @@ app.put('/api/session-requests/:requestId', authenticate, async (req, res) => {
     await sessionRequest.save();
     
     // If the mentor accepted the request, create a new session
-    if (status === 'accepted') {
+    if (status === 'accepted' || status === 'approved') {
       try {
         // Get the student and mentor information
         const student = await User.findById(sessionRequest.studentId);
@@ -836,29 +933,49 @@ app.put('/api/session-requests/:requestId', authenticate, async (req, res) => {
           return res.status(404).json({ message: 'Student or mentor not found' });
         }
         
-        // Create a new session
-        const session = new Session({
+        // Check if a session already exists for this request to avoid duplicates
+        const existingSession = await Session.findOne({
           studentId: sessionRequest.studentId,
           mentorId: sessionRequest.mentorId,
-          studentName: `${student.firstName} ${student.lastName}`,
-          mentorName: `${mentor.firstName} ${mentor.lastName}`,
-          sessionDate: sessionRequest.sessionDate,
-          sessionTime: sessionRequest.sessionTime,
-          sessionType: sessionRequest.sessionType,
-          notes: sessionRequest.notes,
-          status: 'accepted',
-          price: mentor.price,
-          paymentId: 'pending' // This will be updated when payment is made
+          sessionDate: sessionRequest.sessionDate.toISOString().split('T')[0],
+          sessionTime: sessionRequest.sessionTime
         });
         
-        console.log('Creating new session with price:', mentor.price);
-        await session.save();
-        console.log('New session created:', session._id);
+        if (existingSession) {
+          console.log('Session already exists for this request:', existingSession._id);
+          
+          // Update the existing session if needed
+          if (existingSession.status !== 'accepted') {
+            existingSession.status = 'accepted';
+            await existingSession.save();
+            console.log('Updated existing session status to accepted');
+          }
+        } else {
+          // Create a new session
+          const session = new Session({
+            studentId: sessionRequest.studentId,
+            mentorId: sessionRequest.mentorId,
+            studentName: `${student.firstName} ${student.lastName}`,
+            mentorName: `${mentor.firstName} ${mentor.lastName}`,
+            sessionDate: sessionRequest.sessionDate.toISOString().split('T')[0],
+            sessionTime: sessionRequest.sessionTime,
+            sessionType: sessionRequest.sessionType,
+            notes: sessionRequest.notes,
+            status: 'confirmed',
+            price: mentor.price,
+            paymentId: 'pending' // This will be updated when payment is made
+          });
+          
+          console.log('Creating new session with price:', mentor.price);
+          await session.save();
+          console.log('New session created:', session._id);
+        }
         
-        // Increment the mentor's sessions count
-        mentor.sessionsCompleted = (mentor.sessionsCompleted || 0) + 1;
-        await mentor.save();
-        console.log('Mentor sessions count updated:', mentor.sessionsCompleted);
+        // Make sure payment status is set to pending
+        sessionRequest.paymentStatus = 'pending';
+        await sessionRequest.save();
+        
+        // Don't increment the sessions count here - do it when payment is made
       } catch (error) {
         console.error('Error creating session after accepting request:', error);
         // Don't throw here, just log the error
@@ -924,32 +1041,209 @@ app.get('/api/dashboard/session-requests', authenticate, async (req, res) => {
   }
 });
 
-// Get user's session requests (as student)
+// API endpoint to get user's session requests
 app.get('/api/session-requests', authenticate, async (req, res) => {
   try {
-    // Get all session requests for the current user as a student
+    // Find session requests for the current user
     const sessionRequests = await SessionRequest.find({ 
       studentId: req.user._id 
     }).sort({ createdAt: -1 });
     
-    // Get mentor details for each request
-    const requestsWithMentorDetails = await Promise.all(sessionRequests.map(async (request) => {
-      const mentor = await User.findById(request.mentorId).select('-password');
-      return {
-        ...request.toObject(),
-        mentor: mentor || null
-      };
+    // Enhance session request objects with payment information
+    const enhancedRequests = await Promise.all(sessionRequests.map(async (request) => {
+      // Check if there's a corresponding session that's been paid for
+      const paidSession = await Session.findOne({
+        studentId: req.user._id,
+        mentorId: request.mentorId,
+        sessionDate: request.sessionDate.toISOString().split('T')[0],
+        sessionTime: request.sessionTime,
+        paymentId: { $exists: true, $ne: 'pending' }
+      });
+      
+      const requestObj = request.toObject();
+      
+      // Add a derived status that combines the request status with payment information
+      if (paidSession) {
+        requestObj.derivedStatus = 'paid';
+        requestObj.paymentId = paidSession.paymentId;
+        requestObj.displayStatus = 'Paid';
+      } else if (request.status === 'accepted' && request.paymentStatus === 'pending') {
+        requestObj.derivedStatus = 'payment_required';
+        requestObj.displayStatus = 'Payment Required';
+      } else {
+        requestObj.derivedStatus = request.status;
+        requestObj.displayStatus = request.status === 'pending' ? 'Pending Approval' : 
+                                  request.status === 'accepted' ? 'Accepted' : 
+                                  request.status === 'approved' ? 'Approved' :
+                                  request.status === 'rejected' ? 'Rejected' : 'Unknown';
+      }
+      
+      return requestObj;
     }));
     
-    res.json({
+    res.json({ 
       success: true,
-      sessionRequests: requestsWithMentorDetails
+      sessionRequests: enhancedRequests 
     });
   } catch (error) {
     console.error('Error fetching session requests:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Error fetching session requests: ' + error.message 
+    });
+  }
+});
+
+// Get students for a mentor
+app.get('/api/mentor/students', authenticate, async (req, res) => {
+  try {
+    // Check if user is a mentor
+    if (!req.user.isMentor) {
+      return res.status(403).json({ 
+        success: false, 
+        message: 'Access denied. Only mentors can view their students.' 
+      });
+    }
+    
+    // Find all completed/confirmed sessions for this mentor
+    const sessions = await Session.find({
+      mentorId: req.user._id,
+      status: { $in: ['accepted', 'confirmed', 'completed'] }
+    });
+    
+    // Get sessions with completed payments (not pending)
+    const completedPaymentSessions = sessions.filter(session => 
+      session.paymentId && session.paymentId !== 'pending'
+    ).map(session => ({
+      studentId: session.studentId.toString(),
+      sessionId: session._id.toString()
+    }));
+    
+    // Track which students have completed payments for which sessions
+    const studentPaidSessions = {};
+    completedPaymentSessions.forEach(({ studentId, sessionId }) => {
+      if (!studentPaidSessions[studentId]) {
+        studentPaidSessions[studentId] = new Set();
+      }
+      studentPaidSessions[studentId].add(sessionId);
+    });
+    
+    // Also find all session requests for this mentor (accepted/pending)
+    const sessionRequests = await SessionRequest.find({
+      mentorId: req.user._id,
+      status: { $in: ['accepted', 'pending'] }
+    });
+    
+    // Get unique student IDs from both sessions and session requests
+    const sessionStudentIds = sessions.map(session => session.studentId.toString());
+    const requestStudentIds = sessionRequests.map(request => request.studentId.toString());
+    const allStudentIds = [...new Set([...sessionStudentIds, ...requestStudentIds])];
+    
+    // Fetch student details from User collection
+    const students = await Promise.all(
+      allStudentIds.map(async (studentId) => {
+        try {
+          const student = await User.findById(studentId).select('-password');
+          
+          if (!student) return null;
+          
+          // Get the most recent session with this student
+          const latestSession = await Session.findOne({
+            mentorId: req.user._id,
+            studentId: studentId
+          }).sort({ createdAt: -1 });
+          
+          // Get the most recent session request with this student
+          const latestRequest = await SessionRequest.findOne({
+            mentorId: req.user._id,
+            studentId: studentId
+          }).sort({ createdAt: -1 });
+          
+          // Determine the latest interaction (session or request)
+          let latestInteraction = latestSession;
+          if (!latestInteraction || (latestRequest && new Date(latestRequest.createdAt) > new Date(latestSession.createdAt))) {
+            latestInteraction = latestRequest;
+          }
+          
+          // Count completed sessions
+          const completedSessionCount = await Session.countDocuments({
+            mentorId: req.user._id,
+            studentId: studentId,
+            status: 'completed'
+          });
+          
+          // Count pending session requests
+          const pendingRequestCount = await SessionRequest.countDocuments({
+            mentorId: req.user._id,
+            studentId: studentId,
+            status: 'pending'
+          });
+          
+          // Count only sessions with pending payment that haven't been paid for yet
+          const sessionRequestsWithPendingPayment = await SessionRequest.find({
+            mentorId: req.user._id,
+            studentId: studentId,
+            status: 'accepted',
+            paymentStatus: 'pending'
+          });
+          
+          // Check if there's a corresponding paid session for each request
+          const pendingPaymentCount = sessionRequestsWithPendingPayment.filter(request => {
+            // If there's no entry for this student in studentPaidSessions, 
+            // or none of their paid sessions matches this request, then it's pending
+            return !studentPaidSessions[studentId] || 
+                   !Array.from(sessions).some(session => 
+                     session.studentId.toString() === studentId &&
+                     session.sessionDate === request.sessionDate.toISOString().split('T')[0] &&
+                     session.sessionTime === request.sessionTime &&
+                     session.paymentId !== 'pending'
+                   );
+          }).length;
+          
+          // Count sessions with completed payment
+          const paidSessionsCount = await Session.countDocuments({
+            mentorId: req.user._id,
+            studentId: studentId,
+            paymentId: { $exists: true, $ne: 'pending' }
+          });
+          
+          return {
+            id: student._id,
+            name: `${student.firstName} ${student.lastName}`,
+            firstName: student.firstName,
+            lastName: student.lastName,
+            email: student.email,
+            lastSession: latestSession ? latestSession.sessionDate : null,
+            lastRequest: latestRequest ? latestRequest.sessionDate : null,
+            sessionCount: completedSessionCount,
+            pendingCount: pendingRequestCount,
+            pendingPayment: pendingPaymentCount > 0,
+            paidSessions: paidSessionsCount,
+            lastActive: student.lastActive || latestInteraction?.createdAt || null,
+            field: student.field || null,
+            latestSessionTopic: latestInteraction?.notes || 'Career Guidance',
+            hasUpcomingSessions: sessions.some(s => s.status === 'confirmed' && s.studentId.toString() === studentId)
+          };
+        } catch (err) {
+          console.error(`Error fetching student details for ID ${studentId}:`, err);
+          return null;
+        }
+      })
+    );
+    
+    // Filter out null values (students that couldn't be found)
+    const validStudents = students.filter(student => student !== null);
+    
+    res.json({
+      success: true,
+      students: validStudents
+    });
+    
+  } catch (error) {
+    console.error('Error fetching mentor students:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error fetching mentor students: ' + error.message 
     });
   }
 });
@@ -961,30 +1255,194 @@ app.put('/api/sessions/:sessionId/payment', authenticate, async (req, res) => {
     const { paymentId } = req.body;
 
     console.log('Updating session payment:', { sessionId, paymentId });
+    console.log('User:', { id: req.user._id, name: `${req.user.firstName} ${req.user.lastName}` });
 
-    // Find the session
-    const session = await Session.findById(sessionId);
+    // Validate sessionId is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(sessionId)) {
+      console.error('Invalid session ID format:', sessionId);
+      return res.status(400).json({ message: 'Invalid session ID format' });
+    }
+
+    // First try to find the specific session
+    let session = await Session.findById(sessionId);
     
+    // If no session found, check if it's a session request
     if (!session) {
-      console.log('Session not found:', sessionId);
+      console.log('Session not found with ID:', sessionId, 'Checking for session request...');
+      
+      const sessionRequest = await SessionRequest.findById(sessionId);
+      if (sessionRequest) {
+        console.log('Found session request instead:', sessionRequest._id);
+        
+        // Make sure the requesting user is the student in the session request
+        if (sessionRequest.studentId.toString() !== req.user._id.toString()) {
+          console.error('User not authorized to update this session request:', {
+            requestStudentId: sessionRequest.studentId,
+            userId: req.user._id
+          });
+          return res.status(403).json({ message: 'You are not authorized to update this session request' });
+        }
+        
+        // Check if a session already exists for this request (to avoid duplicates)
+        const existingSession = await Session.findOne({
+          studentId: sessionRequest.studentId,
+          mentorId: sessionRequest.mentorId,
+          sessionDate: sessionRequest.sessionDate.toISOString().split('T')[0],
+          sessionTime: sessionRequest.sessionTime,
+        });
+        
+        if (existingSession) {
+          console.log('Session already exists for this request. Updating payment:', existingSession._id);
+          
+          // Update the existing session with payment info
+          existingSession.paymentId = paymentId;
+          existingSession.status = 'confirmed';
+          await existingSession.save();
+          
+          // Update session request payment status
+          sessionRequest.paymentStatus = 'completed';
+          await sessionRequest.save();
+          
+          return res.status(200).json({
+            message: 'Existing session payment updated successfully',
+            session: existingSession
+          });
+        }
+        
+        // Get the mentor information to get the price
+        const mentor = await User.findById(sessionRequest.mentorId);
+        if (!mentor) {
+          console.error('Mentor not found for session request:', sessionRequest.mentorId);
+          return res.status(404).json({ message: 'Mentor not found for this session request' });
+        }
+        
+        console.log('Creating new session from request with mentor:', mentor.firstName, mentor.lastName);
+        
+        // Create a new session from the session request
+        const newSession = new Session({
+          studentId: sessionRequest.studentId,
+          mentorId: sessionRequest.mentorId,
+          studentName: sessionRequest.studentName,
+          mentorName: `${mentor.firstName} ${mentor.lastName}`,
+          sessionDate: sessionRequest.sessionDate.toISOString().split('T')[0],
+          sessionTime: sessionRequest.sessionTime,
+          sessionType: sessionRequest.sessionType,
+          notes: sessionRequest.notes,
+          status: 'confirmed',
+          price: mentor.price || 0,
+          paymentId: paymentId
+        });
+        
+        await newSession.save();
+        console.log('Created new session from session request:', newSession._id);
+        
+        // Update the session request status to accepted and payment status to completed
+        sessionRequest.status = 'accepted';
+        sessionRequest.paymentStatus = 'completed';
+        await sessionRequest.save();
+        console.log('Updated session request status to accepted and payment completed');
+        
+        // Increment the mentor's sessions count
+        if (!mentor.sessionsCompleted || typeof mentor.sessionsCompleted !== 'number') {
+          mentor.sessionsCompleted = 1;
+        } else {
+          mentor.sessionsCompleted += 1;
+        }
+        await mentor.save();
+        console.log('Updated mentor session count to:', mentor.sessionsCompleted);
+        
+        // Return the newly created session
+        return res.status(200).json({
+          message: 'New session created and payment recorded successfully',
+          session: newSession
+        });
+      }
+      
+      console.error('No session or session request found with ID:', sessionId);
       return res.status(404).json({ message: 'Session not found' });
     }
 
+    // We found a session - update it with the payment info
+    console.log('Found existing session:', session._id);
+    
     // Check if the user is the student for this session
     if (session.studentId.toString() !== req.user._id.toString()) {
-      console.log('Unauthorized access attempt:', {
+      console.error('Unauthorized access attempt:', {
         sessionStudentId: session.studentId,
         currentUserId: req.user._id
       });
       return res.status(403).json({ message: 'You are not authorized to update this session' });
     }
+    
+    // If payment has already been made, don't process it again
+    if (session.paymentId && session.paymentId !== 'pending') {
+      console.log('Payment already processed for this session:', session.paymentId);
+      return res.status(200).json({
+        message: 'Payment was already processed for this session',
+        session
+      });
+    }
 
     // Update the session payment status
     session.paymentId = paymentId;
-    session.status = 'confirmed';
+    
+    // Change status to confirmed now that payment is complete
+    if (session.status === 'accepted') {
+      session.status = 'confirmed';
+      console.log('Updating session status from accepted to confirmed after payment');
+    }
+    
     await session.save();
 
     console.log('Session payment updated successfully:', session._id);
+    
+    // Attempt to find any associated sessions with the same details
+    // This is to handle potential duplicate sessions created during payment flow
+    try {
+      const otherSessions = await Session.find({
+        _id: { $ne: session._id },
+        studentId: session.studentId,
+        mentorId: session.mentorId,
+        sessionDate: session.sessionDate,
+        sessionTime: session.sessionTime,
+      });
+      
+      for (const otherSession of otherSessions) {
+        // Mark these sessions as paid too
+        otherSession.paymentId = paymentId;
+        otherSession.status = 'confirmed';
+        await otherSession.save();
+        console.log('Updated duplicate session with payment:', otherSession._id);
+      }
+    } catch (error) {
+      console.error('Error updating duplicate sessions:', error);
+      // Continue execution even if this fails
+    }
+    
+    // Find and update any corresponding session requests
+    try {
+      // This is important to keep session requests and sessions in sync
+      const sessionRequests = await SessionRequest.find({
+        studentId: session.studentId,
+        mentorId: session.mentorId,
+        // Convert sessionDate to a Date object for comparison
+        sessionDate: new Date(session.sessionDate),
+        sessionTime: session.sessionTime
+      });
+      
+      for (const request of sessionRequests) {
+        request.paymentStatus = 'completed';
+        // Also ensure the status is accepted or confirmed
+        if (request.status === 'pending') {
+          request.status = 'accepted';
+        }
+        await request.save();
+        console.log('Updated session request payment status:', request._id);
+      }
+    } catch (error) {
+      console.error('Error updating related session requests:', error);
+      // Continue execution even if this fails
+    }
 
     return res.status(200).json({
       message: 'Session payment updated successfully',
@@ -996,6 +1454,39 @@ app.put('/api/sessions/:sessionId/payment', authenticate, async (req, res) => {
       message: 'Server error. Please try again.',
       error: error.message
     });
+  }
+});
+
+// Get a specific session by ID
+app.get('/api/sessions/:sessionId', authenticate, async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    
+    // Validate sessionId is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(sessionId)) {
+      return res.status(400).json({ message: 'Invalid session ID format' });
+    }
+    
+    // Find the session
+    const session = await Session.findById(sessionId);
+    
+    if (!session) {
+      return res.status(404).json({ message: 'Session not found' });
+    }
+    
+    // Check if the user is either the student or mentor of the session
+    if (session.studentId.toString() !== req.user._id.toString() && 
+        (session.mentorId ? session.mentorId.toString() !== req.user._id.toString() : true)) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+    
+    res.json({
+      success: true,
+      session
+    });
+  } catch (error) {
+    console.error('Error fetching session details:', error);
+    res.status(500).json({ message: 'Failed to fetch session details. Please try again later.' });
   }
 });
 

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test Razorpay Integration</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f7f9fc;
+        }
+
+        button {
+            background-color: #4F46E5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #3730a3;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e2e8f0;
+            border-radius: 4px;
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Razorpay Test</h1>
+    <p>This page tests if Razorpay scripts load correctly and can create a payment instance.</p>
+
+    <div>
+        <button id="testBtn">Test Razorpay</button>
+    </div>
+
+    <h2>Script status</h2>
+    <div id="status">Checking...</div>
+
+    <h2>Console output</h2>
+    <div id="output" class="result">
+        <pre>// Output will appear here</pre>
+    </div>
+
+    <script>
+        // Function to log and display messages
+        function log(message) {
+            console.log(message);
+            document.querySelector('#output pre').textContent += message + '\n';
+        }
+
+        // Check if Razorpay script is loaded
+        function checkRazorpay() {
+            const status = document.getElementById('status');
+
+            if (window.Razorpay) {
+                status.innerHTML = '<span style="color: green">✓ Razorpay script is loaded!</span>';
+                log('Razorpay is available in the window object');
+            } else {
+                status.innerHTML = '<span style="color: red">✗ Razorpay script is NOT loaded</span>';
+                log('Razorpay is NOT available in the window object');
+
+                // Try to load it
+                log('Attempting to load Razorpay script...');
+                const script = document.createElement('script');
+                script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+                script.async = true;
+                script.onload = function () {
+                    log('Razorpay script loaded successfully!');
+                    status.innerHTML = '<span style="color: green">✓ Razorpay script loaded successfully!</span>';
+                };
+                script.onerror = function () {
+                    log('Failed to load Razorpay script');
+                    status.innerHTML = '<span style="color: red">✗ Failed to load Razorpay script</span>';
+                };
+                document.body.appendChild(script);
+            }
+        }
+
+        // Run the check when page loads
+        window.addEventListener('load', checkRazorpay);
+
+        // Test Razorpay button click
+        document.getElementById('testBtn').addEventListener('click', function () {
+            try {
+                log('Testing Razorpay instance creation...');
+
+                if (!window.Razorpay) {
+                    throw new Error('Razorpay is not loaded');
+                }
+
+                const options = {
+                    key: 'rzp_test_ilZnoyJIDqrWYR', // Test key
+                    amount: 50000, // 500 INR in paise
+                    currency: 'INR',
+                    name: 'Test Company',
+                    description: 'Test Payment',
+                    image: '/images/razorpay-logo.svg',
+                    handler: function (response) {
+                        log('Payment successful! ID: ' + response.razorpay_payment_id);
+                    },
+                    prefill: {
+                        name: 'Test User',
+                        email: 'test@example.com'
+                    },
+                    theme: {
+                        color: '#4F46E5'
+                    }
+                };
+
+                log('Options prepared: ' + JSON.stringify(options, null, 2));
+                const razorpayInstance = new window.Razorpay(options);
+                log('Razorpay instance created successfully!');
+
+                log('Opening payment modal...');
+                razorpayInstance.open();
+
+                razorpayInstance.on('payment.failed', function (response) {
+                    log('Payment failed: ' + JSON.stringify(response.error, null, 2));
+                });
+            } catch (error) {
+                log('Error: ' + error.message);
+            }
+        });
+    </script>
+</body>
+
+</html>

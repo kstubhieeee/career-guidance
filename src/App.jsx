@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import StudentLogin from './pages/StudentLogin';
+import StudentSignup from './pages/StudentSignup';
+import MentorLogin from './pages/MentorLogin';
 import Interests from './pages/Interests';
 import Mcq from './pages/Mcq';
 import Analysis from './pages/Analysis';
@@ -14,20 +17,24 @@ import SessionHistory from './pages/SessionHistory';
 import Assesment from './pages/Assesment';
 import MentorSignup from './pages/MentorSignup';
 import MenteeRequests from './pages/MenteeRequests';
+import SessionPayment from './pages/SessionPayment';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import { AssessmentProvider } from './context/AssessmentContext.jsx';
 
 function AppContent() {
   const location = useLocation();
-  const isLoginPage = location.pathname === '/login';
+  const isAuthPage = ['/login', '/student-login', '/student-signup', '/mentor-login', '/mentor-signup'].includes(location.pathname);
 
   return (
     <div className="min-h-screen bg-darkblue">
-      {!isLoginPage && <Navbar />}
+      {!isAuthPage && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/student-login" element={<StudentLogin />} />
+        <Route path="/student-signup" element={<StudentSignup />} />
+        <Route path="/mentor-login" element={<MentorLogin />} />
         <Route path="/mentor-signup" element={<MentorSignup />} />
         <Route path="/interests" element={<Interests />} />
         <Route path="/assessment" element={<Assesment />} />
@@ -64,6 +71,11 @@ function AppContent() {
         <Route path="/my-bookings" element={
           <ProtectedRoute>
             <MyBookings />
+          </ProtectedRoute>
+        } />
+        <Route path="/session-payment" element={
+          <ProtectedRoute>
+            <SessionPayment />
           </ProtectedRoute>
         } />
         <Route path="/session-history" element={

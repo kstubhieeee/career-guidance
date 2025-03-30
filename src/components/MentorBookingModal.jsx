@@ -21,14 +21,14 @@ function MentorBookingModal({ mentor, onClose, onSuccess, razorpayKeyId }) {
     const today = new Date();
     const formattedDate = today.toISOString().split('T')[0];
     document.getElementById('session-date').min = formattedDate;
-    
+
     // Add Razorpay script to the document if needed
     if (!window.Razorpay) {
       const script = document.createElement('script');
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
       script.async = true;
       document.body.appendChild(script);
-      
+
       return () => {
         // Only remove it if we added it
         if (document.body.contains(script)) {
@@ -44,38 +44,35 @@ function MentorBookingModal({ mentor, onClose, onSuccess, razorpayKeyId }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Reset error message
     setErrorMessage('');
-    
+
     if (!currentUser) {
       toast.error('Please login to book a session');
       navigate('/login');
       return;
     }
-    
+
     if (!isFormValid()) {
       toast.error('Please fill all required fields');
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
       // Create the session request data
       const sessionRequestData = {
         mentorId: mentor._id || mentor.id,
-        mentorName: `${mentor.firstName} ${mentor.lastName}`,
         sessionDate: date,
         sessionTime: time,
         sessionType,
-        notes,
-        price: mentor.price,
-        status: 'pending' // Initial status is pending
+        notes
       };
-      
+
       console.log('Creating session request:', sessionRequestData);
-      
+
       // Send session request to the API
       const apiResponse = await fetch(`${API_BASE_URL}/api/session-requests`, {
         method: 'POST',
@@ -85,19 +82,19 @@ function MentorBookingModal({ mentor, onClose, onSuccess, razorpayKeyId }) {
         body: JSON.stringify(sessionRequestData),
         credentials: 'include'
       });
-      
+
       if (!apiResponse.ok) {
         throw new Error('Failed to create session request');
       }
-      
+
       const apiData = await apiResponse.json();
-      
+
       // Show success message
       toast.success('Session request sent to mentor successfully!');
-      
+
       // Close modal and call onSuccess callback
       onSuccess(apiData.sessionRequest);
-      
+
     } catch (error) {
       console.error('Error creating session request:', error);
       setErrorMessage(error.message || 'Error sending your request. Please try again later.');
@@ -110,7 +107,7 @@ function MentorBookingModal({ mentor, onClose, onSuccess, razorpayKeyId }) {
   return (
     <div className="fixed inset-0 bg-darkblue bg-opacity-80 flex items-center justify-center z-50 overflow-y-auto p-4">
       <div className="relative bg-darkblue-light border border-gray-700 rounded-xl shadow-xl max-w-3xl w-full mx-auto p-6 animate-fadeIn">
-        <button 
+        <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
         >
@@ -118,35 +115,35 @@ function MentorBookingModal({ mentor, onClose, onSuccess, razorpayKeyId }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        
+
         <div className="flex flex-col md:flex-row gap-8">
           {/* Mentor Info */}
           <div className="md:w-1/3">
             <div className="aspect-square rounded-lg overflow-hidden mb-4">
-              <img 
-                src={mentor.photo} 
-                alt={mentor.name} 
+              <img
+                src={mentor.photo}
+                alt={mentor.name}
                 className="w-full h-full object-cover"
               />
             </div>
             <h2 className="text-xl font-bold text-white mb-2">{mentor.name}</h2>
             <p className="text-gray-300 text-sm mb-2">{mentor.qualification}</p>
-            
+
             <div className="flex items-center mb-4">
               <span className="mr-1 text-yellow-400">★</span>
               <span className="text-white font-semibold">{mentor.rating}</span>
               <span className="text-gray-400 text-sm ml-1">({mentor.sessions || 0} sessions)</span>
             </div>
-            
+
             <div className="text-white font-bold text-xl mb-4">
               ₹{mentor.price}<span className="text-gray-400 font-normal text-sm">/session</span>
             </div>
-            
+
             <div className="bg-darkblue rounded-lg p-4">
               <h3 className="text-primary font-semibold mb-2 text-sm uppercase tracking-wider">Expertise</h3>
               <div className="flex flex-wrap gap-2">
                 {mentor.expertise.map((skill, index) => (
-                  <span 
+                  <span
                     key={index}
                     className="bg-secondary-dark text-gray-300 px-2 py-1 rounded-full text-xs"
                   >
@@ -156,11 +153,11 @@ function MentorBookingModal({ mentor, onClose, onSuccess, razorpayKeyId }) {
               </div>
             </div>
           </div>
-          
+
           {/* Booking Form */}
           <div className="md:w-2/3">
             <h3 className="text-2xl font-bold text-white mb-6">Book a Session</h3>
-            
+
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
@@ -176,7 +173,7 @@ function MentorBookingModal({ mentor, onClose, onSuccess, razorpayKeyId }) {
                     required
                   />
                 </div>
-                
+
                 <div>
                   <label htmlFor="session-time" className="block text-white text-sm font-medium mb-2">
                     Time *
@@ -202,7 +199,7 @@ function MentorBookingModal({ mentor, onClose, onSuccess, razorpayKeyId }) {
                   </select>
                 </div>
               </div>
-              
+
               <div className="mb-6">
                 <label className="block text-white text-sm font-medium mb-2">
                   Session Type *
@@ -224,7 +221,7 @@ function MentorBookingModal({ mentor, onClose, onSuccess, razorpayKeyId }) {
                       <div className="text-white">Video Call</div>
                     </div>
                   </label>
-                  
+
                   <label className={`p-3 rounded-lg border ${sessionType === 'audio' ? 'border-primary bg-primary bg-opacity-10' : 'border-gray-600 bg-darkblue'} cursor-pointer transition-all duration-200`}>
                     <input
                       type="radio"
@@ -241,7 +238,7 @@ function MentorBookingModal({ mentor, onClose, onSuccess, razorpayKeyId }) {
                       <div className="text-white">Audio Call</div>
                     </div>
                   </label>
-                  
+
                   <label className={`p-3 rounded-lg border ${sessionType === 'chat' ? 'border-primary bg-primary bg-opacity-10' : 'border-gray-600 bg-darkblue'} cursor-pointer transition-all duration-200`}>
                     <input
                       type="radio"
@@ -260,7 +257,7 @@ function MentorBookingModal({ mentor, onClose, onSuccess, razorpayKeyId }) {
                   </label>
                 </div>
               </div>
-              
+
               <div className="mb-6">
                 <label htmlFor="session-notes" className="block text-white text-sm font-medium mb-2">
                   Notes for Mentor (Optional)
@@ -273,7 +270,7 @@ function MentorBookingModal({ mentor, onClose, onSuccess, razorpayKeyId }) {
                   className="w-full p-3 rounded-lg bg-darkblue border border-gray-600 text-white focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 focus:outline-none min-h-[100px]"
                 ></textarea>
               </div>
-              
+
               <div className="bg-darkblue p-4 rounded-lg border border-gray-700 mb-6">
                 <div className="flex justify-between items-center text-white mb-2">
                   <span>Session Fee</span>
@@ -284,7 +281,7 @@ function MentorBookingModal({ mentor, onClose, onSuccess, razorpayKeyId }) {
                   <span>₹{mentor.price}</span>
                 </div>
               </div>
-              
+
               {errorMessage && (
                 <div className="mb-4 p-3 bg-red-900 bg-opacity-20 border border-red-500 rounded-lg text-red-400 text-sm">
                   <div className="flex items-start">
@@ -295,7 +292,7 @@ function MentorBookingModal({ mentor, onClose, onSuccess, razorpayKeyId }) {
                   </div>
                 </div>
               )}
-              
+
               <button
                 type="submit"
                 disabled={loading || !isFormValid()}

@@ -14,14 +14,20 @@ function MentorDashboard() {
   const [sessions, setSessions] = useState([]);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [pendingRequestsCount, setPendingRequestsCount] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const refreshData = () => {
+    setRefreshKey(prev => prev + 1);
+  };
 
   useEffect(() => {
     if (!currentUser || !currentUser.isMentor) {
       return;
     }
-    
+
     const fetchDashboardData = async () => {
       setLoading(true);
+      setError(null);
       try {
         // Fetch the latest session requests
         const requestsResponse = await fetch(`${API_BASE_URL}/api/dashboard/session-requests`, {
@@ -36,23 +42,44 @@ function MentorDashboard() {
         const requestsData = await requestsResponse.json();
         setPendingRequests(requestsData.latestRequests || []);
         setPendingRequestsCount(requestsData.pendingCount || 0);
-        
-        // For now, we'll use the mock data for students and sessions
-        // In the future, we'll replace this with API calls
-        setStudents([
-          { id: 1, name: 'Karan Banerjee', email: 'karanprince85@gmail.com', field: 'Technology', lastActive: '2023-05-15T10:30:00' },
-          { id: 2, name: 'Dyuti Agarwal', email: 'dyuti.z.agarwal@gmail.com', field: 'Science', lastActive: '2023-05-14T14:45:00' },
-          { id: 3, name: 'Faiz Moulavi', email: 'faizloveskohli@gmail.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' },
-          { id: 4, name: 'Sneha Choudhary', email: 'snehaa@gmail.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' },
-          { id: 5, name: 'Shrey Mishra', email: 'shrey69@gmail.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' }
-        ]);
 
-        setSessions([
-          { id: 1, studentName: 'Karan Banerjee', date: '2023-05-20T15:00:00', status: 'upcoming', topic: 'Career in Software Development' },
-          { id: 2, studentName: 'Dyuti Agarwal', date: '2023-05-18T11:30:00', status: 'upcoming', topic: 'Research Opportunities in Biology' },
-          { id: 3, studentName: 'Faiz Moulavi', date: '2023-05-10T13:00:00', status: 'completed', topic: 'Mechanical Engineering Career Paths' },
-          { id: 4, studentName: 'Sneha Choudhary', date: '2023-05-10T13:00:00', status: 'completed', topic: 'Mechanical Engineering Career Paths' },
-        ]);
+        // Fetch mentor sessions - both ongoing and completed
+        const sessionsResponse = await fetch(`${API_BASE_URL}/api/mentor/sessions`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+
+        if (!sessionsResponse.ok) {
+          throw new Error('Failed to fetch mentor sessions');
+        }
+
+        const sessionsData = await sessionsResponse.json();
+        const mentorSessions = sessionsData.sessions || [];
+
+        // Set sessions state with actual data
+        setSessions(mentorSessions.map(session => ({
+          id: session._id,
+          studentName: session.studentName,
+          date: session.sessionDate,
+          status: session.status === 'confirmed' ? 'upcoming' : session.status,
+          topic: session.notes || 'Mentoring Session',
+          rating: session.rating,
+          paymentId: session.paymentId
+        })));
+
+        // Fetch real student data using the API endpoint
+        const studentsResponse = await fetch(`${API_BASE_URL}/api/mentor/students`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+
+        if (!studentsResponse.ok) {
+          throw new Error('Failed to fetch student details');
+        }
+
+        const studentsData = await studentsResponse.json();
+        console.log('Fetched students data:', studentsData.students);
+        setStudents(studentsData.students || []);
       } catch (err) {
         console.error('Error fetching dashboard data:', err);
         setError(err.message || 'Failed to load dashboard data');
@@ -63,9 +90,8 @@ function MentorDashboard() {
     };
 
     fetchDashboardData();
-  }, [currentUser]);
+  }, [currentUser, refreshKey]);
 
-  
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString).toLocaleDateString(undefined, options);
@@ -74,12 +100,12 @@ function MentorDashboard() {
   // Format time from 24h to 12h format
   const formatTime = (timeString) => {
     if (!timeString) return '';
-    
+
     const [hours, minutes] = timeString.split(':');
     const hour = parseInt(hours, 10);
     const ampm = hour >= 12 ? 'PM' : 'AM';
     const hour12 = hour % 12 || 12;
-    
+
     return `${hour12}:${minutes || '00'} ${ampm}`;
   };
 
@@ -103,8 +129,11 @@ function MentorDashboard() {
       // Update the UI by removing the accepted request
       setPendingRequests(pendingRequests.filter(req => req._id !== requestId));
       setPendingRequestsCount(pendingRequestsCount - 1);
-      
+
       toast.success('Session request accepted successfully');
+
+      // Refresh data to ensure all components are up to date
+      refreshData();
     } catch (error) {
       console.error('Error accepting session request:', error);
       toast.error(error.message || 'Failed to accept session request');
@@ -142,7 +171,7 @@ function MentorDashboard() {
               </div>
               <div className="mt-4 md:mt-0 flex space-x-4">
                 <Link to="/mentee-requests" className="bg-secondary text-white px-6 py-3 rounded-lg hover:bg-secondary-dark transition-colors shadow-md flex items-center">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg className="w-5 h-5 mr-2" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                   </svg>
                   Session Requests
@@ -152,8 +181,11 @@ function MentorDashboard() {
                     </span>
                   )}
                 </Link>
-                <button className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors shadow-md">
-                  <i className="fas fa-calendar-plus mr-2"></i> Schedule New Session
+                <button className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors shadow-md flex items-center">
+                  <svg className="w-5 h-5 mr-2" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                  </svg>
+                  Schedule New Session
                 </button>
               </div>
             </div>
@@ -197,8 +229,11 @@ function MentorDashboard() {
                     </div>
                   </div>
                   <div className="mt-6">
-                    <button className="w-full bg-darkblue text-white px-4 py-2 rounded border border-gray-600 hover:bg-darkblue-dark transition-colors">
-                      <i className="fas fa-user-edit mr-2"></i> Edit Profile
+                    <button className="w-full bg-darkblue text-white px-4 py-2 rounded border border-gray-600 hover:bg-darkblue-dark transition-colors flex items-center justify-center">
+                      <svg className="w-4 h-4 mr-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                      </svg>
+                      Edit Profile
                     </button>
                   </div>
                 </div>
@@ -207,14 +242,14 @@ function MentorDashboard() {
                 <div className="bg-darkblue-light rounded-lg shadow-md p-6 border border-gray-700 md:col-span-2">
                   <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-bold text-white">New Session Requests</h2>
-                    <Link 
-                      to="/mentee-requests" 
+                    <Link
+                      to="/mentee-requests"
                       className="text-primary hover:text-primary-light text-sm"
                     >
                       View all requests
                     </Link>
                   </div>
-                  
+
                   {pendingRequests.length > 0 ? (
                     <div className="space-y-4">
                       {pendingRequests.map(request => (
@@ -230,7 +265,7 @@ function MentorDashboard() {
                               </p>
                             </div>
                             <div>
-                              <button 
+                              <button
                                 onClick={() => handleAcceptRequest(request._id)}
                                 className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors"
                               >
@@ -262,10 +297,12 @@ function MentorDashboard() {
                       placeholder="Search students..."
                       className="px-4 py-2 bg-darkblue border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                     />
-                    <i className="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <svg className="w-4 h-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
                   </div>
                 </div>
-                
+
                 {students.length > 0 ? (
                   <div className="overflow-x-auto">
                     <table className="w-full text-white">
@@ -273,7 +310,9 @@ function MentorDashboard() {
                         <tr className="border-b border-gray-700">
                           <th className="py-3 px-4 text-left">Name</th>
                           <th className="py-3 px-4 text-left">Email</th>
-                          <th className="py-3 px-4 text-left">Field</th>
+                          <th className="py-3 px-4 text-left">Interest</th>
+                          <th className="py-3 px-4 text-left">Completed</th>
+                          <th className="py-3 px-4 text-left">Status</th>
                           <th className="py-3 px-4 text-left">Last Active</th>
                           <th className="py-3 px-4 text-left">Actions</th>
                         </tr>
@@ -283,8 +322,36 @@ function MentorDashboard() {
                           <tr key={student.id} className="border-b border-gray-700 hover:bg-darkblue-dark">
                             <td className="py-3 px-4">{student.name}</td>
                             <td className="py-3 px-4">{student.email}</td>
-                            <td className="py-3 px-4">{student.field}</td>
-                            <td className="py-3 px-4">{formatDate(student.lastActive)}</td>
+                            <td className="py-3 px-4">{student.latestSessionTopic || 'Career Guidance'}</td>
+                            <td className="py-3 px-4">{student.sessionCount || 0}</td>
+                            <td className="py-3 px-4">
+                              {student.pendingCount > 0 && (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-500 bg-opacity-20 text-yellow-400 border border-yellow-500 mr-1">
+                                  {student.pendingCount} pending
+                                </span>
+                              )}
+                              {student.hasUpcomingSessions && (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500 bg-opacity-20 text-green-400 border border-green-500 mr-1">
+                                  Upcoming
+                                </span>
+                              )}
+                              {student.pendingPayment && (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-500 bg-opacity-20 text-orange-400 border border-orange-500 mr-1">
+                                  Payment pending
+                                </span>
+                              )}
+                              {student.paidSessions > 0 && (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500 bg-opacity-20 text-blue-400 border border-blue-500 mr-1">
+                                  {student.paidSessions} paid
+                                </span>
+                              )}
+                              {!student.pendingCount && !student.hasUpcomingSessions && !student.sessionCount && !student.pendingPayment && !student.paidSessions && (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-500 bg-opacity-20 text-gray-400 border border-gray-500">
+                                  No sessions
+                                </span>
+                              )}
+                            </td>
+                            <td className="py-3 px-4">{formatDate(student.lastActive || student.lastSession || student.lastRequest || new Date())}</td>
                             <td className="py-3 px-4">
                               <div className="flex space-x-2">
                                 <button className="bg-primary text-white px-3 py-1 rounded text-xs hover:bg-primary-dark transition-colors">
@@ -310,7 +377,7 @@ function MentorDashboard() {
               {/* Session History */}
               <div className="bg-darkblue-light rounded-lg shadow-md p-6 border border-gray-700">
                 <h2 className="text-xl font-bold text-white mb-6">Session History</h2>
-                
+
                 {sessions.filter(s => s.status === 'completed').length > 0 ? (
                   <div className="overflow-x-auto">
                     <table className="w-full text-white">
@@ -319,6 +386,7 @@ function MentorDashboard() {
                           <th className="py-3 px-4 text-left">Student</th>
                           <th className="py-3 px-4 text-left">Topic</th>
                           <th className="py-3 px-4 text-left">Date</th>
+                          <th className="py-3 px-4 text-left">Rating</th>
                           <th className="py-3 px-4 text-left">Actions</th>
                         </tr>
                       </thead>
@@ -331,8 +399,19 @@ function MentorDashboard() {
                               <td className="py-3 px-4">{session.topic}</td>
                               <td className="py-3 px-4">{formatDate(session.date)}</td>
                               <td className="py-3 px-4">
+                                {session.rating ? (
+                                  <div className="flex text-yellow-400">
+                                    {Array.from({ length: 5 }).map((_, i) => (
+                                      <span key={i} className={i < session.rating ? 'text-yellow-400' : 'text-gray-600'}>★</span>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <span className="text-gray-500">Not rated</span>
+                                )}
+                              </td>
+                              <td className="py-3 px-4">
                                 <button className="bg-darkblue-dark text-white px-3 py-1 rounded text-xs border border-gray-600 hover:bg-darkblue transition-colors">
-                                  View Notes
+                                  View Details
                                 </button>
                               </td>
                             </tr>

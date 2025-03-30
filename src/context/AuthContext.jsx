@@ -17,12 +17,12 @@ export const AuthProvider = ({ children }) => {
       try {
         // First check if we have user data in localStorage
         const savedUser = localStorage.getItem('currentUser');
-        
+
         if (savedUser) {
           setCurrentUser(JSON.parse(savedUser));
           setLoading(false);
         }
-        
+
         // Always verify with the server even if we have local data
         const response = await fetch(`${API_BASE_URL}/api/user`, {
           method: 'GET',
@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
 
         if (response.ok) {
           const data = await response.json();
-          
+
           // Update localStorage and state if server data is available
           localStorage.setItem('currentUser', JSON.stringify(data.user));
           setCurrentUser(data.user);
@@ -64,17 +64,34 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       setError(null);
+
+      // Clean up the userData based on isMentor flag
+      let registerData = { ...userData };
+
+      // If user is not a mentor, remove mentor-specific fields
+      if (!registerData.isMentor) {
+        // Keep only these fields for students - explicitly removing mentor fields
+        const { firstName, lastName, email, password, isMentor } = registerData;
+        registerData = {
+          firstName,
+          lastName,
+          email,
+          password,
+          isMentor
+        };
+      }
+
       console.log('Sending registration request to server with data:', {
-        ...userData,
+        ...registerData,
         password: '[REDACTED]' // Don't log the actual password
       });
-      
+
       const response = await fetch(`${API_BASE_URL}/api/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify(registerData),
         credentials: 'include',
       });
 
