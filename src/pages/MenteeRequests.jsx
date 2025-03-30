@@ -72,9 +72,10 @@ function MenteeRequests() {
         credentials: 'include'
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || `Failed to ${status} the session request`);
+        throw new Error(data.message || data.error || `Failed to ${status} the session request`);
       }
 
       // Update the request status in the UI
@@ -83,7 +84,7 @@ function MenteeRequests() {
       ));
 
       // Show success message
-      toast.success(`Session ${status} successfully`);
+      toast.success(`Session request ${status} successfully`);
     } catch (err) {
       console.error(`Error ${status} session request:`, err);
       toast.error(err.message || `Failed to ${status} the session request`);

@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 // API base URL constant
 const API_BASE_URL = 'http://localhost:3250';
 
-function MentorBookingModal({ mentor, onClose, onSuccess }) {
+function MentorBookingModal({ mentor, onClose, onSuccess, razorpayKeyId }) {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -65,16 +65,19 @@ function MentorBookingModal({ mentor, onClose, onSuccess }) {
       // Create the session request data
       const sessionRequestData = {
         mentorId: mentor._id || mentor.id,
+        mentorName: `${mentor.firstName} ${mentor.lastName}`,
         sessionDate: date,
         sessionTime: time,
         sessionType,
-        notes
+        notes,
+        price: mentor.price,
+        status: 'pending' // Initial status is pending
       };
       
       console.log('Creating session request:', sessionRequestData);
       
       // Send session request to the API
-      const response = await fetch(`${API_BASE_URL}/api/session-requests`, {
+      const apiResponse = await fetch(`${API_BASE_URL}/api/session-requests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -83,26 +86,18 @@ function MentorBookingModal({ mentor, onClose, onSuccess }) {
         credentials: 'include'
       });
       
-      let responseData;
-      try {
-        responseData = await response.json();
-      } catch (parseError) {
-        console.error('Error parsing API response:', parseError);
-        throw new Error('Failed to parse server response. Please try again later.');
+      if (!apiResponse.ok) {
+        throw new Error('Failed to create session request');
       }
       
-      if (!response.ok) {
-        console.error('API error response:', responseData);
-        throw new Error(responseData.message || 'Failed to create session request. Please try again.');
-      }
-      
-      console.log('Session request created successfully:', responseData);
+      const apiData = await apiResponse.json();
       
       // Show success message
       toast.success('Session request sent to mentor successfully!');
       
       // Close modal and call onSuccess callback
-      onSuccess(responseData.sessionRequest);
+      onSuccess(apiData.sessionRequest);
+      
     } catch (error) {
       console.error('Error creating session request:', error);
       setErrorMessage(error.message || 'Error sending your request. Please try again later.');

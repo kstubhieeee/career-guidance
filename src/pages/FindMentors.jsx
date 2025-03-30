@@ -124,25 +124,18 @@ function FindMentors() {
     }
 
     setSelectedMentor(mentor);
-    // Load Razorpay script if not already loaded
-    if (!window.Razorpay) {
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
   };
 
   const handleBookingSuccess = (booking) => {
     setSelectedMentor(null);
     toast.success(
       <div>
-        Booking confirmed with {booking.mentorName}!
+        Session request sent to {booking.mentorName}!
         <button
           onClick={() => navigate('/my-bookings')}
           className="ml-2 underline text-primary-light hover:text-primary"
         >
-          View Bookings
+          View Requests
         </button>
       </div>
     );

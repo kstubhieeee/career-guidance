@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toast, Toaster } from 'react-hot-toast';
 import MentorRatingModal from '../components/MentorRatingModal';
+import SessionPaymentModal from '../components/SessionPaymentModal';
 import Footer from '../components/Footer';
 
 function MyBookings() {
@@ -10,6 +11,10 @@ function MyBookings() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [bookingToRate, setBookingToRate] = useState(null);
+  const [bookingToPay, setBookingToPay] = useState(null);
+  const [envVars] = useState({
+    razorpayKeyId: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_ilZnoyJIDqrWYR'
+  });
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -20,20 +25,44 @@ function MyBookings() {
           return;
         }
 
-        const response = await fetch('http://localhost:3250/api/sessions', {
-          method: 'GET',
-          credentials: 'include'
-        });
+        // Fetch both sessions and session requests
+        const [sessionsResponse, requestsResponse] = await Promise.all([
+          fetch('http://localhost:3250/api/sessions', {
+            method: 'GET',
+            credentials: 'include'
+          }),
+          fetch('http://localhost:3250/api/session-requests', {
+            method: 'GET',
+            credentials: 'include'
+          })
+        ]);
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch bookings');
+        const [sessionsData, requestsData] = await Promise.all([
+          sessionsResponse.json(),
+          requestsResponse.json()
+        ]);
+
+        if (!sessionsResponse.ok) {
+          throw new Error(sessionsData.message || 'Failed to fetch sessions');
         }
 
-        const data = await response.json();
-        setBookings(data.sessions);
+        if (!requestsResponse.ok) {
+          throw new Error(requestsData.message || 'Failed to fetch session requests');
+        }
+
+        // Combine sessions and requests
+        const allBookings = [
+          ...(sessionsData.sessions || []),
+          ...(requestsData.sessionRequests || [])
+        ];
+
+        // Sort by date (newest first)
+        allBookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        
+        setBookings(allBookings);
       } catch (error) {
         console.error('Error fetching bookings:', error);
-        toast.error('Failed to load your bookings');
+        toast.error(error.message || 'Failed to load your bookings');
       } finally {
         setLoading(false);
       }
@@ -182,6 +211,13 @@ function MyBookings() {
     }
   };
 
+  const handlePaymentSuccess = (updatedSession) => {
+    setBookings(bookings.map(booking => 
+      booking._id === updatedSession._id ? updatedSession : booking
+    ));
+    setBookingToPay(null);
+  };
+
   return (
     <>
       <div className="min-h-screen bg-darkblue py-12">
@@ -253,11 +289,20 @@ function MyBookings() {
                       
                       <div className="flex flex-col md:flex-row justify-between items-start md:items-center pt-4 border-t border-gray-700">
                         <div>
-                          <div className="text-gray-400 text-sm mb-1">Amount Paid</div>
+                          <div className="text-gray-400 text-sm mb-1">Amount</div>
                           <div className="text-white font-bold text-xl">₹{booking.price}</div>
                         </div>
                         
                         <div className="mt-4 md:mt-0 flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                          {booking.status === 'accepted' && !booking.paymentId && (
+                            <button
+                              onClick={() => setBookingToPay(booking)}
+                              className="inline-block bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-lg transition-colors text-center"
+                            >
+                              Pay Now
+                            </button>
+                          )}
+                          
                           {booking.status === 'confirmed' && (
                             <a
                               href="#"
@@ -317,6 +362,15 @@ function MyBookings() {
           booking={bookingToRate}
           onClose={() => setBookingToRate(null)}
           onSubmit={(rating, feedback) => handleRatingSubmit(bookingToRate._id, rating, feedback)}
+        />
+      )}
+      
+      {bookingToPay && (
+        <SessionPaymentModal
+          session={bookingToPay}
+          onClose={() => setBookingToPay(null)}
+          onSuccess={handlePaymentSuccess}
+          razorpayKeyId={envVars.razorpayKeyId}
         />
       )}
       
