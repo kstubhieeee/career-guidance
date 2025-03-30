@@ -4,6 +4,9 @@ const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
+// Add a base URL constant
+const API_BASE_URL = 'http://localhost:3250';
+
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -21,7 +24,7 @@ export const AuthProvider = ({ children }) => {
         }
         
         // Always verify with the server even if we have local data
-        const response = await fetch('http://localhost:3250/api/user', {
+        const response = await fetch(`${API_BASE_URL}/api/user`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -32,8 +35,14 @@ export const AuthProvider = ({ children }) => {
           // Update localStorage and state if server data is available
           localStorage.setItem('currentUser', JSON.stringify(data.user));
           setCurrentUser(data.user);
+        } else if (response.status === 401) {
+          // User is not authenticated - this is normal during signup/login
+          // Just clear the user data silently
+          localStorage.removeItem('currentUser');
+          setCurrentUser(null);
         } else {
-          // Clear localStorage if server doesn't recognize the user
+          // Other errors - clear localStorage if server doesn't recognize the user
+          console.error('Server error:', response.status);
           localStorage.removeItem('currentUser');
           setCurrentUser(null);
         }
@@ -55,7 +64,12 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       setError(null);
-      const response = await fetch('http://localhost:3250/api/register', {
+      console.log('Sending registration request to server with data:', {
+        ...userData,
+        password: '[REDACTED]' // Don't log the actual password
+      });
+      
+      const response = await fetch(`${API_BASE_URL}/api/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,6 +79,7 @@ export const AuthProvider = ({ children }) => {
       });
 
       const data = await response.json();
+      console.log('Registration response:', data);
 
       if (!response.ok) {
         throw new Error(data.message || 'Registration failed');
@@ -74,7 +89,8 @@ export const AuthProvider = ({ children }) => {
       setCurrentUser(data.user);
       return data;
     } catch (err) {
-      setError(err.message);
+      console.error('Registration error in AuthContext:', err);
+      setError(err.message || 'Registration failed');
       throw err;
     }
   };
@@ -82,7 +98,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
       setError(null);
-      const response = await fetch('http://localhost:3250/api/login', {
+      const response = await fetch(`${API_BASE_URL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,7 +125,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       setError(null);
-      const response = await fetch('http://localhost:3250/api/logout', {
+      const response = await fetch(`${API_BASE_URL}/api/logout`, {
         method: 'POST',
         credentials: 'include',
       });
@@ -130,7 +146,7 @@ export const AuthProvider = ({ children }) => {
   const saveAssessment = async (assessmentData) => {
     try {
       setError(null);
-      const response = await fetch('http://localhost:3250/api/assessment', {
+      const response = await fetch(`${API_BASE_URL}/api/assessment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -155,7 +171,7 @@ export const AuthProvider = ({ children }) => {
   const getAssessments = async () => {
     try {
       setError(null);
-      const response = await fetch('http://localhost:3250/api/assessments', {
+      const response = await fetch(`${API_BASE_URL}/api/assessments`, {
         method: 'GET',
         credentials: 'include',
       });

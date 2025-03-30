@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
+// API base URL constant
+const API_BASE_URL = 'http://localhost:3250';
+
 function MentorBookingModal({ mentor, onClose, onSuccess }) {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -59,175 +62,52 @@ function MentorBookingModal({ mentor, onClose, onSuccess }) {
     setLoading(true);
     
     try {
-      const sessionData = {
+      // Create the session request data
+      const sessionRequestData = {
         mentorId: mentor._id || mentor.id,
-        mentorName: mentor.name,
         sessionDate: date,
         sessionTime: time,
         sessionType,
-        notes,
-        price: mentor.price,
-        status: 'pending',
-        createdAt: new Date().toISOString()
+        notes
       };
       
-      // Make sure the mentorId is a valid MongoDB ID if sending to API
-      if (!/^[0-9a-fA-F]{24}$/.test(sessionData.mentorId)) {
-        console.warn('mentorId is not a valid MongoDB ObjectId:', sessionData.mentorId);
-        // Since we're using demo data, use a placeholder MongoDB ID format
-        sessionData.mentorId = '000000000000000000000000';
+      console.log('Creating session request:', sessionRequestData);
+      
+      // Send session request to the API
+      const response = await fetch(`${API_BASE_URL}/api/session-requests`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(sessionRequestData),
+        credentials: 'include'
+      });
+      
+      let responseData;
+      try {
+        responseData = await response.json();
+      } catch (parseError) {
+        console.error('Error parsing API response:', parseError);
+        throw new Error('Failed to parse server response. Please try again later.');
       }
       
-      // Make sure we have a valid key
-      const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_ilZnoyJIDqrWYR';
-      
-      // For development/testing - simulate payment success if needed
-      const simulatePaymentSuccess = !window.Razorpay || !razorpayKey;
-      
-      if (simulatePaymentSuccess) {
-        console.log('Simulating successful payment for testing purposes');
-        
-        // Simulate successful payment
-        const mockPaymentId = 'pay_' + Math.random().toString(36).substring(2, 15);
-        
-        // Save session booking with payment details
-        try {
-          // Create the new booking data
-          const newBooking = {
-            ...sessionData,
-            paymentId: mockPaymentId,
-            status: 'confirmed',
-          };
-          
-          console.log('Sending booking data to API:', newBooking);
-          
-          // Send to the backend API
-          const bookingResponse = await fetch('http://localhost:3250/api/sessions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newBooking),
-            credentials: 'include'
-          });
-          
-          let errorData;
-          try {
-            errorData = await bookingResponse.json();
-          } catch (parseError) {
-            console.error('Error parsing API response:', parseError);
-            throw new Error('Failed to parse server response. Please try again later.');
-          }
-          
-          if (!bookingResponse.ok) {
-            console.error('API error response:', errorData);
-            throw new Error(errorData.message || 'Failed to book session. Please try again.');
-          }
-          
-          console.log('Booking saved successfully:', errorData);
-          
-          // Show success message
-          toast.success('Session booked successfully! (Test Mode)');
-          
-          // Close modal and refresh mentor list
-          onSuccess(errorData.session);
-          return;
-        } catch (error) {
-          console.error('Error in test mode:', error);
-          setErrorMessage(error.message || 'Error saving your booking. Please try again later.');
-          toast.error(error.message || 'Error saving your booking. Please contact support.');
-          setLoading(false);
-          return;
-        }
+      if (!response.ok) {
+        console.error('API error response:', responseData);
+        throw new Error(responseData.message || 'Failed to create session request. Please try again.');
       }
       
-      if (!razorpayKey) {
-        throw new Error('Razorpay key is not configured');
-      }
+      console.log('Session request created successfully:', responseData);
       
-      // Initialize Razorpay payment
-      const options = {
-        key: razorpayKey, // Use the key we confirmed above
-        amount: mentor.price * 100, // Razorpay expects amount in smallest currency unit (paise)
-        currency: "INR",
-        name: "Career Guidant",
-        description: `Mentorship Session with ${mentor.name}`,
-        image: "https://example.com/logo.png", // Use a generic logo instead of mentor photo which might cause issues
-        handler: async function(response) {
-          // Payment was successful
-          const paymentId = response.razorpay_payment_id;
-          
-          // Save session booking with payment details
-          try {
-            // Create the new booking data
-            const newBooking = {
-              ...sessionData,
-              paymentId,
-              status: 'confirmed',
-            };
-            
-            console.log('Razorpay payment successful, sending booking data to API:', newBooking);
-            
-            // Send to the backend API
-            const bookingResponse = await fetch('http://localhost:3250/api/sessions', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(newBooking),
-              credentials: 'include'
-            });
-            
-            let errorData;
-            try {
-              errorData = await bookingResponse.json();
-            } catch (parseError) {
-              console.error('Error parsing API response:', parseError);
-              throw new Error('Failed to parse server response. Please try again later.');
-            }
-            
-            if (!bookingResponse.ok) {
-              console.error('API error response:', errorData);
-              throw new Error(errorData.message || 'Failed to book session. Please try again.');
-            }
-            
-            console.log('Booking saved successfully:', errorData);
-            
-            // Show success message
-            toast.success('Session booked successfully!');
-            
-            // Close modal and refresh mentor list
-            onSuccess(errorData.session);
-          } catch (error) {
-            console.error('Error saving booking:', error);
-            setErrorMessage(error.message || 'Error saving your booking. Please try again later.');
-            toast.error(error.message || 'Error saving your booking. Please contact support.');
-            setLoading(false);
-          }
-        },
-        prefill: {
-          name: `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim(),
-          email: currentUser.email || '',
-          contact: currentUser.phone || ''
-        },
-        theme: {
-          color: "#6366f1" // Primary color
-        },
-        modal: {
-          ondismiss: function() {
-            setLoading(false);
-          }
-        }
-      };
+      // Show success message
+      toast.success('Session request sent to mentor successfully!');
       
-      const razorpay = new window.Razorpay(options);
-      razorpay.open();
+      // Close modal and call onSuccess callback
+      onSuccess(responseData.sessionRequest);
     } catch (error) {
-      console.error('Error initiating payment:', error);
-      console.log('Razorpay key used:', razorpayKey);
-      console.log('Environment variables:', import.meta.env);
-      setErrorMessage(error.message || 'Failed to initiate payment. Please try again.');
-      toast.error('Failed to initiate payment. Please try again.');
+      console.error('Error creating session request:', error);
+      setErrorMessage(error.message || 'Error sending your request. Please try again later.');
+      toast.error(error.message || 'Error sending your request. Please contact support.');
+    } finally {
       setLoading(false);
     }
   };
@@ -435,7 +315,7 @@ function MentorBookingModal({ mentor, onClose, onSuccess }) {
                     Processing...
                   </>
                 ) : (
-                  <>Proceed to Pay ₹{mentor.price}</>
+                  <>Request Session</>
                 )}
               </button>
             </form>
