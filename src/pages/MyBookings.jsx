@@ -440,236 +440,259 @@ function MyBookings() {
                 </div>
 
                 <div className="space-y-6">
-                  {filteredBookings.map((booking) => (
-                    <div key={booking._id || booking.paymentId} className={`bg-darkblue-light rounded-xl border ${isSessionConfirmed(booking)
-                      ? 'border-green-500 bg-green-900 bg-opacity-10'
-                      : 'border-gray-700'
-                      } overflow-hidden`}>
-                      <div className="p-6">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                          <h2 className="text-xl font-semibold text-white mb-2 md:mb-0">
-                            Session with {booking.mentorName}
-                          </h2>
-                          <div className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center border ${isSessionConfirmed(booking)
-                            ? statusBadgeClasses.confirmed
-                            : booking.derivedStatus === 'payment_required'
-                              ? 'bg-yellow-500 bg-opacity-20 text-yellow-400 border-yellow-500'
-                              : getStatusBadgeClass(booking.status)
-                            }`}>
-                            {isSessionConfirmed(booking) && (
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                              </svg>
-                            )}
-                            {booking.displayStatus}
-                          </div>
-                        </div>
-
-                        {/* Show different messages based on session status */}
-                        {isSessionConfirmed(booking) && (
-                          <div className="mt-4 mb-2 text-center">
-                            <p className="text-green-400 text-sm">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                              This session is confirmed and ready to attend
-                            </p>
-                          </div>
-                        )}
-
-                        {booking.status === 'accepted' && !isSessionConfirmed(booking) && (
-                          <div className="mt-4 mb-2 text-center">
-                            <p className="text-yellow-400 text-sm">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                              Payment required to confirm this session
-                            </p>
-                          </div>
-                        )}
-
-                        {getMentorInfo(booking)}
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                          <div>
-                            <div className="text-gray-400 text-sm mb-1">Date</div>
-                            <div className="text-white font-medium">{formatSessionDate(booking.sessionDate)}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-400 text-sm mb-1">Time</div>
-                            <div className="text-white font-medium">{formatSessionTime(booking.sessionTime)}</div>
-                          </div>
-                          <div>
-                            <div className="text-gray-400 text-sm mb-1">Session Type</div>
-                            <div className="text-white font-medium flex items-center">
-                              <span className="mr-2 text-primary">{getSessionTypeIcon(booking.sessionType)}</span>
-                              <span className="capitalize">{booking.sessionType}</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {booking.notes && (
-                          <div className="bg-darkblue p-4 rounded-lg mb-6">
-                            <div className="text-gray-400 text-sm mb-1">Notes</div>
-                            <div className="text-white">{booking.notes}</div>
-                          </div>
-                        )}
-
-                        {/* Only show payment details section for confirmed sessions */}
-                        {isSessionConfirmed(booking) && booking.paymentId && booking.paymentId !== 'pending' && (
-                          <div className="bg-darkblue p-4 rounded-lg mb-6 border border-green-800 border-opacity-30">
-                            <h4 className="text-white text-sm font-semibold mb-3 flex items-center">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                              </svg>
-                              Payment Details
-                            </h4>
-                            <div className="space-y-2">
-                              <div className="flex justify-between">
-                                <span className="text-gray-400">Transaction ID:</span>
-                                <span className="text-white text-sm truncate max-w-[200px]" title={booking.paymentId}>
-                                  {booking.paymentId}
-                                </span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-gray-400">Amount Paid:</span>
-                                <span className="text-white font-semibold">
-                                  ₹{booking.price || (mentors[booking.mentorId]?.price || 0)}
-                                </span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-gray-400">Payment Method:</span>
-                                <span className="text-white">Razorpay</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-gray-400">Status:</span>
-                                <span className="text-green-400">Paid</span>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center pt-4 border-t border-gray-700">
-                          <div>
-                            <div className="text-gray-400 text-sm mb-1">Amount</div>
-                            <div className="flex items-center">
-                              <span className="text-white font-bold text-xl">
-                                {(booking.status === 'accepted' || booking.status === 'pending') && mentors[booking.mentorId]
-                                  ? `₹${mentors[booking.mentorId].price}`
-                                  : `₹${booking.price || 0}`}
-                              </span>
+                  {filteredBookings.length > 0 ? (
+                    filteredBookings.map((booking) => (
+                      <div key={booking._id || booking.paymentId} className={`bg-darkblue-light rounded-xl border ${isSessionConfirmed(booking)
+                        ? 'border-green-500 bg-green-900 bg-opacity-10'
+                        : 'border-gray-700'
+                        } overflow-hidden`}>
+                        <div className="p-6">
+                          <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                            <h2 className="text-xl font-semibold text-white mb-2 md:mb-0">
+                              Session with {booking.mentorName}
+                            </h2>
+                            <div className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center border ${isSessionConfirmed(booking)
+                              ? statusBadgeClasses.confirmed
+                              : booking.derivedStatus === 'payment_required'
+                                ? 'bg-yellow-500 bg-opacity-20 text-yellow-400 border-yellow-500'
+                                : getStatusBadgeClass(booking.status)
+                              }`}>
                               {isSessionConfirmed(booking) && (
-                                <span className="ml-2 px-2 py-1 bg-green-500 bg-opacity-20 text-green-400 text-xs rounded-md border border-green-500">
-                                  Paid
-                                </span>
-                              )}
-                              {booking.status === 'accepted' && !isSessionConfirmed(booking) && (
-                                <span className="ml-2 px-2 py-1 bg-yellow-500 bg-opacity-20 text-yellow-400 text-xs rounded-md border border-yellow-500">
-                                  Payment Required
-                                </span>
-                              )}
-                              {booking.status === 'pending' && (
-                                <span className="ml-2 px-2 py-1 bg-blue-500 bg-opacity-20 text-blue-400 text-xs rounded-md border border-blue-500">
-                                  Approval Pending
-                                </span>
-                              )}
-                              {booking.status === 'approved' && (
-                                <span className="ml-2 px-2 py-1 bg-green-500 bg-opacity-20 text-green-400 text-xs rounded-md border border-green-500">
-                                  Approved by Mentor
-                                </span>
-                              )}
-                              {booking.status === 'rejected' && (
-                                <span className="ml-2 px-2 py-1 bg-red-500 bg-opacity-20 text-red-400 text-xs rounded-md border border-red-500">
-                                  Rejected by Mentor
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          <div className="mt-4 md:mt-0 flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
-                            {/* Payment required - show Pay Now button */}
-                            {booking.status === 'accepted' && !isSessionConfirmed(booking) && (
-                              <button
-                                onClick={() => handlePayment(booking)}
-                                className="inline-block bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-lg transition-colors text-center"
-                              >
-                                Pay Now
-                              </button>
-                            )}
-
-                            {/* Confirmed session - show Join Session button */}
-                            {isSessionConfirmed(booking) && (
-                              <a
-                                href="#"
-                                className="inline-block bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors text-center font-medium"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                </svg>
-                                Join Session
-                              </a>
-                            )}
-
-                            {/* Reschedule button - only for confirmed/paid sessions */}
-                            {isSessionConfirmed(booking) && (
-                              <button
-                                onClick={() => {
-                                  const newDate = prompt('Enter new date (YYYY-MM-DD)');
-                                  const newTime = prompt('Enter new time (HH:MM)');
-                                  if (newDate && newTime) {
-                                    handleReschedule(booking._id, newDate, newTime);
-                                  }
-                                }}
-                                className="inline-block bg-darkblue hover:bg-darkblue-dark text-white py-2 px-4 rounded-lg border border-gray-600 transition-colors text-center"
-                              >
-                                Reschedule
-                              </button>
-                            )}
-
-                            {/* Rate session button - show for confirmed/completed sessions without rating */}
-                            {isSessionConfirmed(booking) && !booking.rating && (
-                              <button
-                                onClick={() => handleRateSession(booking)}
-                                className="inline-block bg-darkblue hover:bg-darkblue-dark text-white py-2 px-4 rounded-lg border border-gray-600 transition-colors"
-                              >
-                                Rate Session
-                              </button>
-                            )}
-
-                            {/* Special status indicators */}
-                            {booking.status === 'approved' && (
-                              <div className="inline-flex items-center bg-green-500 bg-opacity-20 text-green-400 py-2 px-4 rounded-lg border border-green-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                 </svg>
-                                Approved by Mentor
-                              </div>
-                            )}
+                              )}
+                              {booking.displayStatus}
+                            </div>
+                          </div>
 
-                            {booking.status === 'rejected' && (
-                              <div className="inline-flex items-center bg-red-500 bg-opacity-20 text-red-400 py-2 px-4 rounded-lg border border-red-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          {/* Show different messages based on session status */}
+                          {isSessionConfirmed(booking) && (
+                            <div className="mt-4 mb-2 text-center">
+                              <p className="text-green-400 text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                Rejected by Mentor
-                              </div>
-                            )}
+                                This session is confirmed and ready to attend
+                              </p>
+                            </div>
+                          )}
 
-                            {booking.rating && (
-                              <div className="flex items-center bg-darkblue py-2 px-4 rounded-lg border border-gray-600">
-                                <div className="text-yellow-400 flex">
-                                  {Array.from({ length: 5 }).map((_, index) => (
-                                    <span key={index} className={index < booking.rating ? 'text-yellow-400' : 'text-gray-600'}>★</span>
-                                  ))}
-                                </div>
-                                <span className="ml-2 text-gray-300">Your Rating</span>
+                          {booking.status === 'accepted' && !isSessionConfirmed(booking) && (
+                            <div className="mt-4 mb-2 text-center">
+                              <p className="text-yellow-400 text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Payment required to confirm this session
+                              </p>
+                            </div>
+                          )}
+
+                          {getMentorInfo(booking)}
+
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div>
+                              <div className="text-gray-400 text-sm mb-1">Date</div>
+                              <div className="text-white font-medium">{formatSessionDate(booking.sessionDate)}</div>
+                            </div>
+                            <div>
+                              <div className="text-gray-400 text-sm mb-1">Time</div>
+                              <div className="text-white font-medium">{formatSessionTime(booking.sessionTime)}</div>
+                            </div>
+                            <div>
+                              <div className="text-gray-400 text-sm mb-1">Session Type</div>
+                              <div className="text-white font-medium flex items-center">
+                                <span className="mr-2 text-primary">{getSessionTypeIcon(booking.sessionType)}</span>
+                                <span className="capitalize">{booking.sessionType}</span>
                               </div>
-                            )}
+                            </div>
+                          </div>
+
+                          {booking.notes && (
+                            <div className="bg-darkblue p-4 rounded-lg mb-6">
+                              <div className="text-gray-400 text-sm mb-1">Notes</div>
+                              <div className="text-white">{booking.notes}</div>
+                            </div>
+                          )}
+
+                          {/* Only show payment details section for confirmed sessions */}
+                          {isSessionConfirmed(booking) && booking.paymentId && booking.paymentId !== 'pending' && (
+                            <div className="bg-darkblue p-4 rounded-lg mb-6 border border-green-800 border-opacity-30">
+                              <h4 className="text-white text-sm font-semibold mb-3 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                                Payment Details
+                              </h4>
+                              <div className="space-y-2">
+                                <div className="flex justify-between">
+                                  <span className="text-gray-400">Transaction ID:</span>
+                                  <span className="text-white text-sm truncate max-w-[200px]" title={booking.paymentId}>
+                                    {booking.paymentId}
+                                  </span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-400">Amount Paid:</span>
+                                  <span className="text-white font-semibold">
+                                    ₹{booking.price || (mentors[booking.mentorId]?.price || 0)}
+                                  </span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-400">Payment Method:</span>
+                                  <span className="text-white">Razorpay</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-400">Status:</span>
+                                  <span className="text-green-400">Paid</span>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          <div className="flex flex-col md:flex-row justify-between items-start md:items-center pt-4 border-t border-gray-700">
+                            <div>
+                              <div className="text-gray-400 text-sm mb-1">Amount</div>
+                              <div className="flex items-center">
+                                <span className="text-white font-bold text-xl">
+                                  {(booking.status === 'accepted' || booking.status === 'pending') && mentors[booking.mentorId]
+                                    ? `₹${mentors[booking.mentorId].price}`
+                                    : `₹${booking.price || 0}`}
+                                </span>
+                                {isSessionConfirmed(booking) && (
+                                  <span className="ml-2 px-2 py-1 bg-green-500 bg-opacity-20 text-green-400 text-xs rounded-md border border-green-500">
+                                    Paid
+                                  </span>
+                                )}
+                                {booking.status === 'accepted' && !isSessionConfirmed(booking) && (
+                                  <span className="ml-2 px-2 py-1 bg-yellow-500 bg-opacity-20 text-yellow-400 text-xs rounded-md border border-yellow-500">
+                                    Payment Required
+                                  </span>
+                                )}
+                                {booking.status === 'pending' && (
+                                  <span className="ml-2 px-2 py-1 bg-blue-500 bg-opacity-20 text-blue-400 text-xs rounded-md border border-blue-500">
+                                    Approval Pending
+                                  </span>
+                                )}
+                                {booking.status === 'approved' && (
+                                  <span className="ml-2 px-2 py-1 bg-green-500 bg-opacity-20 text-green-400 text-xs rounded-md border border-green-500">
+                                    Approved by Mentor
+                                  </span>
+                                )}
+                                {booking.status === 'rejected' && (
+                                  <span className="ml-2 px-2 py-1 bg-red-500 bg-opacity-20 text-red-400 text-xs rounded-md border border-red-500">
+                                    Rejected by Mentor
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="mt-4 md:mt-0 flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                              {/* Payment required - show Pay Now button */}
+                              {booking.status === 'accepted' && !isSessionConfirmed(booking) && (
+                                <button
+                                  onClick={() => handlePayment(booking)}
+                                  className="inline-block bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-lg transition-colors text-center"
+                                >
+                                  Pay Now
+                                </button>
+                              )}
+
+                              {/* Confirmed session - show Join Session button */}
+                              {isSessionConfirmed(booking) && (
+                                <a
+                                  href="#"
+                                  className="inline-block bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors text-center font-medium"
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                  </svg>
+                                  Join Session
+                                </a>
+                              )}
+
+                              {/* Reschedule button - only for confirmed/paid sessions */}
+                              {isSessionConfirmed(booking) && (
+                                <button
+                                  onClick={() => {
+                                    const newDate = prompt('Enter new date (YYYY-MM-DD)');
+                                    const newTime = prompt('Enter new time (HH:MM)');
+                                    if (newDate && newTime) {
+                                      handleReschedule(booking._id, newDate, newTime);
+                                    }
+                                  }}
+                                  className="inline-block bg-darkblue hover:bg-darkblue-dark text-white py-2 px-4 rounded-lg border border-gray-600 transition-colors text-center"
+                                >
+                                  Reschedule
+                                </button>
+                              )}
+
+                              {/* Rate session button - show for confirmed/completed sessions without rating */}
+                              {isSessionConfirmed(booking) && !booking.rating && (
+                                <button
+                                  onClick={() => handleRateSession(booking)}
+                                  className="inline-block bg-darkblue hover:bg-darkblue-dark text-white py-2 px-4 rounded-lg border border-gray-600 transition-colors"
+                                >
+                                  Rate Session
+                                </button>
+                              )}
+
+                              {/* Special status indicators */}
+                              {booking.status === 'approved' && (
+                                <div className="inline-flex items-center bg-green-500 bg-opacity-20 text-green-400 py-2 px-4 rounded-lg border border-green-500">
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                  </svg>
+                                  Approved by Mentor
+                                </div>
+                              )}
+
+                              {booking.status === 'rejected' && (
+                                <div className="inline-flex items-center bg-red-500 bg-opacity-20 text-red-400 py-2 px-4 rounded-lg border border-red-500">
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                  </svg>
+                                  Rejected by Mentor
+                                </div>
+                              )}
+
+                              {booking.rating && (
+                                <div className="flex items-center bg-darkblue py-2 px-4 rounded-lg border border-gray-600">
+                                  <div className="text-yellow-400 flex">
+                                    {Array.from({ length: 5 }).map((_, index) => (
+                                      <span key={index} className={index < booking.rating ? 'text-yellow-400' : 'text-gray-600'}>★</span>
+                                    ))}
+                                  </div>
+                                  <span className="ml-2 text-gray-300">Your Rating</span>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
+                    ))
+                  ) : (
+                    <div className="bg-darkblue-light rounded-xl border border-gray-700 p-8 text-center">
+                      <div className="mx-auto w-16 h-16 mb-4 text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                      </div>
+                      <h2 className="text-xl font-semibold text-white mb-2">No {activeTab} sessions found</h2>
+                      <p className="text-gray-400 mb-6">
+                        {activeTab === 'confirmed' && "You don't have any confirmed sessions yet. Complete payment to confirm your sessions."}
+                        {activeTab === 'pending' && "You don't have any pending sessions awaiting mentor approval."}
+                        {activeTab === 'accepted' && "You don't have any sessions waiting for payment."}
+                        {activeTab === 'rejected' && "You don't have any rejected session requests."}
+                        {activeTab === 'all' && "You don't have any sessions yet. Book a session with a mentor to get started."}
+                      </p>
+                      {(activeTab === 'all' || activeTab === 'confirmed') && (
+                        <Link to="/find-mentors" className="inline-block bg-primary hover:bg-primary-dark text-white py-2 px-6 rounded-lg transition-colors">
+                          Find Mentors
+                        </Link>
+                      )}
                     </div>
-                  ))}
+                  )}
                 </div>
               </>
             )}

@@ -14,6 +14,7 @@ function MenteeRequests() {
   const [requests, setRequests] = useState([]);
   const [error, setError] = useState(null);
   const [processingRequest, setProcessingRequest] = useState(null);
+  const [activeFilter, setActiveFilter] = useState('all');
 
   // Fetch session requests when component mounts
   useEffect(() => {
@@ -57,6 +58,15 @@ function MenteeRequests() {
       setLoading(false);
     }
   };
+
+  // Filter requests based on active filter
+  const filteredRequests = requests.filter(request => {
+    if (activeFilter === 'all') return true;
+    if (activeFilter === 'pending') return request.status === 'pending';
+    if (activeFilter === 'accepted') return request.status === 'accepted';
+    if (activeFilter === 'rejected') return request.status === 'rejected';
+    return true;
+  });
 
   // Function to handle request status update
   const handleStatusUpdate = async (requestId, status) => {
@@ -149,107 +159,140 @@ function MenteeRequests() {
             </p>
           </div>
         ) : (
-          <div className="space-y-6">
-            {requests.map(request => (
-              <div
-                key={request._id}
-                className={`bg-darkblue-light p-6 rounded-lg border ${request.status === 'pending' ? 'border-yellow-600' :
-                  request.status === 'accepted' ? 'border-green-600' :
-                    request.status === 'rejected' ? 'border-red-600' :
-                      'border-gray-600'
-                  }`}
-              >
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                  <div>
-                    <h3 className="text-xl font-semibold text-white mb-1">
-                      Session with {request.studentName}
-                    </h3>
-                    <p className="text-gray-300 text-sm">
-                      Request received on {formatDate(request.createdAt)}
-                    </p>
-                  </div>
+          <>
+            {/* Filter tabs */}
+            <div className="flex border-b border-gray-700 mb-6 overflow-x-auto">
+              {['all', 'pending', 'accepted', 'rejected'].map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  className={`px-4 py-2 text-sm font-medium whitespace-nowrap ${activeFilter === filter
+                    ? 'text-primary border-b-2 border-primary'
+                    : 'text-gray-400 hover:text-white'
+                    }`}
+                >
+                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                </button>
+              ))}
+            </div>
 
-                  <div className="mt-2 md:mt-0">
-                    <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${request.status === 'pending' ? 'bg-yellow-500 bg-opacity-20 text-yellow-300' :
-                      request.status === 'accepted' ? 'bg-green-500 bg-opacity-20 text-green-300' :
-                        request.status === 'rejected' ? 'bg-red-500 bg-opacity-20 text-red-300' :
-                          'bg-gray-500 bg-opacity-20 text-gray-300'
-                      }`}>
-                      {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
-                    </span>
-                  </div>
-                </div>
+            {filteredRequests.length > 0 ? (
+              <div className="space-y-6">
+                {filteredRequests.map(request => (
+                  <div
+                    key={request._id}
+                    className={`bg-darkblue-light p-6 rounded-lg border ${request.status === 'pending' ? 'border-yellow-600' :
+                      request.status === 'accepted' ? 'border-green-600' :
+                        request.status === 'rejected' ? 'border-red-600' :
+                          'border-gray-600'
+                      }`}
+                  >
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                      <div>
+                        <h3 className="text-xl font-semibold text-white mb-1">
+                          Session with {request.studentName}
+                        </h3>
+                        <p className="text-gray-300 text-sm">
+                          Request received on {formatDate(request.createdAt)}
+                        </p>
+                      </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-                  <div>
-                    <h4 className="text-primary text-sm font-medium mb-1">Date & Time</h4>
-                    <p className="text-white">
-                      {formatDate(request.sessionDate)} at {formatTime(request.sessionTime)}
-                    </p>
-                  </div>
+                      <div className="mt-2 md:mt-0">
+                        <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${request.status === 'pending' ? 'bg-yellow-500 bg-opacity-20 text-yellow-300' :
+                          request.status === 'accepted' ? 'bg-green-500 bg-opacity-20 text-green-300' :
+                            request.status === 'rejected' ? 'bg-red-500 bg-opacity-20 text-red-300' :
+                              'bg-gray-500 bg-opacity-20 text-gray-300'
+                          }`}>
+                          {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                        </span>
+                      </div>
+                    </div>
 
-                  <div>
-                    <h4 className="text-primary text-sm font-medium mb-1">Session Type</h4>
-                    <p className="text-white capitalize">{request.sessionType}</p>
-                  </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                      <div>
+                        <h4 className="text-primary text-sm font-medium mb-1">Date & Time</h4>
+                        <p className="text-white">
+                          {formatDate(request.sessionDate)} at {formatTime(request.sessionTime)}
+                        </p>
+                      </div>
 
-                  <div>
-                    <h4 className="text-primary text-sm font-medium mb-1">Student Name</h4>
-                    <p className="text-white">{request.studentName}</p>
-                  </div>
-                </div>
+                      <div>
+                        <h4 className="text-primary text-sm font-medium mb-1">Session Type</h4>
+                        <p className="text-white capitalize">{request.sessionType}</p>
+                      </div>
 
-                {request.notes && (
-                  <div className="mb-4">
-                    <h4 className="text-primary text-sm font-medium mb-1">Notes</h4>
-                    <p className="text-white bg-darkblue p-3 rounded border border-gray-700">
-                      {request.notes}
-                    </p>
-                  </div>
-                )}
+                      <div>
+                        <h4 className="text-primary text-sm font-medium mb-1">Student Name</h4>
+                        <p className="text-white">{request.studentName}</p>
+                      </div>
+                    </div>
 
-                {request.status === 'pending' && (
-                  <div className="flex flex-col sm:flex-row gap-3 mt-4">
-                    <button
-                      onClick={() => handleStatusUpdate(request._id, 'accepted')}
-                      disabled={processingRequest === request._id}
-                      className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                    >
-                      {processingRequest === request._id ? (
-                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                      ) : (
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
-                        </svg>
-                      )}
-                      Accept Request
-                    </button>
+                    {request.notes && (
+                      <div className="mb-4">
+                        <h4 className="text-primary text-sm font-medium mb-1">Notes</h4>
+                        <p className="text-white bg-darkblue p-3 rounded border border-gray-700">
+                          {request.notes}
+                        </p>
+                      </div>
+                    )}
 
-                    <button
-                      onClick={() => handleStatusUpdate(request._id, 'rejected')}
-                      disabled={processingRequest === request._id}
-                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                    >
-                      {processingRequest === request._id ? (
-                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                      ) : (
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                      )}
-                      Decline Request
-                    </button>
+                    {request.status === 'pending' && (
+                      <div className="flex flex-col sm:flex-row gap-3 mt-4">
+                        <button
+                          onClick={() => handleStatusUpdate(request._id, 'accepted')}
+                          disabled={processingRequest === request._id}
+                          className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                        >
+                          {processingRequest === request._id ? (
+                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                          ) : (
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
+                            </svg>
+                          )}
+                          Accept Request
+                        </button>
+
+                        <button
+                          onClick={() => handleStatusUpdate(request._id, 'rejected')}
+                          disabled={processingRequest === request._id}
+                          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                        >
+                          {processingRequest === request._id ? (
+                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                          ) : (
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                          )}
+                          Decline Request
+                        </button>
+                      </div>
+                    )}
                   </div>
-                )}
+                ))}
               </div>
-            ))}
-          </div>
+            ) : (
+              <div className="bg-darkblue-light p-8 rounded-lg text-center">
+                <svg className="w-16 h-16 mx-auto text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                <h2 className="text-xl font-semibold text-white mb-2">No {activeFilter} requests found</h2>
+                <p className="text-gray-400 mb-4">
+                  {activeFilter === 'pending' && "You don't have any pending session requests waiting for your action."}
+                  {activeFilter === 'accepted' && "You don't have any accepted session requests."}
+                  {activeFilter === 'rejected' && "You don't have any rejected session requests."}
+                  {activeFilter === 'all' && "No session requests match the current filter."}
+                </p>
+              </div>
+            )}
+          </>
         )}
       </div>
       <Footer />
