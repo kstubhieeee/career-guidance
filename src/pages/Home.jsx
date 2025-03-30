@@ -2,6 +2,7 @@ import React from 'react';
 import Hero from '../components/Hero';
 import About from '../components/About';
 import Contact from '../components/Contact';
+import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
 
 function Home() {
@@ -15,6 +16,7 @@ function Home() {
       </div>
       <About />
       <Contact />
+      <Footer />
     </div>
   );
 }
