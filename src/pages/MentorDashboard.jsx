@@ -1,38 +1,114 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { toast, Toaster } from 'react-hot-toast';
+
+// API base URL constant
+const API_BASE_URL = 'http://localhost:3250';
 
 function MentorDashboard() {
   const { currentUser } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [students, setStudents] = useState([]);
   const [sessions, setSessions] = useState([]);
+  const [pendingRequests, setPendingRequests] = useState([]);
+  const [pendingRequestsCount, setPendingRequestsCount] = useState(0);
 
   useEffect(() => {
+    if (!currentUser || !currentUser.isMentor) {
+      return;
+    }
     
-    setStudents([
-      { id: 1, name: 'Karan Banerjee', email: 'karanprince85@gmail.com', field: 'Technology', lastActive: '2023-05-15T10:30:00' },
-      { id: 2, name: 'Dyuti Agarwal', email: 'dyuti.z.agarwal@gmail.com', field: 'Science', lastActive: '2023-05-14T14:45:00' },
-      { id: 3, name: 'Faiz Moulavi', email: 'faizloveskohli@gmail.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' },
-      { id: 4, name: 'Sneha Choudhary', email: 'snehaa@gmail.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' },
-      { id: 5, name: 'Shrey Mishra', email: 'shrey69@gmail.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' }
-      
-      
-    ]);
+    const fetchDashboardData = async () => {
+      setLoading(true);
+      try {
+        // Fetch the latest session requests
+        const requestsResponse = await fetch(`${API_BASE_URL}/api/dashboard/session-requests`, {
+          method: 'GET',
+          credentials: 'include'
+        });
 
-    setSessions([
-      { id: 1, studentName: 'Karan Banerjee', date: '2023-05-20T15:00:00', status: 'upcoming', topic: 'Career in Software Development' },
-      { id: 2, studentName: 'Dyuti Agarwal', date: '2023-05-18T11:30:00', status: 'upcoming', topic: 'Research Opportunities in Biology' },
-      { id: 3, studentName: 'Faiz Moulavi', date: '2023-05-10T13:00:00', status: 'completed', topic: 'Mechanical Engineering Career Paths' },
-      { id: 4, studentName: 'Sneha Choudhary', date: '2023-05-10T13:00:00', status: 'completed', topic: 'Mechanical Engineering Career Paths' },
-    ]);
-  }, []);
+        if (!requestsResponse.ok) {
+          throw new Error('Failed to fetch session requests');
+        }
+
+        const requestsData = await requestsResponse.json();
+        setPendingRequests(requestsData.latestRequests || []);
+        setPendingRequestsCount(requestsData.pendingCount || 0);
+        
+        // For now, we'll use the mock data for students and sessions
+        // In the future, we'll replace this with API calls
+        setStudents([
+          { id: 1, name: 'Karan Banerjee', email: 'karanprince85@gmail.com', field: 'Technology', lastActive: '2023-05-15T10:30:00' },
+          { id: 2, name: 'Dyuti Agarwal', email: 'dyuti.z.agarwal@gmail.com', field: 'Science', lastActive: '2023-05-14T14:45:00' },
+          { id: 3, name: 'Faiz Moulavi', email: 'faizloveskohli@gmail.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' },
+          { id: 4, name: 'Sneha Choudhary', email: 'snehaa@gmail.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' },
+          { id: 5, name: 'Shrey Mishra', email: 'shrey69@gmail.com', field: 'Engineering', lastActive: '2023-05-13T09:15:00' }
+        ]);
+
+        setSessions([
+          { id: 1, studentName: 'Karan Banerjee', date: '2023-05-20T15:00:00', status: 'upcoming', topic: 'Career in Software Development' },
+          { id: 2, studentName: 'Dyuti Agarwal', date: '2023-05-18T11:30:00', status: 'upcoming', topic: 'Research Opportunities in Biology' },
+          { id: 3, studentName: 'Faiz Moulavi', date: '2023-05-10T13:00:00', status: 'completed', topic: 'Mechanical Engineering Career Paths' },
+          { id: 4, studentName: 'Sneha Choudhary', date: '2023-05-10T13:00:00', status: 'completed', topic: 'Mechanical Engineering Career Paths' },
+        ]);
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+        setError(err.message || 'Failed to load dashboard data');
+        toast.error('Failed to load dashboard data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [currentUser]);
 
   
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  // Format time from 24h to 12h format
+  const formatTime = (timeString) => {
+    if (!timeString) return '';
+    
+    const [hours, minutes] = timeString.split(':');
+    const hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const hour12 = hour % 12 || 12;
+    
+    return `${hour12}:${minutes || '00'} ${ampm}`;
+  };
+
+  // Function to handle accepting a session request directly from dashboard
+  const handleAcceptRequest = async (requestId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/session-requests/${requestId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: 'accepted' }),
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to accept session request');
+      }
+
+      // Update the UI by removing the accepted request
+      setPendingRequests(pendingRequests.filter(req => req._id !== requestId));
+      setPendingRequestsCount(pendingRequestsCount - 1);
+      
+      toast.success('Session request accepted successfully');
+    } catch (error) {
+      console.error('Error accepting session request:', error);
+      toast.error(error.message || 'Failed to accept session request');
+    }
   };
 
   if (!currentUser || !currentUser.isMentor) {
@@ -59,12 +135,23 @@ function MentorDashboard() {
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="bg-darkblue-light rounded-lg shadow-md p-6 mb-8 border border-gray-700">
-            <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div>
                 <h1 className="text-3xl font-bold text-white mb-2">Welcome, Mentor {currentUser.firstName}!</h1>
                 <p className="text-gray-300">Manage your mentoring sessions and student interactions</p>
               </div>
-              <div className="mt-4 md:mt-0">
+              <div className="mt-4 md:mt-0 flex space-x-4">
+                <Link to="/mentee-requests" className="bg-secondary text-white px-6 py-3 rounded-lg hover:bg-secondary-dark transition-colors shadow-md flex items-center">
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                  </svg>
+                  Session Requests
+                  {pendingRequestsCount > 0 && (
+                    <span className="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                      {pendingRequestsCount}
+                    </span>
+                  )}
+                </Link>
                 <button className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors shadow-md">
                   <i className="fas fa-calendar-plus mr-2"></i> Schedule New Session
                 </button>
@@ -116,51 +203,50 @@ function MentorDashboard() {
                   </div>
                 </div>
 
-                {/* Upcoming Sessions Card */}
+                {/* Session Requests Card */}
                 <div className="bg-darkblue-light rounded-lg shadow-md p-6 border border-gray-700 md:col-span-2">
-                  <h2 className="text-xl font-bold text-white mb-4">Upcoming Sessions</h2>
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-bold text-white">New Session Requests</h2>
+                    <Link 
+                      to="/mentee-requests" 
+                      className="text-primary hover:text-primary-light text-sm"
+                    >
+                      View all requests
+                    </Link>
+                  </div>
                   
-                  {sessions.filter(s => s.status === 'upcoming').length > 0 ? (
+                  {pendingRequests.length > 0 ? (
                     <div className="space-y-4">
-                      {sessions
-                        .filter(session => session.status === 'upcoming')
-                        .slice(0, 3)
-                        .map(session => (
-                          <div key={session.id} className="bg-darkblue p-4 rounded-lg border border-gray-700 hover:border-primary transition-colors">
-                            <div className="flex justify-between items-center">
-                              <div>
-                                <h3 className="font-semibold text-white">{session.topic}</h3>
-                                <p className="text-gray-300 text-sm">With {session.studentName}</p>
-                              </div>
-                              <div className="text-right">
-                                <p className="text-primary font-medium">{formatDate(session.date)}</p>
-                                <div className="flex mt-2 space-x-2">
-                                  <button className="bg-primary text-white px-3 py-1 rounded text-xs hover:bg-primary-dark transition-colors">
-                                    Join
-                                  </button>
-                                  <button className="bg-darkblue-dark text-white px-3 py-1 rounded text-xs border border-gray-600 hover:bg-darkblue transition-colors">
-                                    Reschedule
-                                  </button>
-                                </div>
-                              </div>
+                      {pendingRequests.map(request => (
+                        <div key={request._id} className="bg-darkblue p-4 rounded-lg border border-yellow-600 border-opacity-50 hover:border-yellow-500 transition-colors">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <h3 className="font-semibold text-white mb-1">Session with {request.studentName}</h3>
+                              <p className="text-gray-300 text-sm">
+                                {formatDate(request.sessionDate)} at {formatTime(request.sessionTime)}
+                              </p>
+                              <p className="text-gray-400 text-sm mt-1">
+                                <span className="capitalize">{request.sessionType}</span> session
+                              </p>
+                            </div>
+                            <div>
+                              <button 
+                                onClick={() => handleAcceptRequest(request._id)}
+                                className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors"
+                              >
+                                Accept
+                              </button>
                             </div>
                           </div>
-                        ))}
-                      
-                      {sessions.filter(s => s.status === 'upcoming').length > 3 && (
-                        <div className="text-center mt-2">
-                          <button className="text-primary hover:text-primary-light transition-colors text-sm">
-                            View all sessions <i className="fas fa-arrow-right ml-1"></i>
-                          </button>
                         </div>
-                      )}
+                      ))}
                     </div>
                   ) : (
                     <div className="text-center py-8">
-                      <p className="text-gray-300 mb-4">You don't have any upcoming sessions.</p>
-                      <button className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">
-                        Schedule a Session
-                      </button>
+                      <p className="text-gray-300 mb-2">No pending session requests.</p>
+                      <p className="text-gray-400 text-sm">
+                        New requests will appear here when students book sessions with you.
+                      </p>
                     </div>
                   )}
                 </div>
@@ -256,7 +342,7 @@ function MentorDashboard() {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <p className="text-gray-300">No completed sessions yet.</p>
+                    <p className="text-gray-300">You don't have any completed sessions yet.</p>
                   </div>
                 )}
               </div>
@@ -264,6 +350,7 @@ function MentorDashboard() {
           )}
         </div>
       </div>
+      <Toaster position="bottom-center" />
     </div>
   );
 }

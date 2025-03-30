@@ -12,7 +12,11 @@ function Login() {
     lastName: '',
     experience: '',
     specialization: '',
-    bio: ''
+    qualification: '',
+    expertise: [],
+    bio: '',
+    price: '',
+    availability: []
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -22,9 +26,48 @@ function Login() {
   const from = location.state?.from?.pathname || '/';
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
+    });
+  };
+
+  // Handle expertise checkboxes
+  const handleExpertiseChange = (e) => {
+    const { value, checked } = e.target;
+    
+    setFormData(prevData => {
+      if (checked) {
+        return {
+          ...prevData,
+          expertise: [...prevData.expertise, value]
+        };
+      } else {
+        return {
+          ...prevData,
+          expertise: prevData.expertise.filter(item => item !== value)
+        };
+      }
+    });
+  };
+
+  // Handle availability checkboxes
+  const handleAvailabilityChange = (e) => {
+    const { value, checked } = e.target;
+    
+    setFormData(prevData => {
+      if (checked) {
+        return {
+          ...prevData,
+          availability: [...prevData.availability, value]
+        };
+      } else {
+        return {
+          ...prevData,
+          availability: prevData.availability.filter(day => day !== value)
+        };
+      }
     });
   };
 
@@ -50,7 +93,11 @@ function Login() {
           ...(isMentor && {
             experience: formData.experience,
             specialization: formData.specialization,
-            bio: formData.bio
+            qualification: formData.qualification,
+            expertise: formData.expertise,
+            bio: formData.bio,
+            price: formData.price,
+            availability: formData.availability
           })
         });
       }
@@ -214,6 +261,50 @@ function Login() {
               </div>
               
               <div>
+                <label htmlFor="qualification" className="block text-sm font-medium text-gray-200 mb-1">
+                  Qualification
+                </label>
+                <input
+                  id="qualification"
+                  name="qualification"
+                  type="text"
+                  required
+                  value={formData.qualification}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-3 py-2 bg-darkblue border border-gray-600 placeholder-gray-400 text-white rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                  placeholder="Your highest qualification or certification"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-200 mb-1">
+                  Areas of Expertise
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {['Computer Science', 'Data Science', 'Mathematics', 'Engineering', 
+                    'Physics', 'Chemistry', 'Biology', 'Education'].map(area => (
+                    <div key={area} className="flex items-center">
+                      <input
+                        id={`expertise-${area}`}
+                        name="expertise"
+                        type="checkbox"
+                        value={area}
+                        onChange={handleExpertiseChange}
+                        checked={formData.expertise.includes(area)}
+                        className="h-4 w-4 text-primary focus:ring-primary border-gray-600 rounded bg-darkblue"
+                      />
+                      <label htmlFor={`expertise-${area}`} className="ml-2 block text-sm text-gray-200">
+                        {area}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                {formData.expertise.length === 0 && (
+                  <p className="text-red-400 text-xs mt-1">Please select at least one area of expertise</p>
+                )}
+              </div>
+              
+              <div>
                 <label htmlFor="experience" className="block text-sm font-medium text-gray-200 mb-1">
                   Years of Experience
                 </label>
@@ -228,6 +319,50 @@ function Login() {
                   className="appearance-none relative block w-full px-3 py-2 bg-darkblue border border-gray-600 placeholder-gray-400 text-white rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
                   placeholder="Years of experience"
                 />
+              </div>
+              
+              <div>
+                <label htmlFor="price" className="block text-sm font-medium text-gray-200 mb-1">
+                  Session Price (₹)
+                </label>
+                <input
+                  id="price"
+                  name="price"
+                  type="number"
+                  min="10"
+                  required
+                  value={formData.price}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-3 py-2 bg-darkblue border border-gray-600 placeholder-gray-400 text-white rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                  placeholder="Price per session (min ₹10)"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-200 mb-1">
+                  Availability
+                </label>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => (
+                    <div key={day} className="flex items-center">
+                      <input
+                        id={`availability-${day}`}
+                        name="availability"
+                        type="checkbox"
+                        value={day}
+                        onChange={handleAvailabilityChange}
+                        checked={formData.availability.includes(day)}
+                        className="h-4 w-4 text-primary focus:ring-primary border-gray-600 rounded bg-darkblue"
+                      />
+                      <label htmlFor={`availability-${day}`} className="ml-2 block text-sm text-gray-200">
+                        {day}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                {formData.availability.length === 0 && (
+                  <p className="text-red-400 text-xs mt-1">Please select at least one day you're available</p>
+                )}
               </div>
               
               <div>

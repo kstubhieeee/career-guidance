@@ -1,14 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import UserMenu from './UserMenu';
 
+// API base URL constant
+const API_BASE_URL = 'http://localhost:3250';
+
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { currentUser } = useAuth();
+  const [pendingRequests, setPendingRequests] = useState(0);
   
   // Determine if the user is a mentor
   const isMentor = currentUser?.isMentor;
+
+  // Fetch pending session requests for mentors
+  useEffect(() => {
+    if (currentUser && isMentor) {
+      const fetchPendingRequests = async () => {
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/mentor/session-requests`, {
+            method: 'GET',
+            credentials: 'include'
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to fetch session requests');
+          }
+
+          const data = await response.json();
+          // Count pending requests
+          const pendingCount = data.sessionRequests?.filter(req => req.status === 'pending').length || 0;
+          setPendingRequests(pendingCount);
+        } catch (error) {
+          console.error('Error fetching pending requests:', error);
+        }
+      };
+
+      fetchPendingRequests();
+      
+      // Set up polling every 2 minutes
+      const intervalId = setInterval(fetchPendingRequests, 120000);
+      
+      // Clean up interval on unmount
+      return () => clearInterval(intervalId);
+    }
+  }, [currentUser, isMentor]);
 
   return (
     <nav className="bg-darkblue-dark shadow-md">
@@ -57,7 +94,14 @@ function Navbar() {
             {currentUser && isMentor && (
               <>
                 <Link className="text-white hover:text-primary transition-colors" to="/mentor-dashboard">Mentor Dashboard</Link>
-                <Link className="text-white hover:text-primary transition-colors" to="/mentee-requests">Mentee Requests</Link>
+                <Link className="text-white hover:text-primary transition-colors relative" to="/mentee-requests">
+                  Mentee Requests
+                  {pendingRequests > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                      {pendingRequests}
+                    </span>
+                  )}
+                </Link>
               </>
             )}
             
@@ -65,6 +109,7 @@ function Navbar() {
               <UserMenu />
             ) : (
               <div className="flex items-center space-x-4">
+                <Link className="text-white border border-primary px-4 py-2 rounded hover:bg-primary-dark hover:text-white transition-colors" to="/mentor-signup">Become a Mentor</Link>
                 <Link className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors" to="/login">Login</Link>
               </div>
             )}
@@ -149,11 +194,16 @@ function Navbar() {
                     Mentor Dashboard
                   </Link>
                   <Link 
-                    className="text-white hover:text-primary transition-colors" 
+                    className="text-white hover:text-primary transition-colors relative" 
                     to="/mentee-requests"
                     onClick={() => setIsOpen(false)}
                   >
                     Mentee Requests
+                    {pendingRequests > 0 && (
+                      <span className="absolute right-0 -translate-y-1/2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        {pendingRequests}
+                      </span>
+                    )}
                   </Link>
                 </>
               )}
@@ -183,7 +233,13 @@ function Navbar() {
                 </div>
               ) : (
                 <>
-                  
+                  <Link 
+                    className="text-white border border-primary px-4 py-2 rounded hover:bg-primary-dark hover:text-white transition-colors inline-block mb-2" 
+                    to="/mentor-signup"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Become a Mentor
+                  </Link>
                   <Link 
                     className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors inline-block" 
                     to="/login"
