@@ -232,4 +232,4 @@ npm run dev
 
 ---
 
-Made with ❤️ by Kaustubh Vijay Bane
+Made with ❤️ by Zero KT FC
