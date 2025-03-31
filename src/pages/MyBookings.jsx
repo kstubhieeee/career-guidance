@@ -165,7 +165,16 @@ function MyBookings() {
       // For sessions without payment, only include if they don't have a session request
       // This avoids showing both the session and the request for unpaid sessions
       return !session.sessionRequestId;
-    }).map(session => ({ ...session, source: 'session' }));
+    }).map(session => {
+      // Look up the original request to get any additional fields like roomID
+      if (session.sessionRequestId) {
+        const originalRequest = sessionRequests.find(req => req._id.toString() === session.sessionRequestId);
+        if (originalRequest && originalRequest.roomID) {
+          session.roomID = originalRequest.roomID;
+        }
+      }
+      return { ...session, source: 'session' };
+    });
 
     // Add these sessions to our bookings list
     allBookings = [...allBookings, ...filteredSessions];
@@ -386,6 +395,59 @@ function MyBookings() {
     return true;
   });
 
+  const renderBookingSessionInfo = (booking) => {
+    return (
+      <div className="mb-3">
+        <div className="flex justify-between mb-1">
+          <span className="text-gray-400">Session Date:</span>
+          <span className="text-white font-medium">{formatSessionDate(booking.sessionDate)}</span>
+        </div>
+        <div className="flex justify-between mb-1">
+          <span className="text-gray-400">Session Time:</span>
+          <span className="text-white font-medium">{formatSessionTime(booking.sessionTime)}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-gray-400">Session Type:</span>
+          <span className="text-white">{getSessionTypeIcon(booking.sessionType)}</span>
+        </div>
+        
+        {/* Show Room ID if available and session type is video */}
+        {booking.roomID && booking.sessionType === 'video' && (
+          <div className="mt-3 p-3 bg-blue-900 bg-opacity-20 border border-blue-800 rounded-lg">
+            <p className="text-sm text-white mb-1 font-semibold">Video Call Room ID:</p>
+            <div className="flex justify-between items-center">
+              <code className="text-blue-300 font-mono">{booking.roomID}</code>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(booking.roomID);
+                  toast.success('Room ID copied to clipboard!');
+                }}
+                className="p-1 hover:bg-blue-800 rounded-md"
+                title="Copy to clipboard"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                </svg>
+              </button>
+            </div>
+            <div className="mt-2">
+              <Link
+                to="/video-call-setup"
+                state={{ roomID: booking.roomID }}
+                className="inline-flex items-center text-blue-300 hover:text-blue-200 text-sm"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                Join Video Call
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="min-h-screen bg-darkblue py-12">
@@ -487,23 +549,7 @@ function MyBookings() {
 
                           {getMentorInfo(booking)}
 
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                            <div>
-                              <div className="text-gray-400 text-sm mb-1">Date</div>
-                              <div className="text-white font-medium">{formatSessionDate(booking.sessionDate)}</div>
-                            </div>
-                            <div>
-                              <div className="text-gray-400 text-sm mb-1">Time</div>
-                              <div className="text-white font-medium">{formatSessionTime(booking.sessionTime)}</div>
-                            </div>
-                            <div>
-                              <div className="text-gray-400 text-sm mb-1">Session Type</div>
-                              <div className="text-white font-medium flex items-center">
-                                <span className="mr-2 text-primary">{getSessionTypeIcon(booking.sessionType)}</span>
-                                <span className="capitalize">{booking.sessionType}</span>
-                              </div>
-                            </div>
-                          </div>
+                          {renderBookingSessionInfo(booking)}
 
                           {booking.notes && (
                             <div className="bg-darkblue p-4 rounded-lg mb-6">

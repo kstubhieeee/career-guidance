@@ -150,6 +150,7 @@ const sessionRequestSchema = new mongoose.Schema({
   sessionTime: { type: String, required: true },
   sessionType: { type: String, required: true },
   notes: { type: String },
+  roomID: { type: String }, // Room ID for video calls
   status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' },
   paymentStatus: { type: String, enum: ['pending', 'completed'], default: 'pending' }
 }, { timestamps: true });
@@ -1690,6 +1691,56 @@ app.post('/api/sessions/:sessionId/rating', authenticate, async (req, res) => {
   } catch (error) {
     console.error('Rate session error:', error);
     res.status(500).json({ message: 'Failed to submit rating. Please try again later.' });
+  }
+});
+
+// API endpoint to update a session request with a room ID
+app.put('/api/session-requests/:requestId/room', authenticate, async (req, res) => {
+  try {
+    const { requestId } = req.params;
+    const { roomID } = req.body;
+    
+    // Validate roomID
+    if (!roomID) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Room ID is required' 
+      });
+    }
+    
+    // Find the session request
+    const sessionRequest = await SessionRequest.findById(requestId);
+    
+    if (!sessionRequest) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Session request not found' 
+      });
+    }
+    
+    // Make sure the current user is the mentor for this request
+    if (sessionRequest.mentorId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ 
+        success: false, 
+        message: 'You are not authorized to update this session request' 
+      });
+    }
+    
+    // Update the session request with the room ID
+    sessionRequest.roomID = roomID;
+    await sessionRequest.save();
+    
+    res.json({
+      success: true,
+      message: 'Room ID added to session request successfully',
+      sessionRequest
+    });
+  } catch (error) {
+    console.error('Error updating session request with room ID:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to update session request with room ID: ' + error.message 
+    });
   }
 });
 

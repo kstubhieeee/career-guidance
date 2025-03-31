@@ -2,6 +2,10 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Footer from '../components/Footer';
+import { toast, Toaster } from 'react-hot-toast';
+
+// API base URL constant
+const API_BASE_URL = 'http://localhost:3250';
 
 // Helper function to generate a random room ID
 const generateRoomID = () => {
@@ -15,6 +19,9 @@ function VideoCallSetupPage() {
     const [roomID, setRoomID] = useState('');
     const [userName, setUserName] = useState('');
     const [previousPage, setPreviousPage] = useState('');
+    const [sessionRequests, setSessionRequests] = useState([]);
+    const [selectedSessionRequest, setSelectedSessionRequest] = useState(null);
+    const [loading, setLoading] = useState(false);
     const isMentor = currentUser?.isMentor;
 
     useEffect(() => {
@@ -45,12 +52,74 @@ function VideoCallSetupPage() {
                 setPreviousPage(url.pathname);
             }
         }
-    }, [currentUser, navigate, location.state]);
+
+        // If user is a mentor, fetch their session requests
+        if (isMentor) {
+            fetchSessionRequests();
+        }
+    }, [currentUser, navigate, location.state, isMentor]);
+
+    const fetchSessionRequests = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/mentor/session-requests`, {
+                method: 'GET',
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch session requests');
+            }
+
+            const data = await response.json();
+            // Filter to only show accepted requests without a roomID
+            const acceptedRequests = data.sessionRequests.filter(
+                req => req.status === 'accepted' && !req.roomID
+            );
+            setSessionRequests(acceptedRequests);
+        } catch (error) {
+            console.error('Error fetching session requests:', error);
+            toast.error('Failed to load session requests');
+        }
+    };
 
     const handleCreateRoom = useCallback(() => {
         const newRoomID = generateRoomID();
         setRoomID(newRoomID);
     }, []);
+
+    const handleSendRoomID = async () => {
+        if (!selectedSessionRequest || !roomID) {
+            toast.error('Please select a session request and create a room ID');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/session-requests/${selectedSessionRequest._id}/room`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({ roomID })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to send room ID');
+            }
+
+            toast.success('Room ID sent to student successfully!');
+            // Refresh the session requests list
+            fetchSessionRequests();
+            // Clear the selection
+            setSelectedSessionRequest(null);
+        } catch (error) {
+            console.error('Error sending room ID:', error);
+            toast.error('Failed to send room ID to student');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleJoinCall = useCallback((e) => {
         e.preventDefault();
@@ -141,15 +210,64 @@ function VideoCallSetupPage() {
                                     />
                                 </div>
 
-                                {roomID && isMentor && (
-                                    <div className="mt-4 p-4 bg-blue-900/20 rounded-lg border border-blue-800">
-                                        <p className="text-sm text-blue-300 flex items-center gap-2">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                                            </svg>
-                                            Share this Room ID with others to join: <span className="font-bold">{roomID}</span>
-                                        </p>
-                                    </div>
+                                {isMentor && roomID && (
+                                    <>
+                                        <div className="mt-4 p-4 bg-blue-900/20 rounded-lg border border-blue-800">
+                                            <p className="text-sm text-blue-300 flex items-center gap-2">
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                </svg>
+                                                Share this Room ID with others to join: <span className="font-bold">{roomID}</span>
+                                            </p>
+                                        </div>
+
+                                        {sessionRequests.length > 0 && (
+                                            <div className="mt-4">
+                                                <label className="block text-sm font-medium text-gray-200 mb-2">Send to Student</label>
+                                                <div className="flex flex-col gap-4">
+                                                    <select
+                                                        value={selectedSessionRequest ? selectedSessionRequest._id : ''}
+                                                        onChange={(e) => {
+                                                            const selected = sessionRequests.find(req => req._id === e.target.value);
+                                                            setSelectedSessionRequest(selected || null);
+                                                        }}
+                                                        className="w-full bg-gray-700/50 border border-gray-600 text-white p-2 rounded-md"
+                                                    >
+                                                        <option value="">Select a session request...</option>
+                                                        {sessionRequests.map((request) => (
+                                                            <option key={request._id} value={request._id}>
+                                                                {request.studentName} - {new Date(request.sessionDate).toLocaleDateString()} {request.sessionTime}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleSendRoomID}
+                                                        disabled={!selectedSessionRequest || loading}
+                                                        className="flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors disabled:bg-gray-500"
+                                                    >
+                                                        {loading ? (
+                                                            <>
+                                                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                                </svg>
+                                                                Sending...
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                                                </svg>
+                                                                Send Room ID
+                                                            </>
+                                                        )}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </>
                                 )}
 
                                 <div className="mt-6 pt-6 border-t border-gray-700">
@@ -181,10 +299,9 @@ function VideoCallSetupPage() {
                             </form>
                         </div>
                     </div>
-
                 </div>
             </div>
-
+            <Toaster position="bottom-center" />
         </div>
     );
 }
