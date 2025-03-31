@@ -244,8 +244,6 @@ npm run dev
 5. Open a Pull Request
 
 
-
-
 ## 🙏 Acknowledgments
 
 - ZegoCloud for video conferencing capabilities
