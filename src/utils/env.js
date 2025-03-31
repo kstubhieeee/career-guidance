@@ -4,5 +4,16 @@ export const getEnvVar = (key, fallback = '') => {
   return import.meta.env[`VITE_${key}`] || fallback;
 };
 
-// Export Gemini API key
-export const GEMINI_API_KEY = getEnvVar('GEMINI_API_KEY', 'AIzaSyBmuGPpLhFgSNSsY273SLKBrVMGdMCuzKo'); 
+// Export API keys
+export const GEMINI_API_KEY = getEnvVar('GEMINI_API_KEY');
+export const OPENROUTER_API_KEY = getEnvVar('OPENROUTER_API_KEY');
+export const RAZORPAY_KEY_ID = getEnvVar('RAZORPAY_KEY_ID');
+
+// Export ZegoCloud configuration
+export const ZEGO_CONFIG = {
+  appID: parseInt(getEnvVar('ZEGO_APP_ID')),
+  serverSecret: getEnvVar('ZEGO_SERVER_SECRET'),
+  serverUrl: getEnvVar('ZEGO_SERVER_URL'),
+  appSign: getEnvVar('ZEGO_APP_SIGN'),
+  callbackSecret: getEnvVar('ZEGO_CALLBACK_SECRET')
+}; 

@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { toast, Toaster } from 'react-hot-toast';
 import Footer from '../components/Footer';
 import axios from 'axios';
+import { RAZORPAY_KEY_ID } from '../utils/env';
 
 const API_BASE_URL = 'http://localhost:3250';
 
@@ -18,7 +19,6 @@ function SessionPayment() {
     const [mentor, setMentor] = useState(null);
     const [agreementChecked, setAgreementChecked] = useState(false);
     const [paymentCompleted, setPaymentCompleted] = useState(false);
-    const [razorpayKeyId] = useState(import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_ilZnoyJIDqrWYR');
     const [scriptLoaded, setScriptLoaded] = useState(false);
     const scriptRef = useRef(null);
     const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -223,7 +223,7 @@ function SessionPayment() {
 
             // Initialize Razorpay payment
             const options = {
-                key: razorpayKeyId,
+                key: RAZORPAY_KEY_ID,
                 amount: Math.round(sessionPrice * 100),
                 currency: "INR",
                 name: "Career Guidance",

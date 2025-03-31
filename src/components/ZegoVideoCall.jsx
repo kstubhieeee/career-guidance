@@ -1,13 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-
-// ZegoCloud configuration
-const ZEGO_CONFIG = {
-    appID: 374148232,
-    serverSecret: '0396d009929be4ab3974e91803b3ff72',
-    serverUrl: 'wss://webliveroom374148232-api.coolzcloud.com/ws',
-    appSign: 'b8fa473bdd748f98e35087e9e797521f2ccce8bbe470a4dea6dccefea8b4f9e6',
-    callbackSecret: 'b8fa473bdd748f98e35087e9e797521f'
-};
+import { ZEGO_CONFIG } from '../utils/env';
 
 function ZegoVideoCall({ roomID, userID, userName, onCallEnd }) {
     const containerRef = useRef(null);

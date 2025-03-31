@@ -79,6 +79,30 @@ A comprehensive web application that connects students with mentors for career g
 - MongoDB
 - npm or yarn
 
+### Environment Variables Setup
+
+Create a `.env.local` file in the root directory with the following variables:
+
+```bash
+# Server Configuration
+JWT_SECRET=your_jwt_secret
+MONGODB_URI=your_mongodb_uri
+
+# API Keys
+VITE_GEMINI_API_KEY=your_gemini_api_key
+VITE_OPENROUTER_API_KEY=your_openrouter_api_key
+VITE_RAZORPAY_KEY_ID=your_razorpay_key_id
+
+# ZegoCloud Configuration
+VITE_ZEGO_APP_ID=your_zego_app_id
+VITE_ZEGO_SERVER_SECRET=your_zego_server_secret
+VITE_ZEGO_SERVER_URL=your_zego_server_url
+VITE_ZEGO_APP_SIGN=your_zego_app_sign
+VITE_ZEGO_CALLBACK_SECRET=your_zego_callback_secret
+```
+
+> Note: All frontend environment variables must be prefixed with `VITE_` to be accessible in the React application.
+
 ### Installation
 
 1. Clone the repository
@@ -94,11 +118,10 @@ npm install
 
 3. Set up environment variables
 ```bash
-# In the server directory, create a .env file with:
-MONGODB_URI=your_mongodb_uri
-JWT_SECRET=your_jwt_secret
-ZEGO_APP_ID=your_zego_app_id
-ZEGO_SERVER_SECRET=your_zego_server_secret
+# Copy the example environment file
+cp .env.example .env.local
+
+# Edit .env.local with your actual values
 ```
 
 4. Start the development servers
@@ -110,7 +133,7 @@ node server.js
 npm run dev
 ```
 
-## 📁 Project Structure
+## �� Project Structure
 ```
 📦 
 ├─ .env

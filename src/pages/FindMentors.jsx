@@ -4,6 +4,7 @@ import MentorBookingModal from '../components/MentorBookingModal';
 import { toast, Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { RAZORPAY_KEY_ID } from '../utils/env';
 
 function FindMentors() {
   const [mentors, setMentors] = useState([]);
@@ -18,7 +19,7 @@ function FindMentors() {
 
   // Add state for environment variables
   const [envVars] = useState({
-    razorpayKeyId: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_ilZnoyJIDqrWYR'
+    razorpayKeyId: RAZORPAY_KEY_ID
   });
 
   const navigate = useNavigate();
@@ -31,29 +32,29 @@ function FindMentors() {
     const fetchMentors = async () => {
       setLoading(true);
       setError(null);
-      
+
       try {
         const response = await fetch('http://localhost:3250/api/mentors');
-        
+
         if (!response.ok) {
           throw new Error('Failed to fetch mentors');
         }
-        
+
         const data = await response.json();
-        
+
         // Process mentor data
         const processedMentors = data.mentors.map(mentor => ({
           ...mentor,
           photo: mentor.photoUrl || fallbackImageBase64,
           id: mentor._id
         }));
-        
+
         setMentors(processedMentors);
         setFilteredMentors(processedMentors);
       } catch (err) {
         console.error('Error fetching mentors:', err);
         setError('Failed to load mentors. Please try again later.');
-        
+
         // If API fails, use fallback data from localStorage if available
         const savedMentors = localStorage.getItem('mentors');
         if (savedMentors) {
@@ -65,7 +66,7 @@ function FindMentors() {
         setLoading(false);
       }
     };
-    
+
     fetchMentors();
   }, []);
 
@@ -149,7 +150,7 @@ function FindMentors() {
     <div className="bg-darkblue min-h-screen">
       <div className="container mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold text-white mb-8 text-center">Find Your Mentor</h1>
-        
+
         <div className="bg-darkblue-light p-6 rounded-lg shadow-lg mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -163,7 +164,7 @@ function FindMentors() {
                 className="w-full p-2 bg-darkblue border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-primary focus:border-primary"
               />
             </div>
-            
+
             <div>
               <label htmlFor="price" className="block text-white mb-2">Price Range</label>
               <select
@@ -179,7 +180,7 @@ function FindMentors() {
                 <option value="100">$100+</option>
               </select>
             </div>
-            
+
             <div>
               <label htmlFor="rating" className="block text-white mb-2">Minimum Rating</label>
               <select
@@ -197,7 +198,7 @@ function FindMentors() {
             </div>
           </div>
         </div>
-        
+
         {loading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary mx-auto"></div>
@@ -207,7 +208,7 @@ function FindMentors() {
           <div className="text-center py-12">
             <div className="bg-red-500 bg-opacity-20 border border-red-500 text-white p-4 rounded-md max-w-md mx-auto">
               <p>{error}</p>
-              <button 
+              <button
                 onClick={() => window.location.reload()}
                 className="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark"
               >
@@ -218,7 +219,7 @@ function FindMentors() {
         ) : filteredMentors.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-white text-xl">No mentors found matching your criteria.</p>
-            <button 
+            <button
               onClick={() => {
                 setSearchTerm('');
                 setPriceFilter('all');
@@ -234,8 +235,8 @@ function FindMentors() {
             {filteredMentors.map(mentor => (
               <div key={mentor.id} className="bg-darkblue-light rounded-xl overflow-hidden shadow-lg border border-gray-700 hover:border-primary transition-all duration-300 transform hover:-translate-y-1">
                 <div className="relative h-48 overflow-hidden">
-                  <img 
-                    src={mentor.photo} 
+                  <img
+                    src={mentor.photo}
                     alt={`${mentor.firstName} ${mentor.lastName}`}
                     className="w-full h-full object-cover"
                     onError={(e) => {
@@ -248,7 +249,7 @@ function FindMentors() {
                     ${mentor.price}/session
                   </div>
                 </div>
-                
+
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="text-xl font-bold text-white">{mentor.firstName} {mentor.lastName}</h3>
@@ -259,9 +260,9 @@ function FindMentors() {
                       <span className="text-white ml-1">{mentor.rating.toFixed(1)}</span>
                     </div>
                   </div>
-                  
+
                   <p className="text-sm text-gray-300 mb-4">{mentor.qualification}</p>
-                  
+
                   <div className="mb-4">
                     <h4 className="text-white font-medium mb-2">Expertise</h4>
                     <div className="flex flex-wrap gap-2">
@@ -272,17 +273,17 @@ function FindMentors() {
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="mb-4">
                     <h4 className="text-white font-medium mb-2">About</h4>
                     <p className="text-sm text-gray-300 line-clamp-3">{mentor.bio}</p>
                   </div>
-                  
+
                   <div className="flex justify-between items-center">
                     <span className="text-gray-300 text-sm">
                       {mentor.sessionsCompleted} {mentor.sessionsCompleted === 1 ? 'session' : 'sessions'} completed
                     </span>
-                    <button 
+                    <button
                       onClick={() => handleBookSession(mentor)}
                       className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark transition-colors"
                     >
@@ -295,7 +296,7 @@ function FindMentors() {
           </div>
         )}
       </div>
-      
+
       {selectedMentor && (
         <MentorBookingModal
           mentor={selectedMentor}
@@ -304,7 +305,7 @@ function FindMentors() {
           razorpayKeyId={envVars.razorpayKeyId}
         />
       )}
-      
+
       <Footer />
       <Toaster position="bottom-center" />
     </div>
