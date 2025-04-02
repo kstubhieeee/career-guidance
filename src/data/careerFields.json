@@ -7,10 +7,38 @@
       { 
         "name": "Geneticist", 
         "path": "/mcq",
-        "description": "Geneticists study genes, their functions, and their influence on the growth, development, and inheritance of traits in living organisms.",
-        "howToBecome": "To become a geneticist, you need a bachelor's degree in genetics, biology, or a related field, followed by a master's or PhD for research positions. Strong analytical and laboratory skills are essential.",
-        "afterTwelfth": "After 12th standard with science (Biology, Physics, Chemistry), pursue a B.Sc. in Genetics, Biotechnology, or Biology, then an M.Sc. and possibly a PhD in Genetics or a specialized field.",
-        "averageSalary": "₹5-12 lakhs per annum for entry-level positions, going up to ₹20-30 lakhs for experienced geneticists.",
+        "description": "Geneticists study the structure, function, inheritance, and variation of genes in living organisms at molecular and population levels. They investigate how genes influence development, disease susceptibility, and evolutionary processes through techniques like DNA sequencing, PCR, and CRISPR gene editing. Geneticists work in diverse settings including medical research, forensics, agriculture, and conservation biology, where they develop disease treatments, improve crop yields, solve crimes, and protect endangered species through their understanding of genetic mechanisms and inheritance patterns.",
+        "howToBecome": "To become a geneticist, you need a bachelor's degree in genetics, biology, or a related field, followed by a master's or PhD for research positions. Strong analytical and laboratory skills are essential, along with expertise in bioinformatics and statistical analysis.",
+        "afterTwelfth": "After 12th standard with science (Biology, Physics, Chemistry), pursue a B.Sc. in Genetics, Biotechnology, or Biology, then an M.Sc. and possibly a PhD in Genetics or a specialized field like molecular genetics or genetic counseling.",
+        "averageSalary": "₹5-12 lakhs per annum for entry-level positions, going up to ₹20-30 lakhs for experienced geneticists in research institutions or ₹40+ lakhs in pharmaceutical companies.",
+        "certifications": [
+          "American Board of Genetic Counseling (ABGC) Certification",
+          "Clinical Laboratory Geneticist Certification by the American Board of Medical Genetics and Genomics",
+          "Certification in Clinical Molecular Genetics by Association of Genetic Technologists",
+          "Next-Generation Sequencing Data Analysis Certification"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Career as a Geneticist: Scope, Skills & Future Prospects",
+              "url": "https://www.biotecnika.org/2020/07/scope-of-genetics-in-india-career-options/"
+            },
+            {
+              "title": "How Genetic Counselors Are Transforming Healthcare",
+              "url": "https://www.nature.com/articles/d41586-021-02446-1"
+            }
+          ],
+          "videos": [
+            {
+              "title": "What is a Geneticist? | Careers in Science",
+              "url": "https://www.youtube.com/watch?v=uXdzuz5Q-hs"
+            },
+            {
+              "title": "A Day in the Life of a Geneticist",
+              "url": "https://www.youtube.com/watch?v=wXSA-83jANE"
+            }
+          ]
+        },
         "topColleges": [
           {
             "name": "All India Institute of Medical Sciences (AIIMS)",
@@ -42,10 +70,38 @@
       { 
         "name": "Environmental Scientist", 
         "path": "/mcq",
-        "description": "Environmental scientists study the environment and identify ways to protect it and human health. They analyze data related to air, water, soil, and other environmental resources.",
-        "howToBecome": "Obtain a bachelor's degree in environmental science, ecology, or a related field. For advanced positions, a master's degree or PhD is often required. Fieldwork experience and analytical skills are important.",
-        "afterTwelfth": "After 12th with science (PCM or PCB), pursue a B.Sc. in Environmental Science, followed by an M.Sc. and possibly a PhD for research positions.",
-        "averageSalary": "₹4-8 lakhs per annum for entry-level positions, reaching ₹15-25 lakhs for senior environmental scientists.",
+        "description": "Environmental scientists study the environment and identify solutions to protect it and human health. They conduct research on air, water, soil, and ecosystem health using fieldwork, laboratory analysis, and computer modeling techniques. These professionals develop strategies to address pollution, climate change, resource depletion, and biodiversity loss while working collaboratively with policymakers, industries, and communities. Environmental scientists often specialize in areas like environmental chemistry, hydrology, ecology, or atmospheric science, integrating knowledge across disciplines to solve complex environmental challenges.",
+        "howToBecome": "Obtain a bachelor's degree in environmental science, ecology, or a related field. For advanced positions, a master's degree or PhD is often required. Fieldwork experience, analytical skills, and knowledge of environmental regulations and assessment techniques are important.",
+        "afterTwelfth": "After 12th with science (PCM or PCB), pursue a B.Sc. in Environmental Science, followed by an M.Sc. and possibly a PhD for research positions or specialized environmental consulting roles.",
+        "averageSalary": "₹4-8 lakhs per annum for entry-level positions, reaching ₹15-25 lakhs for senior environmental scientists and up to ₹35+ lakhs for those in specialized consulting or multinational organizations.",
+        "certifications": [
+          "Certified Environmental Professional (CEP) from the Academy of Board Certified Environmental Professionals",
+          "Registered Environmental Professional (REP) by the National Registry of Environmental Professionals",
+          "Certified Environmental Systems Professional (CESP)",
+          "ISO 14001 Environmental Management Systems Lead Auditor Certification"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Environmental Science: Career Options and Job Opportunities",
+              "url": "https://www.indiaeducation.net/career-center/earth-sciences/career-options-and-job-opportunities.html"
+            },
+            {
+              "title": "The Growing Importance of Environmental Scientists in Climate Action",
+              "url": "https://www.downtoearth.org.in/news/environment/environmental-experts-role-is-crucial-74960"
+            }
+          ],
+          "videos": [
+            {
+              "title": "A Day in the Life of an Environmental Scientist",
+              "url": "https://www.youtube.com/watch?v=FmgxLuwm9IM"
+            },
+            {
+              "title": "Environmental Science Career Paths and Opportunities",
+              "url": "https://www.youtube.com/watch?v=xKSM63z6XpE"
+            }
+          ]
+        },
         "topColleges": [
           {
             "name": "Indian Institute of Science",
@@ -77,10 +133,38 @@
       { 
         "name": "Microbiologist", 
         "path": "/mcq",
-        "description": "Microbiologists study microorganisms such as bacteria, viruses, fungi, and parasites. They research how these organisms grow, interact with the environment, and impact human health.",
-        "howToBecome": "Earn a bachelor's degree in microbiology, biology, or a related field. Advanced research positions typically require a master's or PhD. Laboratory experience and analytical skills are crucial.",
-        "afterTwelfth": "After 12th with science (PCB), pursue a B.Sc. in Microbiology or Biology, followed by an M.Sc. in Microbiology and potentially a PhD for research.",
-        "averageSalary": "₹3-7 lakhs per annum for entry-level positions, with senior positions reaching ₹15-25 lakhs.",
+        "description": "Microbiologists study microorganisms such as bacteria, viruses, fungi, algae, and parasites at molecular and cellular levels. They investigate microbial growth, reproduction, metabolism, and interactions with other organisms and environments using techniques like PCR, gene sequencing, and microscopy. These scientists work across diverse sectors including healthcare, pharmaceuticals, food safety, agriculture, and environmental protection, developing vaccines, antibiotics, diagnostic tests, biofuels, and strategies to combat infectious diseases while exploring microbial applications in biotechnology and ecosystem management.",
+        "howToBecome": "Earn a bachelor's degree in microbiology, biology, or a related field. Advanced research positions typically require a master's or PhD. Laboratory experience, sterile technique proficiency, and analytical skills are crucial, along with knowledge of molecular biology methods and bioinformatics.",
+        "afterTwelfth": "After 12th with science (PCB), pursue a B.Sc. in Microbiology or Biology, followed by an M.Sc. in Microbiology and potentially a PhD for research-oriented careers in academia, pharmaceuticals, or specialized laboratories.",
+        "averageSalary": "₹3-7 lakhs per annum for entry-level positions, with senior positions reaching ₹15-25 lakhs in research institutions and ₹30+ lakhs in pharmaceutical or biotechnology companies.",
+        "certifications": [
+          "National Registry of Microbiologists Certification",
+          "American Society for Clinical Pathology (ASCP) Specialist in Microbiology Certification",
+          "Indian Association of Medical Microbiologists (IAMM) Fellowship",
+          "Food Safety and Standards Authority of India (FSSAI) Certification in Food Microbiology"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Microbiology as a Career Option in India",
+              "url": "https://www.biotecnika.org/2022/03/scope-of-microbiology-in-india/"
+            },
+            {
+              "title": "The Crucial Role of Microbiologists in Combating Antimicrobial Resistance",
+              "url": "https://www.who.int/news-room/fact-sheets/detail/antimicrobial-resistance"
+            }
+          ],
+          "videos": [
+            {
+              "title": "Microbiology Career Path: Medical, Pharmaceutical & Research Opportunities",
+              "url": "https://www.youtube.com/watch?v=pf31Uya2BfM"
+            },
+            {
+              "title": "A Day in the Life of a Microbiologist",
+              "url": "https://www.youtube.com/watch?v=DajS1X2-87U"
+            }
+          ]
+        },
         "topColleges": [
           {
             "name": "All India Institute of Medical Sciences",
@@ -112,10 +196,38 @@
       { 
         "name": "Physicist", 
         "path": "/mcq",
-        "description": "Physicists study the fundamental nature of the universe, including matter, energy, motion, and force. They conduct research, develop theories, and design experiments to test physical phenomena.",
-        "howToBecome": "Obtain a bachelor's degree in physics or a related field, followed by a master's and usually a PhD for research positions. Strong mathematical skills and critical thinking are essential.",
-        "afterTwelfth": "After 12th with PCM, pursue a B.Sc. in Physics, followed by an M.Sc. and a PhD for academic or research careers.",
-        "averageSalary": "₹4-9 lakhs per annum for entry-level positions, with experienced physicists earning ₹15-30 lakhs or more in specialized fields.",
+        "description": "Physicists study the fundamental nature of the universe, including matter, energy, motion, and force at scales from subatomic particles to cosmic structures. They develop theoretical models and conduct experiments to understand phenomena such as gravitation, electromagnetism, quantum mechanics, and thermodynamics. Physicists work in diverse settings including academic institutions, national laboratories, space agencies, and industries, contributing to advancements in technologies like medical imaging, renewable energy, telecommunications, and computing through their understanding of fundamental physical laws and mathematical modeling.",
+        "howToBecome": "Obtain a bachelor's degree in physics or a related field, followed by a master's and usually a PhD for research positions. Strong mathematical abilities, computational skills, and critical thinking are essential, along with expertise in experimental methods or theoretical analysis depending on specialization.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Sc. in Physics, followed by an M.Sc. and a PhD for academic or research careers. Competitive exams like JAM, JEST, and GATE can help secure admission to prestigious institutions for higher studies.",
+        "averageSalary": "₹4-9 lakhs per annum for entry-level positions, with experienced physicists earning ₹15-30 lakhs in academic institutions and up to ₹40+ lakhs in specialized industries like defense, space research, or multinational R&D centers.",
+        "certifications": [
+          "Certified Computational Physicist (CCP)",
+          "Radiation Safety Officer (RSO) Certification",
+          "American Board of Medical Physics Certification",
+          "National Physical Laboratory (NPL) Calibration Certifications"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Career Paths for Physics Graduates in India",
+              "url": "https://www.shiksha.com/science/physics-chp/articles/career-options-after-bsc-physics-blogId-14623"
+            },
+            {
+              "title": "The Role of Physicists in Advancing Technology and Innovation",
+              "url": "https://www.nature.com/articles/s41578-020-0208-y"
+            }
+          ],
+          "videos": [
+            {
+              "title": "What Does a Physicist Do? | Career Paths and Research Areas",
+              "url": "https://www.youtube.com/watch?v=MJJXfRhM5U4"
+            },
+            {
+              "title": "From Theory to Application: Physics Careers in Industry",
+              "url": "https://www.youtube.com/watch?v=6GJzJ5jKMjw"
+            }
+          ]
+        },
         "topColleges": [
           {
             "name": "Indian Institute of Science",
@@ -147,10 +259,38 @@
       { 
         "name": "Biochemist", 
         "path": "/mcq",
-        "description": "Biochemists study the chemical and physical principles of living things and biological processes. They research how cells, proteins, and other substances function and interact.",
-        "howToBecome": "Earn a bachelor's degree in biochemistry, chemistry, or biology, followed by a master's or PhD for research positions. Laboratory skills and knowledge of chemical analysis techniques are important.",
-        "afterTwelfth": "After 12th with PCB, pursue a B.Sc. in Biochemistry or Chemistry, followed by an M.Sc. and potentially a PhD for research careers.",
-        "averageSalary": "₹4-8 lakhs per annum for entry-level positions, with experienced biochemists earning ₹15-25 lakhs.",
+        "description": "Biochemists study the chemical processes and substances that occur in living organisms. They investigate the molecular basis of cellular function, exploring how biomolecules like proteins, carbohydrates, lipids, and nucleic acids interact to enable life processes. Using sophisticated laboratory techniques such as chromatography, electrophoresis, PCR, and mass spectrometry, biochemists explore areas including metabolism, genetics, immunology, and drug development. They work in diverse settings including pharmaceutical companies, biotechnology firms, medical research institutions, and universities, contributing to advancements in medicine, agriculture, environmental protection, and forensic science.",
+        "howToBecome": "Earn a bachelor's degree in biochemistry, chemistry, or biology, followed by a master's or PhD for research positions. Laboratory skills in techniques such as chromatography, spectroscopy, and molecular biology are essential, along with analytical thinking, strong data interpretation abilities, and computational skills for bioinformatics analysis.",
+        "afterTwelfth": "After 12th with PCB, pursue a B.Sc. in Biochemistry, Biotechnology, or Chemistry, followed by an M.Sc. in Biochemistry and potentially a PhD for research careers. Entrance exams like NEET, AIIMS, JIPMER can help secure admission to top institutions for integrated programs.",
+        "averageSalary": "₹4-8 lakhs per annum for entry-level positions, with experienced biochemists earning ₹15-25 lakhs in academic or research institutions and up to ₹35+ lakhs in pharmaceutical companies or specialized biotech firms.",
+        "certifications": [
+          "Certified Clinical Biochemist (CCB)",
+          "Diplomate of American Board of Clinical Chemistry (DABCC)",
+          "Fellowship of the National Academy of Clinical Biochemistry (FNACB)",
+          "Good Laboratory Practice (GLP) Certification"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Career Opportunities for Biochemists in India",
+              "url": "https://www.biotecnika.org/2021/05/career-opportunities-after-msc-biochemistry/"
+            },
+            {
+              "title": "The Role of Biochemistry in Modern Drug Discovery",
+              "url": "https://www.sciencedirect.com/science/article/abs/pii/S1359644620301367"
+            }
+          ],
+          "videos": [
+            {
+              "title": "What Do Biochemists Actually Do? | Various Career Paths and Industries",
+              "url": "https://www.youtube.com/watch?v=gn5QmllRCn4"
+            },
+            {
+              "title": "A Day in the Life of a Biochemistry Researcher",
+              "url": "https://www.youtube.com/watch?v=xGZ1T0gNvi0"
+            }
+          ]
+        },
         "topColleges": [
           {
             "name": "Indian Institute of Science",
@@ -189,10 +329,39 @@
       { 
         "name": "Software Developer", 
         "path": "/mcq",
-        "description": "Software developers design, code, test, and maintain computer programs. They create applications for computers, mobile devices, and other electronic systems.",
-        "howToBecome": "Earn a bachelor's degree in computer science, software engineering, or a related field. Many developers also pursue certifications or bootcamps. Programming skills, problem-solving abilities, and continuous learning are essential.",
-        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Computer Science or Information Technology, or a BCA followed by an MCA.",
-        "averageSalary": "₹3.5-8 lakhs per annum for entry-level positions, with experienced developers earning ₹12-40 lakhs depending on skills and company.",
+        "description": "Software developers design, code, test, and maintain computer programs and applications that power the digital world. They analyze user needs, design software solutions, write code using various programming languages, and ensure functionality through rigorous testing and debugging. These professionals work across diverse domains creating everything from mobile applications and web platforms to enterprise systems and embedded software. Software developers collaborate with product managers, designers, and other stakeholders to transform concepts into functional, user-friendly software products while continually updating their skills to keep pace with rapidly evolving technologies, frameworks, and development methodologies.",
+        "howToBecome": "Earn a bachelor's degree in computer science, software engineering, or a related field. Many developers also complete specialized bootcamps or self-directed learning paths. Develop proficiency in multiple programming languages (like Python, JavaScript, Java, C++), understand data structures and algorithms, and master software development methodologies (Agile, DevOps). Building a strong portfolio of projects, contributing to open source, and gaining experience through internships or freelance work are crucial for career growth. Problem-solving abilities, analytical thinking, teamwork, and continuous learning are essential traits for success.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Computer Science or Information Technology, or a BCA followed by an MCA. Alternative paths include specialized diploma courses followed by hands-on experience. Participating in coding competitions, hackathons, and building personal projects helps develop practical skills. Learning platforms like Coursera, Udemy, and freeCodeCamp offer valuable supplementary education in specific technologies or frameworks.",
+        "averageSalary": "₹3.5-8 lakhs per annum for entry-level positions, ₹10-25 lakhs for mid-level developers with 3-5 years experience, and ₹25-60+ lakhs for senior developers, architects, or specialists in high-demand areas like AI, blockchain, or cloud computing. Salaries vary significantly based on location, company size, specialization, and individual skill level.",
+        "certifications": [
+          "AWS Certified Developer",
+          "Microsoft Certified: Azure Developer Associate",
+          "Oracle Certified Professional, Java SE Programmer",
+          "Certified Kubernetes Application Developer (CKAD)",
+          "Google Associate Android Developer Certification"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Software Development Career Path: From Junior to Senior and Beyond",
+              "url": "https://www.freecodecamp.org/news/software-development-career-path/"
+            },
+            {
+              "title": "The State of Software Development in India 2023",
+              "url": "https://www.nasscom.in/knowledge-center/publications/indian-tech-start-ecosystem-year-review-2023"
+            }
+          ],
+          "videos": [
+            {
+              "title": "A Day in the Life of a Software Developer",
+              "url": "https://www.youtube.com/watch?v=rqX8PFcOpxA"
+            },
+            {
+              "title": "How to Become a Software Developer in 2023 - Complete Roadmap",
+              "url": "https://www.youtube.com/watch?v=DBXH9WJaVdY"
+            }
+          ]
+        },
         "topColleges": [
           {
             "name": "Indian Institute of Technology Bombay",
@@ -224,10 +393,39 @@
       { 
         "name": "Cybersecurity Analyst", 
         "path": "/mcq",
-        "description": "Cybersecurity analysts protect computer systems and networks from cyber threats. They monitor for breaches, investigate incidents, and implement security measures.",
-        "howToBecome": "Obtain a bachelor's degree in cybersecurity, computer science, or a related field. Certifications like CISSP, CEH, or CompTIA Security+ are highly valued. Strong analytical skills and ethical hacking knowledge are important.",
-        "afterTwelfth": "After 12th with PCM, pursue a B.Tech in Computer Science with specialization in Cybersecurity, or get a general CS degree followed by specialized certifications.",
-        "averageSalary": "₹4-10 lakhs per annum for entry-level positions, with experienced analysts earning ₹15-40 lakhs or more.",
+        "description": "Cybersecurity analysts protect an organization's computer systems, networks, and data from cyber threats and attacks. They monitor systems for security breaches, implement protective measures, conduct vulnerability assessments and penetration testing, and respond to security incidents when they occur. These professionals analyze security alerts, investigate suspicious activities, document findings, and develop security solutions that ensure organizational data remains secure. Working across various industries from finance and healthcare to government and tech, cybersecurity analysts must stay current with evolving threat landscapes, compliance requirements, and emerging technologies to maintain robust defense strategies against increasingly sophisticated cyber attacks.",
+        "howToBecome": "Obtain a bachelor's degree in cybersecurity, computer science, information technology, or a related field. Industry certifications like Certified Information Systems Security Professional (CISSP), Certified Ethical Hacker (CEH), CompTIA Security+, or Certified Information Security Manager (CISM) significantly enhance employment prospects. Develop strong technical skills in network security, operating systems, threat detection tools, cryptography, and programming languages like Python. Knowledge of security frameworks (NIST, ISO 27001), experience with security tools (SIEM systems, firewalls, IDS/IPS), and understanding of regulatory requirements are crucial. Strong analytical thinking, problem-solving abilities, and communication skills are essential for success in this field.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech in Computer Science with specialization in Cybersecurity, Information Security, or Network Security. Alternatively, complete a general Computer Science degree followed by specialized certifications and training. Build practical skills through capture-the-flag (CTF) competitions, bug bounty programs, and cybersecurity boot camps. Creating home labs to practice with security tools, contributing to open-source security projects, and completing internships with security teams provides valuable hands-on experience.",
+        "averageSalary": "₹4-10 lakhs per annum for entry-level positions, ₹12-25 lakhs for mid-level analysts with 3-5 years experience, and ₹25-45+ lakhs for senior security specialists, security architects, or management roles. Salaries can be significantly higher in financial services, critical infrastructure sectors, or for professionals with specialized skills in areas like cloud security, security architecture, or incident response.",
+        "certifications": [
+          "Certified Information Systems Security Professional (CISSP)",
+          "Certified Ethical Hacker (CEH)",
+          "CompTIA Security+",
+          "Certified Information Security Manager (CISM)",
+          "Offensive Security Certified Professional (OSCP)"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "The Evolving Landscape of Cybersecurity Careers in India",
+              "url": "https://www.dsci.in/content/cyber-security-market-india"
+            },
+            {
+              "title": "How to Build a Career in Cybersecurity: Paths and Progression",
+              "url": "https://www.sans.org/cybersecurity-careers/career-roadmap/"
+            }
+          ],
+          "videos": [
+            {
+              "title": "Day in the Life of a Cybersecurity Analyst",
+              "url": "https://www.youtube.com/watch?v=Lz5xVGLBXgQ"
+            },
+            {
+              "title": "Complete Cybersecurity Career Path Roadmap 2023",
+              "url": "https://www.youtube.com/watch?v=0NIen9xBKvs"
+            }
+          ]
+        },
         "topColleges": [
           {
             "name": "Indian Institute of Technology Bombay",
@@ -259,10 +457,39 @@
       { 
         "name": "Data Scientist", 
         "path": "/mcq",
-        "description": "Data scientists analyze and interpret complex data to help organizations make better decisions. They use statistical methods, machine learning, and programming to extract insights from data.",
-        "howToBecome": "Earn a bachelor's degree in computer science, statistics, mathematics, or a related field, often followed by a master's or PhD. Skills in programming, statistics, and data visualization are essential.",
-        "afterTwelfth": "After 12th with PCM, pursue a B.Tech in Computer Science, Data Science, or Statistics, followed by an M.Tech or specialized courses in data science.",
-        "averageSalary": "₹5-12 lakhs per annum for entry-level positions, with experienced data scientists earning ₹15-40 lakhs or more.",
+        "description": "Data scientists extract knowledge and insights from structured and unstructured data using scientific methods, algorithms, and advanced analytics. They combine expertise in statistics, mathematics, programming, and domain knowledge to collect, process, and analyze complex datasets, build predictive models, and develop data-driven solutions to business challenges. These professionals work across various sectors including technology, finance, healthcare, e-commerce, and manufacturing, helping organizations optimize operations, understand customer behavior, detect patterns, and make strategic decisions based on data. Data scientists employ machine learning techniques, statistical modeling, and visualization tools to transform raw information into actionable insights that drive innovation and competitive advantage.",
+        "howToBecome": "Earn a bachelor's degree in computer science, statistics, mathematics, physics, or a related quantitative field, often followed by a master's or PhD for advanced positions. Develop strong skills in programming languages (Python, R, SQL), statistical analysis, machine learning algorithms, and data visualization tools like Tableau or Power BI. Proficiency in big data technologies (Hadoop, Spark) and cloud platforms (AWS, Azure, GCP) is increasingly valuable. Strong analytical thinking, problem-solving abilities, business acumen, and communication skills are essential for translating technical findings into business insights.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech in Computer Science, Data Science, or Statistics, followed by an M.Tech or specialized courses in data science and machine learning. Alternative paths include completing a B.Sc. in Mathematics or Statistics followed by an M.Sc. in Data Science or Analytics. Online platforms like Coursera, edX, and DataCamp offer specialized courses and professional certificates that complement formal education with practical skills.",
+        "averageSalary": "₹5-12 lakhs per annum for entry-level positions, ₹12-25 lakhs for mid-level data scientists with 3-5 years experience, and ₹25-60+ lakhs for senior data scientists, ML engineers, or AI specialists. Compensation packages often include performance bonuses and equity in startups or tech companies, with significantly higher salaries in multinational corporations or specialized domains like finance or AI research.",
+        "certifications": [
+          "IBM Data Science Professional Certificate",
+          "Microsoft Certified: Azure Data Scientist Associate",
+          "Google Professional Data Engineer",
+          "Certified Data Scientist (CDS) by Data Science Council of America",
+          "TensorFlow Developer Certificate by Google"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "The State of Data Science in India: Trends and Opportunities",
+              "url": "https://analyticsindiamag.com/the-state-of-data-science-in-india-in-2023/"
+            },
+            {
+              "title": "How to Navigate a Career Path in Data Science",
+              "url": "https://towardsdatascience.com/how-to-navigate-a-career-path-in-data-science-72cd86a62d72"
+            }
+          ],
+          "videos": [
+            {
+              "title": "A Day in the Life of a Data Scientist",
+              "url": "https://www.youtube.com/watch?v=qzWKOnuTGgw"
+            },
+            {
+              "title": "Data Science Roadmap 2023 | Learn Data Science Skills in Right Order",
+              "url": "https://www.youtube.com/watch?v=y9NIuD83tDY"
+            }
+          ]
+        },
         "topColleges": [
           {
             "name": "Indian Institute of Science",
@@ -294,10 +521,39 @@
       { 
         "name": "AI/Machine Learning Engineer", 
         "path": "/mcq",
-        "description": "AI/ML engineers design and implement systems that can learn from and make decisions based on data. They develop algorithms and models that enable computers to perform tasks that typically require human intelligence.",
-        "howToBecome": "Obtain a bachelor's degree in computer science, mathematics, or a related field, often followed by a master's or PhD. Strong skills in programming, mathematics, and algorithm development are essential.",
-        "afterTwelfth": "After 12th with PCM, pursue a B.Tech in Computer Science with specialization in AI/ML, followed by an M.Tech or specialized courses.",
-        "averageSalary": "₹6-15 lakhs per annum for entry-level positions, with experienced engineers earning ₹20-50 lakhs or more.",
+        "description": "AI/Machine Learning Engineers design, build, and deploy intelligent systems and models that can learn from data and make autonomous decisions. They apply deep expertise in mathematics, statistics, computer science, and domain knowledge to develop algorithms and neural networks that enable machines to recognize patterns, understand natural language, make predictions, and solve complex problems. These professionals work across diverse industries from healthcare and finance to autonomous vehicles and robotics, creating cutting-edge applications that leverage computer vision, natural language processing, reinforcement learning, and other AI technologies to automate processes, enhance products, and drive innovation.",
+        "howToBecome": "Obtain a bachelor's degree in computer science, mathematics, statistics, physics, or a related technical field, often followed by a master's or PhD in AI, machine learning, or computational fields. Develop strong skills in programming languages (Python, R, Java), machine learning frameworks (TensorFlow, PyTorch, scikit-learn), and mathematics (linear algebra, calculus, probability, statistics). Experience with data structures, algorithms, distributed computing, and cloud platforms (AWS, GCP, Azure) is crucial. Building a portfolio of projects demonstrating expertise in different ML algorithms, neural networks, and problem-solving approaches is essential for showcasing abilities to potential employers.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech in Computer Science with specialization in AI/ML, computational mathematics, or data science, followed by an M.Tech or specialized courses in machine learning, deep learning, and artificial intelligence. Participate in AI competitions on platforms like Kaggle, contribute to open-source ML projects, and complete industry-recognized courses and certifications. Internships with AI research labs, tech companies, or startups provide valuable hands-on experience with real-world machine learning applications.",
+        "averageSalary": "₹6-15 lakhs per annum for entry-level positions, ₹15-30 lakhs for mid-level engineers with 3-5 years experience, and ₹30-80+ lakhs for senior AI/ML engineers, research scientists, or specialized roles. Compensation at major tech companies and AI-focused startups can be significantly higher, often including equity and performance bonuses, especially for professionals with expertise in cutting-edge domains like deep learning, reinforcement learning, or natural language processing.",
+        "certifications": [
+          "TensorFlow Developer Certificate by Google",
+          "AWS Certified Machine Learning - Specialty",
+          "Microsoft Certified: Azure AI Engineer Associate",
+          "IBM AI Engineering Professional Certificate",
+          "NVIDIA Deep Learning Institute Certification"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Machine Learning Career Path: From Beginner to Professional",
+              "url": "https://towardsdatascience.com/machine-learning-career-path-from-beginner-to-professional-d4b559a94ba7"
+            },
+            {
+              "title": "The State of AI in India: Growth, Talent, and Future Opportunities",
+              "url": "https://analyticsindiamag.com/the-state-of-artificial-intelligence-in-india-in-2023/"
+            }
+          ],
+          "videos": [
+            {
+              "title": "A Day in the Life of a Machine Learning Engineer",
+              "url": "https://www.youtube.com/watch?v=GyR9QRgx8Tg"
+            },
+            {
+              "title": "AI and Machine Learning Engineer Roadmap 2023",
+              "url": "https://www.youtube.com/watch?v=qmh7uT4Qyls"
+            }
+          ]
+        },
         "topColleges": [
           {
             "name": "IIT Bombay",
@@ -329,10 +585,39 @@
       { 
         "name": "IT Support Specialist", 
         "path": "/mcq",
-        "description": "IT support specialists help users troubleshoot computer and network problems. They provide technical assistance, maintain systems, and ensure technology runs smoothly.",
-        "howToBecome": "A bachelor's degree in computer science or information technology is helpful but not always required. Certifications like CompTIA A+, Network+, or Microsoft certifications are valuable. Problem-solving and communication skills are crucial.",
-        "afterTwelfth": "After 12th with any stream, pursue a BCA, B.Sc. in IT, or diploma in computer applications, along with technical certifications.",
-        "averageSalary": "₹2-5 lakhs per annum for entry-level positions, with experienced specialists earning ₹8-15 lakhs.",
+        "description": "IT Support Specialists diagnose and solve hardware, software, and network problems for organizations and end-users. They provide technical assistance through various channels including help desks, phone support, email, and in-person visits, helping users navigate technology challenges and maintain productivity. These professionals install, configure, and maintain computer systems, troubleshoot issues with operating systems, applications, and network connectivity, and implement security measures to protect organizational data. IT Support Specialists also manage user accounts, train employees on new technologies, document solutions, and collaborate with other IT team members to ensure reliable technology infrastructure.",
+        "howToBecome": "A bachelor's degree in computer science, information technology, or a related field is helpful but not always required. Technical diplomas, associate degrees, or comprehensive certifications can provide entry points into the profession. Obtaining industry certifications like CompTIA A+, Network+, or Microsoft certifications significantly enhances employment prospects. Developing hands-on experience with various operating systems (Windows, macOS, Linux), networking concepts, common applications, and basic scripting is essential. Strong problem-solving, communication, and customer service skills are crucial as the role involves explaining technical concepts to non-technical users and working under pressure when systems are down.",
+        "afterTwelfth": "After 12th with any stream, pursue a BCA, B.Sc. in IT, or diploma in computer applications. Entry-level technical certifications like CompTIA A+ provide fundamental knowledge to start in help desk positions. Building a home lab for practice, participating in internships, or volunteering to provide technical support for local organizations or events can provide practical experience. Online learning platforms offer specialized courses in systems administration, networking, and troubleshooting that complement formal education.",
+        "averageSalary": "₹2-5 lakhs per annum for entry-level positions such as help desk technicians or desktop support, ₹5-10 lakhs for mid-level specialists with 3-5 years experience, and ₹10-18 lakhs for senior IT support roles or specialized positions in areas like network administration or systems administration. Salaries vary based on location, company size, technical specialization, and certifications held.",
+        "certifications": [
+          "CompTIA A+ Certification",
+          "CompTIA Network+",
+          "Microsoft Certified: Modern Desktop Administrator Associate",
+          "ITIL Foundation Certification",
+          "Cisco Certified Network Associate (CCNA)"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "IT Support Career Path: From Help Desk to Advanced Roles",
+              "url": "https://www.comptia.org/blog/your-next-move-help-desk-technician"
+            },
+            {
+              "title": "Essential Skills for IT Support Professionals in 2023",
+              "url": "https://www.techrepublic.com/article/it-support-skills/"
+            }
+          ],
+          "videos": [
+            {
+              "title": "A Day in the Life of an IT Support Specialist",
+              "url": "https://www.youtube.com/watch?v=f2b0B5HcRvQ"
+            },
+            {
+              "title": "How to Start a Career in IT Support | Complete Roadmap",
+              "url": "https://www.youtube.com/watch?v=AwLobavAjqI"
+            }
+          ]
+        },
         "topColleges": [
           {
             "name": "University of Delhi",
@@ -360,6 +645,326 @@
             "website": "https://www.amity.edu"
           }
         ]
+      },
+      { 
+        "name": "Network Administrator", 
+        "path": "/mcq",
+        "description": "Network Administrators design, implement, maintain, and secure computer networks within organizations. They manage the installation and configuration of network hardware such as routers, switches, firewalls, and wireless access points, ensuring reliable connectivity and data flow between systems. These professionals monitor network performance, troubleshoot connectivity issues, implement security measures to protect against cyber threats, and plan for future network growth. They are responsible for managing user accounts and access permissions, backing up network data, implementing disaster recovery plans, and keeping network documentation updated. Network Administrators also collaborate with other IT teams to ensure infrastructure aligns with business requirements and stays resilient against failures.",
+        "howToBecome": "A bachelor's degree in computer science, information technology, network engineering, or a related field is typically required. Candidates with diplomas or associate degrees may qualify for entry-level positions if they have relevant certifications and experience. Obtaining industry certifications such as CompTIA Network+, Cisco Certified Network Associate (CCNA), Juniper Networks Certified Associate (JNCIA), or Microsoft Certified: Azure Network Engineer Associate significantly enhances employment prospects. Hands-on experience with network hardware, protocols, and diagnostic tools is essential, as is familiarity with network monitoring software and security practices. Strong analytical and problem-solving skills are crucial, as the role involves diagnosing complex network issues while minimizing downtime.",
+        "afterTwelfth": "After 12th with PCM (Physics, Chemistry, Mathematics), pursue a BE/B.Tech in Computer Science, Information Technology, or Electronics and Communication Engineering. Alternatively, consider a BCA or diploma in networking technologies, supplemented with professional certifications. While studying, build practical skills by setting up home labs with virtual networking environments using tools like Cisco Packet Tracer or GNS3. Seek internships with IT departments or managed service providers to gain hands-on experience with real-world network infrastructures. Participate in networking communities and forums to stay updated with industry trends and build connections with professionals in the field.",
+        "averageSalary": "₹4-7 lakhs per annum for entry-level positions such as network technicians or junior administrators, ₹7-15 lakhs for mid-level administrators with 3-7 years experience managing medium-sized networks, and ₹15-30+ lakhs for senior network administrators or network architects managing complex enterprise networks. Salaries vary based on location, with metropolitan areas like Bangalore, Mumbai, and Delhi-NCR offering higher compensation. Specializations in areas like network security, cloud networking, or SD-WAN can command premium salaries. Professionals holding advanced certifications like CCNP or CCIE can expect significantly higher compensation.",
+        "certifications": [
+          "CompTIA Network+",
+          "Cisco Certified Network Associate (CCNA)",
+          "Juniper Networks Certified Associate (JNCIA)",
+          "Microsoft Certified: Azure Network Engineer Associate",
+          "Certified Information Systems Security Professional (CISSP)"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "The Evolution of Network Administration in the Cloud Era",
+              "url": "https://www.networkworld.com/article/3654633/the-network-administrators-guide-to-cloud-migration.html"
+            },
+            {
+              "title": "Network Administration vs. Network Engineering: Career Paths Explained",
+              "url": "https://www.comptia.org/blog/network-administration-vs-network-engineering"
+            }
+          ],
+          "videos": [
+            {
+              "title": "Day in the Life of a Network Administrator",
+              "url": "https://www.youtube.com/watch?v=ZD9fefSXXqE"
+            },
+            {
+              "title": "Network Administration Full Course | Complete Network Administrator Tutorial",
+              "url": "https://www.youtube.com/watch?v=qiQR5rTSshw"
+            }
+          ]
+        },
+        "topColleges": [
+          {
+            "name": "Indian Institute of Technology Delhi",
+            "location": "New Delhi",
+            "website": "https://www.iitd.ac.in"
+          },
+          {
+            "name": "BITS Pilani",
+            "location": "Pilani",
+            "website": "https://www.bits-pilani.ac.in"
+          },
+          {
+            "name": "College of Engineering, Pune",
+            "location": "Pune",
+            "website": "https://www.coep.org.in"
+          },
+          {
+            "name": "SRM Institute of Science and Technology",
+            "location": "Chennai",
+            "website": "https://www.srmist.edu.in"
+          },
+          {
+            "name": "VIT University",
+            "location": "Vellore",
+            "website": "https://www.vit.ac.in"
+          }
+        ]
+      },
+      { 
+        "name": "Database Administrator", 
+        "path": "/mcq",
+        "description": "Database Administrators design, implement, maintain, and secure database systems that store and organize an organization's critical data. They optimize database performance, ensure data availability and integrity, implement backup and recovery procedures, and manage database access permissions. These professionals develop database architecture, migrate data between systems, troubleshoot performance issues, and maintain documentation of database structures and configurations. Database Administrators work with various database management systems like MySQL, Oracle, SQL Server, MongoDB, and PostgreSQL, applying their technical expertise to support business applications, data analytics initiatives, and everyday operations while ensuring compliance with data protection regulations.",
+        "howToBecome": "Obtain a bachelor's degree in computer science, information technology, or a related field, often supplemented with a master's degree for advanced positions. Develop deep knowledge of database management systems (DBMS) through education and hands-on experience. Acquire certifications specific to major database platforms such as Oracle Certified Professional, Microsoft Certified: Azure Database Administrator Associate, or MongoDB Certified DBA. Build strong skills in SQL programming, database design, performance tuning, backup and recovery procedures, and security practices. Understanding of operating systems, storage systems, networking, and cloud infrastructure is valuable, as is knowledge of data modeling and business intelligence concepts.",
+        "afterTwelfth": "After 12th with PCM or PCB, pursue a B.Tech/B.E. in Computer Science, Information Technology, or a BCA with focus on database technologies. Take specialized courses in database management systems, SQL programming, and data modeling. Build practical skills by setting up and managing databases on personal systems using open-source platforms like MySQL or PostgreSQL. Seek internships with IT departments or software companies where you can gain hands-on experience with real database environments and understand operational challenges. Online platforms offer specialized courses on database administration that can complement your formal education with practical skills.",
+        "averageSalary": "₹4-8 lakhs per annum for entry-level positions such as junior database administrators, ₹8-18 lakhs for mid-level DBAs with 3-7 years experience, and ₹18-35+ lakhs for senior database administrators or database architects. Salaries vary based on expertise with specific database systems, with Oracle and SAP specialists often commanding higher compensation. Location also affects pay scales, with metro cities offering better packages. Professionals with additional skills in cloud databases, data warehousing, or big data technologies can earn premium salaries, especially in sectors like banking, e-commerce, or healthcare that manage large volumes of critical data.",
+        "certifications": [
+          "Oracle Database Administrator Certified Professional",
+          "Microsoft Certified: Azure Database Administrator Associate",
+          "AWS Certified Database – Specialty",
+          "MongoDB Certified DBA",
+          "IBM Certified Database Administrator - DB2"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Career Path: From Junior to Senior Database Administrator",
+              "url": "https://www.oracle.com/technical-resources/articles/database-administrator-career-path.html"
+            },
+            {
+              "title": "The Evolution of Database Administration in the Cloud Era",
+              "url": "https://www.infoworld.com/article/3639880/the-future-of-database-administrators-in-the-era-of-the-autonomous-database.html"
+            }
+          ],
+          "videos": [
+            {
+              "title": "A Day in the Life of a Database Administrator",
+              "url": "https://www.youtube.com/watch?v=Fb9ImBkQiMM"
+            },
+            {
+              "title": "Database Administration Full Course | Complete DBA Tutorial",
+              "url": "https://www.youtube.com/watch?v=HXV3zeQKqGY"
+            }
+          ]
+        },
+        "topColleges": [
+          {
+            "name": "IIT Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "BITS Pilani",
+            "location": "Pilani",
+            "website": "https://www.bits-pilani.ac.in"
+          },
+          {
+            "name": "IIIT Bangalore",
+            "location": "Bangalore",
+            "website": "https://www.iiitb.ac.in"
+          },
+          {
+            "name": "NIT Warangal",
+            "location": "Warangal",
+            "website": "https://www.nitw.ac.in"
+          },
+          {
+            "name": "Delhi Technological University",
+            "location": "Delhi",
+            "website": "https://www.dtu.ac.in"
+          }
+        ]
+      },
+      { 
+        "name": "Information Security Analyst", 
+        "path": "/mcq",
+        "description": "Information Security Analysts protect organizations' computer systems and networks from cyber threats and data breaches. They design and implement security measures, monitor networks for suspicious activity, install security software, conduct penetration testing, and respond to security incidents. These professionals develop security policies and procedures, perform vulnerability assessments, implement encryption protocols, and stay updated on emerging threats and security technologies. Information Security Analysts work across various sectors including finance, healthcare, government, and technology, ensuring the confidentiality, integrity, and availability of sensitive data while educating employees about cybersecurity best practices.",
+        "howToBecome": "Obtain a bachelor's degree in cybersecurity, information technology, computer science, or a related field. For advanced positions, a master's degree in cybersecurity or information assurance may be required. Acquiring industry certifications such as CompTIA Security+, Certified Information Systems Security Professional (CISSP), Certified Ethical Hacker (CEH), or Certified Information Security Manager (CISM) significantly enhances employment prospects. Develop hands-on experience with security tools, intrusion detection systems, firewalls, and security information and event management (SIEM) platforms. Strong analytical and problem-solving skills are essential, as is the ability to stay current with rapidly evolving cyber threats and countermeasures.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Computer Science with specialization in information security, or a dedicated B.Tech in Cybersecurity. Take specialized courses in network security, cryptography, digital forensics, and ethical hacking. Build practical skills by participating in Capture The Flag (CTF) competitions, setting up home labs with security tools, and practicing on platforms like HackTheBox or TryHackMe. Seek internships with IT security departments or cybersecurity firms to gain hands-on experience with real security environments and understand operational challenges. Join cybersecurity communities and forums to stay updated with emerging threats and defense techniques.",
+        "averageSalary": "₹5-10 lakhs per annum for entry-level positions such as security administrators or junior analysts, ₹10-20 lakhs for mid-level security analysts with 3-7 years experience, and ₹20-45+ lakhs for senior security analysts, security architects, or specialized roles like penetration testers. Salaries vary based on industry, with banking, financial services, and critical infrastructure typically offering higher compensation. Location also affects pay scales, with metro cities offering better packages. Professionals with specialized skills in areas like cloud security, IoT security, or threat intelligence command premium salaries, especially in sectors handling sensitive data or subject to strict regulatory compliance.",
+        "certifications": [
+          "CompTIA Security+",
+          "Certified Information Systems Security Professional (CISSP)",
+          "Certified Ethical Hacker (CEH)",
+          "Certified Information Security Manager (CISM)",
+          "Offensive Security Certified Professional (OSCP)"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Cybersecurity Career Paths and Progression in India",
+              "url": "https://www.dsci.in/content/cybersecurity-careers-india"
+            },
+            {
+              "title": "The Evolving Role of Information Security Analysts in the Era of Cloud Computing",
+              "url": "https://www.csoonline.com/article/3654633/the-evolving-role-of-information-security-analysts.html"
+            }
+          ],
+          "videos": [
+            {
+              "title": "A Day in the Life of an Information Security Analyst",
+              "url": "https://www.youtube.com/watch?v=Wvp4uA-hkCo"
+            },
+            {
+              "title": "Complete Cybersecurity Career Path & Certification Guide",
+              "url": "https://www.youtube.com/watch?v=W5HEz3iw8S0"
+            }
+          ]
+        },
+        "topColleges": [
+          {
+            "name": "IIT Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "NIT Surathkal",
+            "location": "Mangalore",
+            "website": "https://www.nitk.ac.in"
+          },
+          {
+            "name": "IIIT Hyderabad",
+            "location": "Hyderabad",
+            "website": "https://www.iiit.ac.in"
+          },
+          {
+            "name": "Amity University",
+            "location": "Noida",
+            "website": "https://www.amity.edu"
+          },
+          {
+            "name": "VIT University",
+            "location": "Vellore",
+            "website": "https://www.vit.ac.in"
+          }
+        ]
+      },
+      { 
+        "name": "Cloud Computing Engineer", 
+        "path": "/mcq",
+        "description": "Cloud Computing Engineers design, implement, and maintain cloud-based systems and infrastructure for organizations. They architect cloud solutions using platforms like AWS, Azure, or Google Cloud, migrate applications and data from traditional environments to the cloud, and optimize cloud resources for performance, security, and cost-efficiency. These professionals configure and manage virtual machines, containers, serverless functions, storage services, and networking components while implementing automation through infrastructure-as-code. They monitor cloud environments, troubleshoot issues, ensure high availability and disaster recovery, and collaborate with development teams to implement DevOps practices. Cloud engineers stay current with rapidly evolving cloud technologies and best practices to help organizations leverage the scalability, flexibility, and innovative capabilities of cloud computing.",
+        "howToBecome": "Obtain a bachelor's degree in computer science, information technology, or a related field, with additional specialized training in cloud technologies. Develop strong foundational knowledge in networking, operating systems, virtualization, and programming/scripting (Python, PowerShell, Bash). Acquire hands-on experience with major cloud platforms such as Amazon Web Services (AWS), Microsoft Azure, or Google Cloud Platform through personal projects, labs, or entry-level roles. Obtain platform-specific certifications like AWS Certified Solutions Architect, Microsoft Azure Administrator, or Google Cloud Professional Cloud Architect to validate expertise. Familiarity with infrastructure-as-code tools (Terraform, CloudFormation), containerization (Docker, Kubernetes), and CI/CD pipelines enhances employability, as does knowledge of security best practices for cloud environments.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Computer Science, Information Technology, or Computer Engineering. While studying, take specialized courses in cloud computing, virtualization, and distributed systems. Create free-tier accounts on major cloud platforms (AWS, Azure, GCP) to gain hands-on experience through self-paced labs and tutorials. Participate in cloud-related hackathons, contribute to open-source projects using cloud services, and complete certification courses from cloud providers. Internships with companies using cloud technologies provide valuable real-world experience with enterprise cloud deployments. Join cloud computing communities and attend webinars to stay updated with rapidly evolving cloud technologies and best practices.",
+        "averageSalary": "₹5-12 lakhs per annum for entry-level positions such as cloud support engineers or junior cloud administrators, ₹12-25 lakhs for mid-level cloud engineers with 3-6 years experience, and ₹25-50+ lakhs for senior cloud architects or specialized roles. Salaries vary based on expertise with specific cloud platforms, with multi-cloud specialists often commanding higher compensation. Location significantly affects pay scales, with tech hubs like Bangalore, Hyderabad, and Pune offering better packages. Professionals with additional skills in DevOps, containerization, serverless architectures, or cloud security can earn premium salaries, especially in sectors undergoing rapid digital transformation such as finance, e-commerce, and SaaS companies.",
+        "certifications": [
+          "AWS Certified Solutions Architect",
+          "Microsoft Certified: Azure Administrator Associate",
+          "Google Cloud Professional Cloud Architect",
+          "Certified Kubernetes Administrator (CKA)",
+          "HashiCorp Certified: Terraform Associate"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Cloud Computing Career Paths and Growth Opportunities",
+              "url": "https://www.cio.com/article/cloud-computing-career-paths.html"
+            },
+            {
+              "title": "Multi-Cloud vs. Single Cloud Strategy: What's Right for Your Career",
+              "url": "https://www.infoworld.com/article/3614839/multicloud-vs-hybrid-cloud-whats-the-difference-and-why-it-matters.html"
+            }
+          ],
+          "videos": [
+            {
+              "title": "A Day in the Life of a Cloud Engineer",
+              "url": "https://www.youtube.com/watch?v=gptsrQf9JcQ"
+            },
+            {
+              "title": "How to Become a Cloud Engineer in 2023 | Complete Roadmap",
+              "url": "https://www.youtube.com/watch?v=3nYI4t8yfbU"
+            }
+          ]
+        },
+        "topColleges": [
+          {
+            "name": "IIT Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "IIT Delhi",
+            "location": "New Delhi",
+            "website": "https://www.iitd.ac.in"
+          },
+          {
+            "name": "BITS Pilani",
+            "location": "Pilani",
+            "website": "https://www.bits-pilani.ac.in"
+          },
+          {
+            "name": "IIT Madras",
+            "location": "Chennai",
+            "website": "https://www.iitm.ac.in"
+          },
+          {
+            "name": "IIIT Bangalore",
+            "location": "Bangalore",
+            "website": "https://www.iiitb.ac.in"
+          }
+        ]
+      },
+      { 
+        "name": "DevOps Engineer", 
+        "path": "/mcq",
+        "description": "DevOps Engineers bridge the gap between software development and IT operations, enabling organizations to build, test, and release software more efficiently and reliably. They implement continuous integration and continuous delivery (CI/CD) pipelines, automate infrastructure provisioning and configuration management, and maintain monitoring and logging systems to ensure application performance and stability. These professionals utilize tools like Git, Jenkins, Docker, Kubernetes, Terraform, and Ansible to streamline workflows, reduce manual processes, and enable faster deployment cycles. DevOps Engineers collaborate with development teams to improve code quality, troubleshoot production issues, implement security best practices, and foster a culture of shared responsibility and continuous improvement throughout the software development lifecycle.",
+        "howToBecome": "Acquire a bachelor's degree in computer science, software engineering, or a related technical field, though practical experience and demonstrated skills often matter more than formal education in this role. Develop solid understanding of software development practices and programming/scripting skills (Python, Bash, PowerShell, Go). Gain experience with source control systems (Git), CI/CD tools (Jenkins, GitHub Actions, GitLab CI), containerization (Docker, Kubernetes), infrastructure-as-code (Terraform, CloudFormation), and configuration management tools (Ansible, Chef, Puppet). Knowledge of cloud platforms (AWS, Azure, GCP) is essential, as is familiarity with monitoring solutions (Prometheus, Grafana, ELK stack) and networking concepts. Strong collaboration and communication skills are crucial, as the role involves working across development and operations teams.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Computer Science, Information Technology, or a related field. While studying, focus on building practical skills in both development and operations. Learn programming languages like Python, Java, or Go, and become proficient with Linux/Unix systems. Set up personal projects using version control, CI/CD pipelines, containers, and cloud resources to gain hands-on experience with the DevOps toolchain. Participate in open-source projects to understand collaborative development workflows. Seek internships that involve both development and operations aspects to understand the challenges of deployment and maintenance in production environments. Online platforms offer specialized DevOps courses and certifications that complement formal education with industry-relevant skills.",
+        "averageSalary": "₹6-12 lakhs per annum for entry-level positions or those transitioning from development or operations roles, ₹12-25 lakhs for mid-level DevOps engineers with 3-5 years experience, and ₹25-60+ lakhs for senior DevOps engineers or platform engineering leads. Salaries vary based on expertise with specific technologies and domains, with Kubernetes specialists and those experienced with multi-cloud environments often commanding higher compensation. Location significantly affects pay scales, with tech hubs like Bangalore, Hyderabad, and Pune offering better packages. Professionals working in high-growth sectors like fintech, e-commerce, and SaaS companies typically receive higher compensation, especially in organizations emphasizing rapid delivery and cloud-native approaches.",
+        "certifications": [
+          "AWS Certified DevOps Engineer - Professional",
+          "Microsoft Certified: DevOps Engineer Expert",
+          "Google Professional Cloud DevOps Engineer",
+          "Certified Kubernetes Administrator (CKA)",
+          "Docker Certified Associate (DCA)"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "The Complete DevOps Roadmap for 2023",
+              "url": "https://devopscube.com/devops-roadmap/"
+            },
+            {
+              "title": "From Development or Operations to DevOps: Career Transition Guide",
+              "url": "https://dzone.com/articles/transitioning-from-developer-to-devops"
+            }
+          ],
+          "videos": [
+            {
+              "title": "A Day in the Life of a DevOps Engineer",
+              "url": "https://www.youtube.com/watch?v=BTXNnhDjOPM"
+            },
+            {
+              "title": "DevOps Engineering Course for Beginners",
+              "url": "https://www.youtube.com/watch?v=j5Zsa_eOXeY"
+            }
+          ]
+        },
+        "topColleges": [
+          {
+            "name": "IIT Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "BITS Pilani",
+            "location": "Pilani",
+            "website": "https://www.bits-pilani.ac.in"
+          },
+          {
+            "name": "IIT Delhi",
+            "location": "New Delhi",
+            "website": "https://www.iitd.ac.in"
+          },
+          {
+            "name": "IIIT Hyderabad",
+            "location": "Hyderabad",
+            "website": "https://www.iiit.ac.in"
+          },
+          {
+            "name": "College of Engineering, Pune",
+            "location": "Pune",
+            "website": "https://www.coep.org.in"
+          }
+        ]
       }
     ]
   },
@@ -371,10 +976,38 @@
       { 
         "name": "Civil Engineer", 
         "path": "/mcq",
-        "description": "Civil engineers design, build, and maintain infrastructure projects like buildings, roads, bridges, and water systems. They ensure projects meet safety, environmental, and regulatory requirements.",
-        "howToBecome": "Earn a bachelor's degree in civil engineering, followed by a master's for specialized roles. Obtaining a Professional Engineer (PE) license is important for career advancement.",
-        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Civil Engineering, followed by an M.Tech for specialization.",
-        "averageSalary": "₹3-7 lakhs per annum for entry-level positions, with experienced engineers earning ₹10-25 lakhs or more.",
+        "description": "Civil engineers design, develop, construct, and manage infrastructure projects essential to modern society including buildings, bridges, highways, dams, water supply systems, airports, and tunnels. They apply technical expertise in structural analysis, materials science, geotechnical engineering, transportation planning, environmental considerations, and construction management to create sustainable, safe, and efficient projects. Civil engineers collaborate with architects, environmental specialists, contractors, and government officials throughout project lifecycles, from initial planning and design through construction, maintenance, and eventual renovation or replacement.",
+        "howToBecome": "Earn a bachelor's degree in civil engineering, followed by a master's for specialized roles. Obtain a Professional Engineer (PE) license after gaining experience and passing required exams. Developing expertise in CAD software, project management tools, and technical codes/standards is essential, along with strong analytical, problem-solving, and communication skills.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Civil Engineering from a reputed institute, followed by an M.Tech for specialization in structural, geotechnical, transportation, environmental, or construction management. Internships with construction firms or consulting companies provide valuable practical experience.",
+        "averageSalary": "₹3-7 lakhs per annum for entry-level positions, with mid-career professionals earning ₹10-18 lakhs, and senior civil engineers or project managers commanding ₹20-35 lakhs or more in specialized roles or multinational firms.",
+        "certifications": [
+          "Professional Engineer (PE) License from the Institution of Engineers India",
+          "Project Management Professional (PMP) Certification",
+          "LEED AP (Leadership in Energy and Environmental Design) Certification",
+          "Chartered Engineer certification from the Institution of Civil Engineers"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Career Path for Civil Engineers in India: Opportunities and Growth",
+              "url": "https://www.aicte-india.org/reports/overview/Civil-Engineering"
+            },
+            {
+              "title": "The Future of Civil Engineering: Sustainable Infrastructure and Smart Cities",
+              "url": "https://www.thecivilengineer.org/news-center/latest-news/item/1453-the-future-of-civil-engineering"
+            }
+          ],
+          "videos": [
+            {
+              "title": "A Day in the Life of a Civil Engineer",
+              "url": "https://www.youtube.com/watch?v=cJaRjI7K-fU"
+            },
+            {
+              "title": "Civil Engineering Career Paths and Specializations",
+              "url": "https://www.youtube.com/watch?v=hGYLCxmgT0A"
+            }
+          ]
+        },
         "topColleges": [
           {
             "name": "IIT Bombay",
@@ -406,10 +1039,39 @@
       { 
         "name": "Mechanical Engineer", 
         "path": "/mcq",
-        "description": "Mechanical engineers design, develop, and test mechanical devices and systems. They work on a variety of machines, tools, and products, from engines and robotics to manufacturing equipment.",
-        "howToBecome": "Obtain a bachelor's degree in mechanical engineering, with a master's helpful for specialized roles. Strong analytical, problem-solving, and creativity skills are essential.",
-        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Mechanical Engineering, followed by an M.Tech for specialization.",
-        "averageSalary": "₹3-8 lakhs per annum for entry-level positions, with experienced engineers earning ₹10-30 lakhs or more.",
+        "description": "Mechanical engineers design, analyze, and manufacture mechanical systems and thermal devices that power our world. They work across diverse industries developing products like engines, machinery, HVAC systems, robotics, medical devices, and renewable energy technologies. Using principles of physics, mathematics, and materials science, mechanical engineers solve complex problems involving motion, energy, and force. These professionals use advanced computational tools including CAD software and finite element analysis to create efficient, reliable, and innovative solutions while optimizing performance, reducing costs, and ensuring compliance with safety and environmental standards.",
+        "howToBecome": "Obtain a bachelor's degree in mechanical engineering, with a master's helpful for specialized roles. Develop proficiency in CAD software (like SOLIDWORKS, AutoCAD), simulation tools, and programming languages. Strong analytical, problem-solving, creativity, and communication skills are essential, along with practical hands-on experience through internships or project work.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Mechanical Engineering from a reputed institute, followed by an M.Tech for specialization in areas like thermal engineering, manufacturing, design, robotics, or automotive engineering. Participation in competitions like BAJA SAE, Formula Student, or robotics contests adds valuable practical experience.",
+        "averageSalary": "₹3-8 lakhs per annum for entry-level positions, ₹8-15 lakhs for mid-career professionals, and experienced engineers or specialists earning ₹15-40 lakhs or more in sectors like automotive, aerospace, energy, or multinational manufacturing companies.",
+        "certifications": [
+          "Certified Mechanical Engineer from the Institution of Engineers India",
+          "Certified SolidWorks Professional (CSWP)",
+          "Certified Quality Engineer (CQE) from American Society for Quality",
+          "Project Management Professional (PMP)",
+          "Six Sigma Green Belt/Black Belt Certification"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "The Evolving Role of Mechanical Engineers in Industry 4.0",
+              "url": "https://www.asme.org/topics-resources/content/how-industry-4-0-impacts-engineering-design"
+            },
+            {
+              "title": "Career Paths for Mechanical Engineers in India",
+              "url": "https://www.shiksha.com/engineering/mechanical-engineering-chp/articles/career-options-after-mechanical-engineering-blogId-14111"
+            }
+          ],
+          "videos": [
+            {
+              "title": "What Mechanical Engineers Do | Mechanical Engineering Explained",
+              "url": "https://www.youtube.com/watch?v=W74y1RxN6BA"
+            },
+            {
+              "title": "A Day in the Life of a Mechanical Engineer",
+              "url": "https://www.youtube.com/watch?v=Z-V9Yj4O_oI"
+            }
+          ]
+        },
         "topColleges": [
           {
             "name": "IIT Bombay",
@@ -441,10 +1103,39 @@
       { 
         "name": "Electrical Engineer", 
         "path": "/mcq",
-        "description": "Electrical engineers design, develop, and test electrical equipment and systems. They work on everything from power generation and transmission to communications and electronic devices.",
-        "howToBecome": "Earn a bachelor's degree in electrical engineering, with a master's helpful for specialized roles. Strong analytical and problem-solving skills, along with knowledge of mathematics and physics, are important.",
-        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Electrical Engineering, followed by an M.Tech for specialization.",
-        "averageSalary": "₹3-8 lakhs per annum for entry-level positions, with experienced engineers earning ₹10-30 lakhs or more.",
+        "description": "Electrical engineers design, develop, test, and supervise the manufacture of electrical equipment and systems that power our modern world. They work on diverse technologies including power generation and transmission equipment, electric motors, communication systems, radar and navigation systems, and consumer electronics. These professionals apply principles of electrical theory, materials science, and mathematics to create solutions for challenges in renewable energy, smart grids, automation, and electronics. Electrical engineers specialize in areas such as power systems, control systems, signal processing, telecommunications, or microelectronics, developing innovations that improve efficiency, sustainability, and functionality in various industries.",
+        "howToBecome": "Earn a bachelor's degree in electrical engineering, with a master's helpful for specialized roles. Develop strong skills in circuit design, signal processing, power systems, and programming languages like C, Python, or MATLAB. Familiarity with industry-standard tools like PSpice, Cadence, MATLAB/Simulink, or LabVIEW is valuable. Strong analytical and problem-solving abilities, along with knowledge of mathematics, physics, and emerging technologies, are essential for success.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Electrical Engineering from a reputed institute, followed by an M.Tech for specialization in areas like power systems, control systems, communication, embedded systems, or VLSI design. Hands-on project experience and internships with power companies, electronics manufacturers, or telecom firms provide valuable industry exposure.",
+        "averageSalary": "₹3-8 lakhs per annum for entry-level positions, ₹8-15 lakhs for mid-career professionals, with experienced specialists earning ₹15-40 lakhs or more in sectors like power utilities, semiconductors, telecommunications, or research and development.",
+        "certifications": [
+          "Licensed Electrical Engineer from the Institution of Engineers India",
+          "Certified Electrical Safety Professional (CESP)",
+          "Power Systems Engineering Certification",
+          "Certified Energy Manager (CEM)",
+          "Professional Engineer (PE) License with Electrical specialization"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "The Future of Electrical Engineering: Smart Grids and Renewable Integration",
+              "url": "https://spectrum.ieee.org/energywise/energy/the-smarter-grid/the-future-of-the-electric-power-sector"
+            },
+            {
+              "title": "Career Opportunities for Electrical Engineers in India",
+              "url": "https://www.shiksha.com/engineering/electrical-engineering-chp/articles/career-options-after-electrical-engineering-blogId-14113"
+            }
+          ],
+          "videos": [
+            {
+              "title": "What do Electrical Engineers Actually do?",
+              "url": "https://www.youtube.com/watch?v=QQewdCJTcIU"
+            },
+            {
+              "title": "A Day in the Life of an Electrical Engineer",
+              "url": "https://www.youtube.com/watch?v=3GBB4jn7uEc"
+            }
+          ]
+        },
         "topColleges": [
           {
             "name": "IIT Bombay",
@@ -476,10 +1167,39 @@
       { 
         "name": "Chemical Engineer", 
         "path": "/mcq",
-        "description": "Chemical engineers apply principles of chemistry, physics, and mathematics to design and develop chemical manufacturing processes. They work on producing chemicals, fuels, drugs, food, and many other products.",
-        "howToBecome": "Obtain a bachelor's degree in chemical engineering, with a master's or PhD helpful for research positions. Strong analytical and problem-solving skills are essential.",
-        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Chemical Engineering, followed by an M.Tech for specialization.",
-        "averageSalary": "₹4-9 lakhs per annum for entry-level positions, with experienced engineers earning ₹12-30 lakhs or more.",
+        "description": "Chemical engineers harness principles of chemistry, physics, biology, and mathematics to solve problems involving the production, transformation, and transportation of chemicals, materials, energy, and food. They design processes and equipment for large-scale manufacturing, develop new materials and technologies, and optimize existing production methods to improve efficiency and sustainability. These professionals work in diverse industries including petroleum refining, pharmaceuticals, food processing, materials science, biotechnology, and environmental engineering, creating solutions for challenges in energy production, pollution control, advanced materials, and sustainable manufacturing processes.",
+        "howToBecome": "Obtain a bachelor's degree in chemical engineering, with a master's or PhD helpful for research positions and specialized roles. Develop strong skills in process design, thermodynamics, reaction kinetics, transport phenomena, and process control. Proficiency with simulation software like Aspen HYSYS, ChemCAD, or COMSOL is valuable. Strong analytical, problem-solving, and communication skills are essential, along with knowledge of safety protocols and environmental regulations.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Chemical Engineering from a reputed institute, followed by an M.Tech for specialization in areas like process design, polymer science, petroleum refining, biochemical engineering, or environmental engineering. Internships with pharmaceutical companies, refineries, or manufacturing plants provide valuable industry exposure.",
+        "averageSalary": "₹4-9 lakhs per annum for entry-level positions, ₹10-18 lakhs for mid-career professionals, with experienced specialists earning ₹20-40 lakhs or more in sectors like petroleum, pharmaceuticals, specialty chemicals, or research and development.",
+        "certifications": [
+          "Licensed Chemical Engineer from the Institution of Engineers India",
+          "Certified Process Safety Professional (CCPSC)",
+          "Six Sigma Green Belt/Black Belt Certification",
+          "Project Management Professional (PMP)",
+          "Certified Energy Manager (CEM) with chemical specialization"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "The Evolving Role of Chemical Engineers in Sustainable Development",
+              "url": "https://www.aiche.org/resources/publications/cep/2021/april/chemical-engineers-role-sustainable-development"
+            },
+            {
+              "title": "Career Paths for Chemical Engineers in India",
+              "url": "https://www.shiksha.com/engineering/chemical-engineering-chp/articles/career-options-after-chemical-engineering-blogId-14112"
+            }
+          ],
+          "videos": [
+            {
+              "title": "What Does a Chemical Engineer Actually Do?",
+              "url": "https://www.youtube.com/watch?v=itl9t-W4JMo"
+            },
+            {
+              "title": "A Day in the Life of a Chemical Engineer",
+              "url": "https://www.youtube.com/watch?v=d_elN_AJwzo"
+            }
+          ]
+        },
         "topColleges": [
           {
             "name": "IIT Bombay",
@@ -511,10 +1231,39 @@
       { 
         "name": "Aerospace Engineer", 
         "path": "/mcq",
-        "description": "Aerospace engineers design, develop, and test aircraft, spacecraft, satellites, and missiles. They create and improve propulsion systems, vehicle structures, and navigation systems.",
-        "howToBecome": "Earn a bachelor's degree in aerospace engineering or a related field, with a master's helpful for specialized roles. Strong analytical, mathematical, and problem-solving skills are essential.",
-        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Aerospace Engineering, followed by an M.Tech for specialization.",
-        "averageSalary": "₹5-10 lakhs per annum for entry-level positions, with experienced engineers earning ₹15-40 lakhs or more.",
+        "description": "Aerospace engineers design, develop, test, and supervise the creation of aircraft, spacecraft, satellites, missiles, and advanced propulsion systems. They combine expertise in aerodynamics, materials science, propulsion, structural analysis, and avionics to create vehicles that can safely and efficiently operate in extreme environments. These professionals specialize in either aeronautical engineering (focused on aircraft that operate within Earth's atmosphere) or astronautical engineering (focused on spacecraft operating beyond Earth's atmosphere). They work in areas like flight mechanics, propulsion, structural design, guidance systems, and materials development to push the boundaries of aviation and space exploration.",
+        "howToBecome": "Earn a bachelor's degree in aerospace engineering or a related field like mechanical or electrical engineering with aerospace focus, followed by a master's for specialized roles. Develop strong skills in aerodynamics, propulsion, structures, controls, and computational fluid dynamics (CFD). Proficiency with industry software like ANSYS, CATIA, or MATLAB is valuable. Strong analytical, mathematical, and problem-solving skills are essential, along with knowledge of materials science, physics, and understanding of aviation or space system integration.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Aerospace Engineering from a reputed institute, followed by an M.Tech for specialization in areas like propulsion, aerodynamics, structures, avionics, or space systems. Participation in aeromodelling clubs, drone competitions, or student satellite projects provides valuable hands-on experience. Internships with aviation companies, space research organizations, or defense establishments offer industry exposure.",
+        "averageSalary": "₹5-10 lakhs per annum for entry-level positions, ₹12-25 lakhs for mid-career professionals, with experienced specialists earning ₹30-60 lakhs or more in organizations like ISRO, HAL, defense research labs, or multinational aerospace corporations.",
+        "certifications": [
+          "Certified Aerospace Engineer from the Aeronautical Society of India",
+          "Professional Engineer (PE) License with Aerospace specialization",
+          "CATIA Certification for Aerospace Design",
+          "Certified Systems Engineering Professional (CSEP)",
+          "Project Management Professional (PMP) with Aerospace focus"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "The Future of Aerospace Engineering in India",
+              "url": "https://www.aerospaceindia.org/aerospace-industry-overview"
+            },
+            {
+              "title": "Career Opportunities in Aerospace Engineering and Space Research",
+              "url": "https://www.shiksha.com/engineering/aerospace-engineering-chp/articles/career-options-after-aerospace-engineering-blogId-21456"
+            }
+          ],
+          "videos": [
+            {
+              "title": "What Does an Aerospace Engineer Do?",
+              "url": "https://www.youtube.com/watch?v=RGjQKMgdAQY"
+            },
+            {
+              "title": "A Day in the Life of an Aerospace Engineer",
+              "url": "https://www.youtube.com/watch?v=HV0TC5xQoME"
+            }
+          ]
+        },
         "topColleges": [
           {
             "name": "IIT Bombay",
@@ -552,77 +1301,318 @@
     "careers": [
       { 
         "name": "Statistician", 
-        "path": "/mcq" 
+        "path": "/mcq",
+        "description": "Statisticians are mathematical experts who collect, analyze, interpret, and present quantitative data. They apply statistical methods to solve real-world problems in fields like healthcare, economics, business, and government policy. Statisticians design experiments, surveys, and observational studies, ensuring methodological rigor while using advanced computational tools to extract meaningful patterns and insights from complex datasets that guide critical decision-making processes.",
+        "howToBecome": "Earn a bachelor's degree in statistics, mathematics, or related field, followed by a master's or PhD for advanced positions. Proficiency in statistical software (R, SAS, SPSS, Python), strong mathematical foundation, and expertise in experimental design and data analysis techniques are essential.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Sc. or B.Stat in Statistics or Mathematics, followed by an M.Sc./M.Stat and potentially a PhD for research or senior positions.",
+        "averageSalary": "₹4-8 lakhs per annum for entry-level positions, with experienced statisticians earning ₹12-30 lakhs depending on sector and expertise.",
+        "certifications": [
+          "SAS Certified Statistical Business Analyst",
+          "Professional Statistician (PStat) certification from the American Statistical Association",
+          "Certified Data Scientist (CDS) from the India Statistical Institute",
+          "IBM Data Science Professional Certificate"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Career as a Statistician in India: Scope, Skills & Opportunities",
+              "url": "https://www.shiksha.com/science/articles/career-as-statistician-blogId-71319"
+            },
+            {
+              "title": "The Role of Statisticians in Data Science and Machine Learning",
+              "url": "https://towardsdatascience.com/the-role-of-statisticians-in-data-science-and-machine-learning-44c8e411c040"
+            }
+          ],
+          "videos": [
+            {
+              "title": "What Does a Statistician Actually Do?",
+              "url": "https://www.youtube.com/watch?v=y6mIt48K_HI"
+            },
+            {
+              "title": "Why you should become a Statistician in 2023",
+              "url": "https://www.youtube.com/watch?v=lLdRkUjwZcI"
+            }
+          ]
+        },
+        "topColleges": [
+          {
+            "name": "Indian Statistical Institute",
+            "location": "Kolkata",
+            "website": "https://www.isical.ac.in"
+          },
+          {
+            "name": "Chennai Mathematical Institute",
+            "location": "Chennai",
+            "website": "https://www.cmi.ac.in"
+          },
+          {
+            "name": "IIT Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "IIT Delhi",
+            "location": "New Delhi",
+            "website": "https://www.iitd.ac.in"
+          },
+          {
+            "name": "University of Delhi",
+            "location": "Delhi",
+            "website": "https://www.du.ac.in"
+          }
+        ]
       },
       { 
         "name": "Actuary", 
-        "path": "/mcq" 
+        "path": "/mcq",
+        "description": "Actuaries are risk assessment experts who analyze financial costs of uncertainty and risk. They use mathematics, statistics, and financial theory to evaluate the likelihood of future events and design creative ways to reduce the likelihood of undesirable events and decrease their impact. Actuaries primarily work in insurance, helping companies develop policies that minimize risk while maximizing profitability, as well as in consulting, healthcare, banking, and government agencies.",
+        "howToBecome": "Obtain a bachelor's degree in actuarial science, mathematics, statistics, or economics. Pass a series of professional exams from actuarial societies to become fully qualified. Strong analytical skills, business acumen, and communication abilities are essential.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Sc./B.Com in Actuarial Science, Mathematics, or Statistics, then begin taking professional actuarial exams while gaining relevant work experience.",
+        "averageSalary": "₹5-10 lakhs per annum for entry-level positions with a few exams passed, rising to ₹20-50 lakhs for fully qualified actuaries.",
+        "certifications": [
+          "Fellowship from the Institute of Actuaries of India (IAI)",
+          "Chartered Enterprise Risk Analyst (CERA)",
+          "Society of Actuaries (SOA) Exam Certifications",
+          "Casualty Actuarial Society (CAS) Credentials"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Actuarial Career in India - Path, Salary & Scope",
+              "url": "https://www.actuariesindia.org/Careers.aspx"
+            },
+            {
+              "title": "How to Become an Actuary in India",
+              "url": "https://byjus.com/commerce/how-to-become-an-actuary/"
+            }
+          ],
+          "videos": [
+            {
+              "title": "What is an Actuary? | The Career Path of an Actuary",
+              "url": "https://www.youtube.com/watch?v=LTzva8g_KSA"
+            },
+            {
+              "title": "Actuarial Science Career in India | Salary | Exam | IAI",
+              "url": "https://www.youtube.com/watch?v=JmKVnkEfLQk"
+            }
+          ]
+        },
+        "topColleges": [
+          {
+            "name": "Institute of Actuaries of India",
+            "location": "Mumbai",
+            "website": "https://www.actuariesindia.org"
+          },
+          {
+            "name": "Amity School of Insurance and Actuarial Science",
+            "location": "Noida",
+            "website": "https://www.amity.edu/aii/"
+          },
+          {
+            "name": "Bishop Heber College",
+            "location": "Tiruchirappalli",
+            "website": "https://www.bhc.edu.in"
+          },
+          {
+            "name": "Christ University",
+            "location": "Bangalore",
+            "website": "https://www.christuniversity.in"
+          },
+          {
+            "name": "Narsee Monjee Institute of Management Studies",
+            "location": "Mumbai",
+            "website": "https://www.nmims.edu"
+          }
+        ]
       },
       { 
         "name": "Financial Analyst", 
-        "path": "/mcq" 
+        "path": "/mcq",
+        "description": "Financial analysts evaluate investment opportunities, assess financial performance, and provide recommendations for businesses and individuals. They analyze financial statements, study economic trends, and examine company fundamentals to determine value and future prospects. These professionals work across various sectors including investment banking, portfolio management, corporate finance, and equity research, combining quantitative expertise with market knowledge to guide financial decision-making and strategy development.",
+        "howToBecome": "Earn a bachelor's degree in finance, economics, accounting, mathematics, or statistics. Many financial analysts pursue an MBA or master's in finance for career advancement. Strong analytical, mathematical, and communication skills are crucial.",
+        "afterTwelfth": "After 12th with PCM or Commerce, pursue a B.Com, BBA in Finance, or B.Sc. in Mathematics/Statistics, followed by an MBA in Finance or CFA certification.",
+        "averageSalary": "₹4-9 lakhs per annum for entry-level positions, with experienced financial analysts earning ₹12-30 lakhs or more depending on specialization.",
+        "certifications": [
+          "Chartered Financial Analyst (CFA)",
+          "Financial Risk Manager (FRM)",
+          "Certified Financial Planner (CFP)",
+          "Certificate in Investment Performance Measurement (CIPM)"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Career as a Financial Analyst in India",
+              "url": "https://www.careers360.com/careers/financial-analyst"
+            },
+            {
+              "title": "Understanding The Various Types Of Financial Analysts",
+              "url": "https://www.investopedia.com/articles/professionals/120915/understanding-various-types-financial-analysts.asp"
+            }
+          ],
+          "videos": [
+            {
+              "title": "A Day in the Life of a Financial Analyst",
+              "url": "https://www.youtube.com/watch?v=MbMh6KmLCD0"
+            },
+            {
+              "title": "Financial Analyst Career Path: The Complete Guide",
+              "url": "https://www.youtube.com/watch?v=g6hBRbDl53o"
+            }
+          ]
+        },
+        "topColleges": [
+          {
+            "name": "Indian Institute of Management",
+            "location": "Ahmedabad",
+            "website": "https://www.iima.ac.in"
+          },
+          {
+            "name": "Indian Institute of Management",
+            "location": "Bangalore",
+            "website": "https://www.iimb.ac.in"
+          },
+          {
+            "name": "XLRI Xavier School of Management",
+            "location": "Jamshedpur",
+            "website": "https://www.xlri.ac.in"
+          },
+          {
+            "name": "Shri Ram College of Commerce",
+            "location": "Delhi",
+            "website": "https://www.srcc.edu"
+          },
+          {
+            "name": "Narsee Monjee Institute of Management Studies",
+            "location": "Mumbai",
+            "website": "https://www.nmims.edu"
+          }
+        ]
       },
       { 
         "name": "Mathematician", 
-        "path": "/mcq" 
+        "path": "/mcq",
+        "description": "Mathematicians conduct research to develop and understand mathematical principles and apply them to solve practical problems in business, engineering, science, and other fields. They develop mathematical models, formulate new questions, devise and test solutions to these problems, and communicate findings to others. Mathematicians work in diverse areas such as cryptography, data analysis, algorithm development, biostatistics, and theoretical research, contributing to technological innovations and scientific breakthroughs across disciplines.",
+        "howToBecome": "Obtain a bachelor's degree in mathematics, followed by a master's and usually a PhD for advanced research positions. Strong analytical thinking, problem-solving abilities, and computational skills are essential.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Sc. in Mathematics, followed by an M.Sc. and a PhD for academic or research careers.",
+        "averageSalary": "₹4-8 lakhs per annum for entry-level positions, with experienced mathematicians in academia or industry earning ₹12-35 lakhs or more.",
+        "certifications": [
+          "Certified Mathematical Modeler (CMM)",
+          "SAS Certified Base Programmer",
+          "Professional Mathematician certification from the Society for Industrial and Applied Mathematics (SIAM)",
+          "IBM Data Science Professional Certificate"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Careers in Mathematics: What Can You Do With a Math Degree?",
+              "url": "https://www.topuniversities.com/student-info/careers-advice/what-can-you-do-mathematics-degree"
+            },
+            {
+              "title": "The Unexpected Applications of Higher Mathematics",
+              "url": "https://www.ams.org/journals/notices/201705/rnoti-p507.pdf"
+            }
+          ],
+          "videos": [
+            {
+              "title": "What do mathematicians do?",
+              "url": "https://www.youtube.com/watch?v=V6yi6Npz3LQ"
+            },
+            {
+              "title": "Career Paths for Mathematics Degrees",
+              "url": "https://www.youtube.com/watch?v=utGDu3biEx4"
+            }
+          ]
+        },
+        "topColleges": [
+          {
+            "name": "Indian Statistical Institute",
+            "location": "Kolkata",
+            "website": "https://www.isical.ac.in"
+          },
+          {
+            "name": "Chennai Mathematical Institute",
+            "location": "Chennai",
+            "website": "https://www.cmi.ac.in"
+          },
+          {
+            "name": "Tata Institute of Fundamental Research",
+            "location": "Mumbai",
+            "website": "https://www.tifr.res.in"
+          },
+          {
+            "name": "Indian Institute of Science",
+            "location": "Bangalore",
+            "website": "https://www.iisc.ac.in"
+          },
+          {
+            "name": "University of Delhi",
+            "location": "Delhi",
+            "website": "https://www.du.ac.in"
+          }
+        ]
       },
       { 
         "name": "Operations Research Analyst", 
-        "path": "/mcq" 
-      }
-    ]
-  },
-  "humanities": {
-    "name": "Humanities",
-    "description": "You have a deep interest in understanding human culture, history, and behavior. Your communication and critical thinking skills make you well-suited for careers in the humanities.",
-    "color": "rgba(153, 102, 255, 0.8)",
-    "careers": [
-      { 
-        "name": "Historian", 
-        "path": "/mcq" 
-      },
-      { 
-        "name": "Psychologist", 
-        "path": "/mcq" 
-      },
-      { 
-        "name": "Sociologist", 
-        "path": "/mcq" 
-      },
-      { 
-        "name": "Linguist", 
-        "path": "/mcq" 
-      },
-      { 
-        "name": "Philosopher", 
-        "path": "/mcq" 
-      }
-    ]
-  },
-  "business": {
-    "name": "Business",
-    "description": "You have strong organizational and interpersonal skills. Your ability to lead and make strategic decisions makes you well-suited for business and management roles.",
-    "color": "rgba(255, 159, 64, 0.8)",
-    "careers": [
-      { 
-        "name": "Business Analyst", 
-        "path": "/mcq" 
-      },
-      { 
-        "name": "Project Manager", 
-        "path": "/mcq" 
-      },
-      { 
-        "name": "Marketing Manager", 
-        "path": "/mcq" 
-      },
-      { 
-        "name": "Human Resources Manager", 
-        "path": "/mcq" 
-      },
-      { 
-        "name": "Entrepreneur", 
-        "path": "/mcq" 
+        "path": "/mcq",
+        "description": "Operations Research Analysts use advanced mathematical and analytical methods to help organizations solve complex problems and make better decisions. They formulate and apply mathematical models and optimization techniques to improve operational efficiency, resource allocation, scheduling, logistics, and supply chain management. These professionals employ data mining, statistical analysis, and predictive modeling to identify patterns and opportunities for improvement, turning complicated business problems into structured mathematical frameworks that yield practical, actionable solutions.",
+        "howToBecome": "Earn a bachelor's degree in operations research, mathematics, statistics, engineering, or a related field. A master's or PhD is often required for advanced positions. Strong analytical, problem-solving, and computational skills are essential.",
+        "afterTwelfth": "After 12th with PCM, pursue a B.Tech/B.E. in Industrial Engineering, Mathematics, or Statistics, followed by an M.Tech/M.Sc. in Operations Research or a related field.",
+        "averageSalary": "₹5-10 lakhs per annum for entry-level positions, with experienced analysts earning ₹15-30 lakhs or more.",
+        "certifications": [
+          "Certified Analytics Professional (CAP)",
+          "INFORMS Certified in Operations Research",
+          "Six Sigma Green Belt and Black Belt",
+          "IASSC Certified Lean Six Sigma Black Belt"
+        ],
+        "externalLinks": {
+          "articles": [
+            {
+              "title": "Operations Research: The Science of Better Decision Making",
+              "url": "https://www.informs.org/Explore/What-is-O.R.-Analytics"
+            },
+            {
+              "title": "The Role of Operations Research in Modern Business Management",
+              "url": "https://www.sciencedirect.com/science/article/pii/S2212567115005511"
+            }
+          ],
+          "videos": [
+            {
+              "title": "What is Operations Research?",
+              "url": "https://www.youtube.com/watch?v=rrvBMGb6rEE"
+            },
+            {
+              "title": "Operations Research Career Paths and Opportunities",
+              "url": "https://www.youtube.com/watch?v=kkGpG-PRrhg"
+            }
+          ]
+        },
+        "topColleges": [
+          {
+            "name": "Indian Institute of Technology Delhi",
+            "location": "New Delhi",
+            "website": "https://www.iitd.ac.in"
+          },
+          {
+            "name": "Indian Statistical Institute",
+            "location": "Kolkata",
+            "website": "https://www.isical.ac.in"
+          },
+          {
+            "name": "Indian Institute of Management",
+            "location": "Ahmedabad",
+            "website": "https://www.iima.ac.in"
+          },
+          {
+            "name": "IIT Bombay",
+            "location": "Mumbai",
+            "website": "https://www.iitb.ac.in"
+          },
+          {
+            "name": "Anna University",
+            "location": "Chennai",
+            "website": "https://www.annauniv.edu"
+          }
+        ]
       }
     ]
   }
