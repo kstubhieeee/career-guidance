@@ -8,7 +8,7 @@ const API_BASE_URL = 'http://localhost:3250';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { currentUser } = useAuth();
+  const { currentUser, logout } = useAuth();
   const [pendingRequests, setPendingRequests] = useState(0);
 
   // Determine if the user is a mentor
@@ -224,7 +224,7 @@ function Navbar() {
                   <button
                     onClick={() => {
                       setIsOpen(false);
-                      useAuth().logout();
+                      logout();
                     }}
                     className="w-full text-left py-2 px-4 text-white hover:bg-secondary-dark rounded-lg transition-colors"
                   >

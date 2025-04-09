@@ -56,15 +56,14 @@ const upload = multer({
 });
 
 // Middleware
-app.use(express.json());
-app.use(cookieParser());
 app.use(cors({
-  origin: function(origin, callback) {
-    // Allow any origin in development
-    return callback(null, true);
-  },
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://127.0.0.1:5173'],
   credentials: true
 }));
+app.use(cookieParser());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 // Serve static files from the public directory
 app.use('/public', express.static(path.join(__dirname, 'public')));
@@ -155,12 +154,76 @@ const sessionRequestSchema = new mongoose.Schema({
   paymentStatus: { type: String, enum: ['pending', 'completed'], default: 'pending' }
 }, { timestamps: true });
 
+// Define Blog Schema
+const blogSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  subtitle: { type: String, required: true },
+  content: { type: String, required: true },
+  image: { type: String, required: true },
+  date: { type: Date, default: Date.now },
+  author: {
+    id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    name: { type: String, required: true },
+    avatar: { type: String },
+    bio: { type: String },
+    email: { type: String }
+  },
+  category: { type: String, required: true },
+  tags: [{ type: String }],
+  source: { type: String },
+  sourceLink: { type: String },
+  isPublished: { type: Boolean, default: true },
+  viewCount: { type: Number, default: 0 },
+  comments: [{
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    userName: { type: String },
+    userAvatar: { type: String },
+    content: { type: String },
+    createdAt: { type: Date, default: Date.now }
+  }]
+});
+
+// Define Question Schema
+const questionSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  body: { type: String, required: true },
+  author: { type: String, required: true },
+  email: { type: String },
+  avatar: { type: String },
+  date: { type: Date, default: Date.now },
+  tags: [{ type: String }],
+  answers: [{
+    id: { type: String },
+    author: { type: String, required: true },
+    text: { type: String, required: true }, 
+    date: { type: Date, default: Date.now },
+    isMentor: { type: Boolean, default: true }
+  }],
+  likes: { type: Number, default: 0 },
+  isAnswered: { type: Boolean, default: false },
+  isFeatured: { type: Boolean, default: false },
+  comments: [{
+    id: { type: String },
+    author: {
+      id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      name: { type: String, required: true },
+      avatar: { type: String },
+      isMentor: { type: Boolean, default: false },
+      email: { type: String }
+    },
+    content: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }
+  }]
+});
+
 // Create models
 const User = mongoose.model('User', userSchema);
 const Assessment = mongoose.model('Assessment', assessmentSchema);
 const Contact = mongoose.model('Contact', contactSchema);
 const Session = mongoose.model('Session', sessionSchema);
 const SessionRequest = mongoose.model('SessionRequest', sessionRequestSchema);
+const Blog = mongoose.model('Blog', blogSchema);
+const Question = mongoose.model('Question', questionSchema);
 
 // Authentication middleware
 const authenticate = async (req, res, next) => {
@@ -1744,6 +1807,172 @@ app.put('/api/session-requests/:requestId/room', authenticate, async (req, res) 
   }
 });
 
+// Blog endpoints
+app.get('/api/blogs', async (req, res) => {
+  try {
+    const blogs = await Blog.find({ isPublished: true }).sort({ date: -1 });
+    res.json({ blogs });
+  } catch (error) {
+    console.error('Error fetching blogs:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/api/blogs/:id', async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id);
+    if (!blog) {
+      return res.status(404).json({ message: 'Blog not found' });
+    }
+    res.json({ blog });
+  } catch (error) {
+    console.error('Error fetching blog:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.post('/api/blogs', authenticate, async (req, res) => {
+  try {
+    const { title, subtitle, content, category, tags, image } = req.body;
+    
+    // Create a new blog
+    const newBlog = new Blog({
+      title,
+      subtitle,
+      content,
+      category,
+      tags,
+      image,
+      author: {
+        id: req.user.id,
+        name: `${req.user.firstName} ${req.user.lastName}`,
+        avatar: req.user.photoUrl || '',
+        bio: req.user.bio || '',
+        email: req.user.email || ''
+      }
+    });
+    
+    await newBlog.save();
+    res.status(201).json({ blog: newBlog });
+  } catch (error) {
+    console.error('Error creating blog:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Questions endpoints
+app.get('/api/questions', async (req, res) => {
+  try {
+    const questions = await Question.find().sort({ date: -1 });
+    res.json({ questions });
+  } catch (error) {
+    console.error('Error fetching questions:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/api/questions/:id', async (req, res) => {
+  try {
+    const questionId = req.params.id;
+    console.log(`Fetching question with ID: ${questionId}`);
+    
+    // First try to find by MongoDB ObjectId
+    let question = null;
+    try {
+      if (questionId.match(/^[0-9a-fA-F]{24}$/)) {
+        question = await Question.findById(questionId);
+      }
+    } catch (e) {
+      console.log('Not a valid MongoDB ObjectId, trying other methods...');
+    }
+    
+    // If not found, try to find by the numeric ID value (for localStorage questions)
+    if (!question) {
+      question = await Question.findOne({ id: questionId });
+      console.log('Tried to find by numeric ID:', question ? 'Found' : 'Not found');
+    }
+    
+    // Log the found question
+    console.log('Question search result:', question ? 'Found' : 'Not found');
+    
+    if (!question) {
+      return res.status(404).json({ message: 'Question not found' });
+    }
+    
+    res.json({ question });
+  } catch (error) {
+    console.error('Error fetching question:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.post('/api/questions', authenticate, async (req, res) => {
+  try {
+    const { title, body, tags } = req.body;
+    
+    // Create a new question
+    const newQuestion = new Question({
+      title,
+      body,
+      author: `${req.user.firstName} ${req.user.lastName}`,
+      email: req.user.email,
+      avatar: req.user.photoUrl || '',
+      tags
+    });
+    
+    await newQuestion.save();
+    res.status(201).json({ question: newQuestion });
+  } catch (error) {
+    console.error('Error creating question:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.post('/api/questions/:id/answers', async (req, res) => {
+  try {
+    const questionId = req.params.id;
+    const { answer } = req.body;
+    
+    console.log(`Adding answer to question ID: ${questionId}`);
+    console.log('Answer data:', answer);
+    
+    // First try to find by MongoDB ObjectId
+    let question = null;
+    try {
+      if (questionId.match(/^[0-9a-fA-F]{24}$/)) {
+        question = await Question.findById(questionId);
+      }
+    } catch (e) {
+      console.log('Not a valid MongoDB ObjectId, trying other methods...');
+    }
+    
+    // If not found, try to find by the numeric ID value
+    if (!question) {
+      question = await Question.findOne({ id: questionId });
+    }
+    
+    if (!question) {
+      return res.status(404).json({ message: 'Question not found' });
+    }
+    
+    // Add the answer to the question
+    question.answers = question.answers || [];
+    question.answers.push(answer);
+    question.isAnswered = true;
+    
+    await question.save();
+    console.log('Answer added successfully');
+    
+    res.status(201).json({ 
+      message: 'Answer added successfully', 
+      question 
+    });
+  } catch (error) {
+    console.error('Error adding answer:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Serve static files from the 'dist' directory after build
 // Only serve static files if the dist directory exists
 const distPath = path.join(__dirname, 'dist');
@@ -1767,6 +1996,28 @@ if (fs.existsSync(distPath)) {
     }
   });
 }
+
+// Error handler for PayloadTooLargeError
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 413) {
+    return res.status(413).json({
+      status: 413,
+      message: 'Request entity too large. Please reduce the size of your request.',
+      error: 'PAYLOAD_TOO_LARGE'
+    });
+  }
+  
+  if (err) {
+    console.error('Express error:', err);
+    return res.status(err.status || 500).json({
+      status: err.status || 500,
+      message: err.message || 'Internal Server Error',
+      error: err.name || 'ServerError'
+    });
+  }
+  
+  next();
+});
 
 // Start the server
 const startServer = (port) => {

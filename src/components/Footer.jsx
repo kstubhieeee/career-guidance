@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function Footer() {
   const currentYear = new Date().getFullYear();
+  const { currentUser } = useAuth();
+  const isMentor = currentUser?.isMentor;
 
   return (
     <footer className="bg-darkblue-dark pt-16 pb-8 border-t border-gray-800">
@@ -59,6 +62,15 @@ function Footer() {
               <li>
                 <Link to="/dashboard" className="text-gray-400 hover:text-primary transition-colors">Dashboard</Link>
               </li>
+              <li>
+                <Link to="/blog" className="text-gray-400 hover:text-primary transition-colors">Blog</Link>
+              </li>
+              {/* <li>
+                <Link to="/forums" className="text-gray-400 hover:text-primary transition-colors">Discussion Forums</Link>
+              </li>
+              <li>
+                <Link to="/qanda" className="text-gray-400 hover:text-primary transition-colors">Q&A</Link>
+              </li> */}
             </ul>
           </div>
 
@@ -78,8 +90,22 @@ function Footer() {
                 <a href="#" className="text-gray-400 hover:text-primary transition-colors">Scholarship Information</a>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-primary transition-colors">Career Blog</a>
+                <Link to="/blog" className="text-gray-400 hover:text-primary transition-colors">Career Blog</Link>
               </li>
+              {isMentor && (
+                <li>
+                  <Link to="/add-blog" className="text-gray-400 hover:text-primary transition-colors">Write a Blog</Link>
+                </li>
+              )}
+              {isMentor ? (
+                <li>
+                  <Link to="/qanda" className="text-gray-400 hover:text-primary transition-colors">Answer Questions</Link>
+                </li>
+              ) : (
+                <li>
+                  <Link to="/ask-question" className="text-gray-400 hover:text-primary transition-colors">Ask a Question</Link>
+                </li>
+              )}
             </ul>
           </div>
 
@@ -103,6 +129,17 @@ function Footer() {
         </div>
 
         <div className="pt-8 border-t border-gray-800 text-center">
+          <div className="mb-4 flex flex-wrap justify-center gap-4">
+            <Link to="/blog" className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">
+              Read Our Blog
+            </Link>
+            {/* <Link to="/forums" className="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary-dark transition-colors">
+              Join Discussions
+            </Link>
+            <Link to="/qanda" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+              {isMentor ? "Answer Questions" : "Ask Questions"}
+            </Link> */}
+          </div>
           <p className="text-gray-500">&copy; {currentYear} Career Guidant. All rights reserved.</p>
           <div className="mt-3 space-x-6 flex justify-center">
             <a href="#" className="text-gray-400 hover:text-primary text-sm">Privacy Policy</a>

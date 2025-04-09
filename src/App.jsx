@@ -22,6 +22,14 @@ import VideoCall from './pages/VideoCall';
 import VideoCallSetupPage from './pages/VideoCallSetup';
 import VideoCallActivePage from './pages/VideoCallActive';
 import RateSession from './pages/RateSession';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+import AddBlog from './pages/AddBlog';
+import Forums from './pages/Forums';
+import ForumTopic from './pages/ForumTopic';
+import QandA from './pages/QandA';
+import QuestionDetail from './pages/QuestionDetail';
+import AskQuestion from './pages/AskQuestion';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProtectedRouteShared from './components/ProtectedRouteShared';
 import { AuthProvider } from './context/AuthContext';
@@ -106,6 +114,27 @@ function AppContent() {
         <Route path="/rate-session" element={
           <ProtectedRoute>
             <RateSession />
+          </ProtectedRoute>
+        } />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:blogId" element={<BlogPost />} />
+        <Route path="/add-blog" element={
+          <ProtectedRoute isMentorRoute={true}>
+            <AddBlog />
+          </ProtectedRoute>
+        } />
+        <Route path="/forums" element={<Forums />} />
+        <Route path="/forums/topic/:topicId" element={<ForumTopic />} />
+        <Route path="/qanda" element={<QandA />} />
+        <Route path="/question/:questionId" element={<QuestionDetail />} />
+        <Route path="/ask-question" element={
+          <ProtectedRoute>
+            <AskQuestion />
+          </ProtectedRoute>
+        } />
+        <Route path="/answer-question/:questionId" element={
+          <ProtectedRoute isMentorRoute={true}>
+            <QuestionDetail />
           </ProtectedRoute>
         } />
       </Routes>
