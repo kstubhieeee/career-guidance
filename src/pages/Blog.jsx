@@ -391,7 +391,7 @@ function Blog() {
             ) : (
               <div className="space-y-8">
                 {currentBlogs.map(blog => (
-                  <div key={blog.id} className="bg-white rounded-xl overflow-hidden shadow-md transition-all hover:shadow-lg">
+                  <div key={blog._id || blog.id || `blog-${blog.title}`} className="bg-white rounded-xl overflow-hidden shadow-md transition-all hover:shadow-lg">
                     <div className="md:flex">
                       <div className="md:w-1/3">
                         <img 
@@ -409,7 +409,7 @@ function Blog() {
                           </span>
                         </div>
                         <h2 className="text-gray-800 text-xl md:text-2xl font-bold mb-2 hover:text-blue-600 transition-colors">
-                          <Link to={`/blog/${blog.id}`}>{blog.title}</Link>
+                          <Link to={`/blog/${blog._id || blog.id}`}>{blog.title}</Link>
                         </h2>
                         <p className="text-gray-600 mb-4">{blog.subtitle}</p>
                         <div className="flex items-center space-x-4 mb-4">
@@ -429,7 +429,7 @@ function Blog() {
                         </div>
                         
                         <Link 
-                          to={`/blog/${blog.id}`} 
+                          to={`/blog/${blog._id || blog.id}`} 
                           className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
                         >
                           Read More <FaChevronRight className="ml-1 text-sm" />
@@ -541,7 +541,10 @@ function Blog() {
                       className="w-16 h-16 rounded-lg object-cover flex-shrink-0" 
                     />
                     <div>
-                      <Link to={`/blog/${blog.id}`} className="font-medium hover:text-blue-600 line-clamp-2">
+                      <Link 
+                        to={`/blog/${blog._id || blog.id}`} 
+                        className="font-medium hover:text-blue-600 line-clamp-2"
+                      >
                         {blog.title}
                       </Link>
                       <p className="text-sm text-gray-500 mt-1">{blog.date}</p>
