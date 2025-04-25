@@ -13,6 +13,7 @@ function Mcq() {
     setCurrentQuestion,
     scores,
     answeredQuestions,
+    selectedOptions,
     showResults,
     error,
     handleOptionSelect,
@@ -77,16 +78,15 @@ function Mcq() {
     // Current question styles
     if (qIndex === currentQuestion) {
       if (answeredQuestions[qIndex]) {
-        // After answering
-        const isSelectedCategory = questions[qIndex].categories[oIndex];
-        if (isSelectedCategory) {
+        // After answering - check if this option was the one selected
+        if (selectedOptions[qIndex] === oIndex) {
           return "bg-primary text-white border border-primary-dark";
         }
         return "bg-darkblue-light border border-gray-700 opacity-70";
       }
 
       // Before answering - hover state
-      return "bg-darkblue-light border border-gray-700 hover:bg-darkblue-dark transform hover:-translate-y-1 hover:shadow-lg";
+      return "bg-darkblue-light border border-gray-700 hover:bg-primary hover:text-white transform hover:-translate-y-1 hover:shadow-lg";
     }
 
     // Other questions

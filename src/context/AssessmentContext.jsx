@@ -21,6 +21,7 @@ export function AssessmentProvider({ children }) {
     Mathematics: 0
   });
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const [aiAnalysis, setAiAnalysis] = useState(null);
   const [error, setError] = useState(null);
@@ -46,6 +47,7 @@ export function AssessmentProvider({ children }) {
       setSessionId(data.sessionId);
       console.log("Session ID set:", data.sessionId);
       setAnsweredQuestions(Array(data.questions.length).fill(false));
+      setSelectedOptions(Array(data.questions.length).fill(-1));
     } catch (err) {
       console.error("Error loading questions:", err);
 
@@ -82,6 +84,11 @@ export function AssessmentProvider({ children }) {
     const newAnsweredQuestions = [...answeredQuestions];
     newAnsweredQuestions[questionIndex] = true;
     setAnsweredQuestions(newAnsweredQuestions);
+    
+    // Update selectedOptions to track which option was selected
+    const newSelectedOptions = [...selectedOptions];
+    newSelectedOptions[questionIndex] = optionIndex;
+    setSelectedOptions(newSelectedOptions);
 
     // Save the response to file
     if (sessionId) {
@@ -215,8 +222,18 @@ export function AssessmentProvider({ children }) {
         setShowResults(true);
       }
 
-      // Mark all questions as answered
+      // Mark all questions as answered and set a default selection (first option) for each
       setAnsweredQuestions(Array(questionsData.questions.length).fill(true));
+      
+      // Extract selected options from responses if available, otherwise default to 0
+      const extractedSelectedOptions = questionsData.questions.map(q => {
+        if (q.responses && q.responses.length > 0) {
+          return q.responses[0].optionIndex;
+        }
+        return 0; // Default to first option if no response data
+      });
+      setSelectedOptions(extractedSelectedOptions);
+      
     } catch (err) {
       console.error("Error loading assessment:", err);
       setError("Failed to load assessment. Please try again later.");
@@ -236,6 +253,7 @@ export function AssessmentProvider({ children }) {
       Mathematics: 0
     });
     setAnsweredQuestions([]);
+    setSelectedOptions([]);
     setShowResults(false);
     setAiAnalysis(null);
     setError(null);
@@ -257,6 +275,7 @@ export function AssessmentProvider({ children }) {
     setCurrentQuestion,
     scores,
     answeredQuestions,
+    selectedOptions,
     showResults,
     aiAnalysis,
     error,
