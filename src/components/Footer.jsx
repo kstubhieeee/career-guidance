@@ -77,15 +77,15 @@ function Footer() {
           <div>
             <h3 className="text-white font-bold text-lg mb-4">Career Resources</h3>
             <ul className="space-y-3">
-              <li>
+              {/* <li>
                 <a href="#" className="text-gray-400 hover:text-primary transition-colors">Resume Builder</a>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <a href="#" className="text-gray-400 hover:text-primary transition-colors">Interview Tips</a>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <a href="#" className="text-gray-400 hover:text-primary transition-colors">Skill Assessments</a>
-              </li>
+              </li> */}
               <li>
                 <a href="#" className="text-gray-400 hover:text-primary transition-colors">Scholarship Information</a>
               </li>
@@ -135,8 +135,8 @@ function Footer() {
             </Link>
             {/* <Link to="/forums" className="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary-dark transition-colors">
               Join Discussions
-            </Link>
-            <Link to="/qanda" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+            </Link> */}
+            {/* <Link to="/qanda" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
               {isMentor ? "Answer Questions" : "Ask Questions"}
             </Link> */}
           </div>

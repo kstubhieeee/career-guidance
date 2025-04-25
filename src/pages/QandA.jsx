@@ -563,7 +563,7 @@ function QandA() {
                               <textarea
                                 placeholder="Write your answer here..."
                                 rows="3"
-                                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                                className="w-full border text-black border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-teal-500"
                                 value={question.answerDraft || ''}
                                 onChange={(e) => {
                                   const updatedQuestions = questions.map(q => {
