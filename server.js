@@ -19,7 +19,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3250;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/career-guidance';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://faizmoulavi54:OFBZ1Dr7vV2eGLbr@guidant.pynokwu.mongodb.net/?retryWrites=true&w=majority&appName=Guidant';
 
 // Ensure mentor-img directory exists
 const mentorImgDir = path.join(__dirname, 'public', 'mentor-img');
@@ -61,7 +61,7 @@ const upload = multer({
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://127.0.0.1:5173'],
+  origin: ['http://localhost:5173', 'https://guidant.vercel.app'],
   credentials: true
 }));
 app.use(cookieParser());
@@ -72,10 +72,30 @@ app.use(express.static(path.join(__dirname, 'dist')));
 // Serve static files from the public directory
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
-// Connect to MongoDB
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+mongoose.set('bufferCommands', false);
+const DB_NAME = process.env.MONGODB_DB || 'guidant';
+const connectWithRetry = async (retries = 5, delayMs = 3000) => {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      await mongoose.connect(MONGODB_URI, {
+        dbName: DB_NAME,
+        serverSelectionTimeoutMS: 10000,
+        socketTimeoutMS: 45000,
+        retryWrites: true,
+        w: 'majority'
+      });
+      console.log('Connected to MongoDB');
+      return;
+    } catch (err) {
+      console.error(`MongoDB connection error (attempt ${attempt}/${retries}):`, err.message);
+      if (attempt === retries) throw err;
+      await new Promise(r => setTimeout(r, delayMs));
+    }
+  }
+};
+mongoose.connection.on('connected', () => console.log('Mongoose connected'));
+mongoose.connection.on('error', err => console.error('Mongoose connection error:', err));
+mongoose.connection.on('disconnected', () => console.warn('Mongoose disconnected'));
 
 // Define User Schema
 const userSchema = new mongoose.Schema({
@@ -2037,4 +2057,12 @@ const startServer = (port) => {
   });
 };
 
-startServer(PORT);
+(async () => {
+  try {
+    await connectWithRetry();
+    startServer(PORT);
+  } catch (err) {
+    console.error('Failed to connect to MongoDB after retries:', err);
+    process.exit(1);
+  }
+})();
